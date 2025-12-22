@@ -12,10 +12,28 @@
            DECIMAL-POINT IS COMMA.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-            COPY "./clientes.sel".
+           SELECT OPTIONAL CLIENTES ASSIGN TO "./clientes.dat"
+                  ORGANIZATION INDEXED
+                  ACCESS MODE IS DYNAMIC
+                  RECORD KEY IS ID_CLIENTE
+                  ALTERNATE KEY CLI_NOMBRE WITH DUPLICATES
+                  ALTERNATE KEY CLI_ALT_2  WITH DUPLICATES
+                  STATUS ST-FILE.
        DATA DIVISION.
        FILE SECTION.
-            COPY "./clientes.fd".
+       FD CLIENTES.
+       01 REG-CLIENTES.
+           03 ID_CLIENTE.
+               05 CLI_ID            PIC 9(8).
+           03 CLI_SALDO            PIC S9(7)V9(3).
+           03 CLI_NOMBRE           PIC X(60).
+           03 CLI_DIRECCION        PIC X(80).
+           03 CLI_CODPOST          PIC X(10).
+           03 CLI_CATEGORIA        PIC X.
+           03 CLI_ALT_2.
+               05 CLI_CATEGORIA_2  PIC X.
+               05 CLI_NOMBRE_2     PIC X(60).
+           03 FILLER               PIC X(240).
 
        WORKING-STORAGE SECTION.
        01  ST-FILE    PIC XX.
@@ -26,24 +44,24 @@
        01  EXISTE     PIC X.
        01  HUBO-ERROR PIC 9     VALUES 0.
        01  GUIONES    PIC X(80) VALUES ALL "-".
-       02  OPCION     PIC 99.
+       01  OPCION     PIC 99.
 
        01  W-CLI-ID   PIC 9(07).
        01  W-CLI-ID-Z PIC Z(06)9.
 
        01  DATOS.
-           02 W-CLI-NOMBRE        PIC X(07).
-           02 W-CLI-NOMBRE-ANT    PIC X(07).
-           02 W-CLI-DIRECCION PIC X(80).
-           02 W-CLI-CODPOST   PIC X(10).
-           02 W-CLI-CATEGORIA PIC X.
+           02 W-CLI-NOMBRE        PIC X(70).
+           02 W-CLI-NOMBRE-ANT    PIC X(70).
+           02 W-CLI-DIRECCION     PIC X(80).
+           02 W-CLI-CODPOST       PIC X(10).
+           02 W-CLI-CATEGORIA     PIC X.
 
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            PERFORM INICIALIZACION.
            PERFORM ABRO-ARCHIVO.
            PERFORM PROCESO THRU F-PROCESO UNTIL FIN = "S".
-           PERFORM CIERRE-ARCHIVO.
+           PERFORM CIERRO-ARCHIVO.
            GO TO FINALIZAR.
 
        INICIALIZACION.
@@ -58,11 +76,12 @@
               DISPLAY MENSAJE LINE 10 COL 20
               MOVE "S" TO FIN.
 
-       CIERRE-ARCHIVO.
+       CIERRO-ARCHIVO.
            CLOSE CLIENTES.
 
        FINALIZAR.
-           EXIT PROGRAM.
+           STOP RUN.
+
        PROCESO.
            PERFORM MUESTRO-PANTALLA.
            PERFORM INGRESO-ID THRU F-INGRESO-ID.
@@ -92,14 +111,13 @@
                    "02 Direccion    : " LINE 12 COL 10
                    "03 Cod. Postal  : " LINE 14 COL 10
                    "04 Categoria    : " LINE 16 COL 10
-                   " Opcion [   ]     " LINE 20 COL 30
-                   GUIONES             LINE 22  COL 1.
+                   "Opcion [  ]       " LINE 20 COL 30
+                   GUIONES              LINE 22  COL 1.
            ACCEPT X.
-
        INGRESO-ID.
            ACCEPT W-CLI-ID    LINE 07 COL 23 PROMPT.
-           MOVE W-CLI-ID TO W-CLI-ID-Z.
-           DISPLAY W-CLI-ID-Z LINE 07 COL 34.
+           MOVE W-CLI-ID      TO W-CLI-ID-Z.
+           DISPLAY W-CLI-ID-Z LINE 07 COL 23.
            IF W-CLI-ID = 0 GO TO INGRESO-ID.
 
        F-INGRESO-ID.
@@ -130,8 +148,8 @@
 
            DISPLAY CLI_NOMBRE    LINE 10 COL 37
                    CLI_DIRECCION LINE 12 COL 37
-                   CLI_CODPOST   LINE 14 COL 37 BLINK
-                   CLI_CATEGORIA LINE 16 COL 37 REVERSED.
+                   CLI_CODPOST   LINE 14 COL 37
+                   CLI_CATEGORIA LINE 16 COL 37.
        CARGO-DATOS.
            INITIALIZE DATOS.
 
@@ -139,10 +157,8 @@
            EXIT.
 
        INGRESO-NOMBRE.
-           MOVE W-CLI-NOMBRE TO W-CLI-NOMBRE-ANT.
            ACCEPT W-CLI-NOMBRE LINE 10 COL 37 UPDATE.
            IF W-CLI-NOMBRE = SPACES
-               MOVE W-CLI-NOMBRE-ANT TO W-CLI-NOMBRE.
                GO TO INGRESO-NOMBRE.
            DISPLAY W-CLI-NOMBRE LINE 10 COL 37.
 
@@ -165,9 +181,12 @@
            DISPLAY W-CLI-CATEGORIA LINE 16 COL 37.
 
        OPCIONES.
+           DISPLAY "[ 00 - ENTER ] GRABAR" LINE 23 COL 1
+                   "[88] - BORRAR"         LINE 24 COL 1
+                   "[77] - SALIR "         LINE 23 COL 23.
+
            ACCEPT OPCION LINE 20 COL 38 PROMPT.
-           IF OPCION = 0 MOVE "S" TO FIN.
-           IF FIN    = "N"
+           IF FIN = "N"
                EVALUATE OPCION
                    WHEN 1
                        PERFORM INGRESO-NOMBRE
@@ -177,8 +196,52 @@
                        PERFORM INGRESO-CODPOSTAL
                    WHEN 4
                        PERFORM INGRESO-CATEGORIA
+                   WHEN 0
+                       PERFORM GRABAR THRU F-GRABAR
+                   WHEN 88
+                       PERFORM BORRAR
+                   WHEN 77
+                       MOVE "S" TO FIN
                    WHEN OTHER
                        GO TO OPCIONES
                END-EVALUATE.
+               IF OPCION > 0 AND OPCION < 77 GO TO OPCIONES.
+
+       GRABAR.
+           MOVE W-CLI-NOMBRE    TO CLI_NOMBRE CLI_NOMBRE_2.
+           MOVE W-CLI-DIRECCION TO CLI_DIRECCION.
+           MOVE W-CLI-CODPOST   TO CLI_CODPOST.
+           MOVE W-CLI-CATEGORIA TO CLI_CATEGORIA CLI_CATEGORIA_2.
+
+       GRABO.
+           IF  EXISTE = "S" GO TO REGRABO.
+           WRITE REG-CLIENTES.
+           IF ST-FILE = "99" GO TO GRABO.
+           IF ST-FILE > "07"
+           STRING "Error al grabar clientes " ST-FILE DELIMITED BY SIZE
+                   INTO MENSAJE
+           DISPLAY MENSAJE LINE 24 COL 40.
+           GO TO F-GRABAR.
+
+       REGRABO.
+           REWRITE REG-CLIENTES.
+           IF ST-FILE = "99" GO TO REGRABO.
+           IF ST-FILE > "07"
+           STRING "Error al regrabar clientes " ST-FILE
+                   DELIMITED BY SIZE
+                   INTO MENSAJE
+           DISPLAY MENSAJE LINE 24 COL 40.
+
+       F-GRABAR.
+           EXIT.
+
+       BORRAR.
+           DELETE CLIENTES.
+           IF ST-FILE = "99" GO TO BORRAR.
+                  IF ST-FILE > "07"
+           STRING "Error al borrar clientes " ST-FILE
+                   DELIMITED BY SIZE
+                   INTO MENSAJE
+           DISPLAY MENSAJE LINE 24 COL 40.
 
        END PROGRAM "JD-TWINS".
