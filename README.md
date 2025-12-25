@@ -1,9 +1,15 @@
 ![menu](images/menu.png)
 ![program](images/program.png)
-
+```
+*> 1. Compila los subprogramas como módulos dinámicos
+*> 2. Compila el menú como el ejecutable principal
+cobc -m -free PROGRAM.cbl CLIENTES.cbl
+cobc -x -free MENU.cbl -o sistema.exe
+```
 ```
 cobc -x -free menu.cbl
-cobc -x -free MENU3.cbl CLIENTES-PROGRAM.cbl CLIENTES.cbl -o sistema.exec
+cobc -x -free MENU.cbl CLIENTES.cbl PROGRAM.cbl LISTADO.cbl -o sistema.exec
+cobc -x -free MENU3.cbl CLIENTES-PROGRAM.cbl CLIENTES.cbl LISTADO.cbl -o sistema.exec
 ```
 
 ARCHIVOS COBOL
@@ -16,10 +22,14 @@ ARCHIVOS COBOL
   C:\GC32\COBOL
  ├── SRC   ← programas COBOL (.cob)
  ├── CPY   ← copybooks (.cpy)
- ├── DAT   ← archivos de datos (.dat, .idx)
  ├── OBJ   ← objetos intermedios (opcional)
  └── BIN   ← ejecutables (.exe)
+      └── DAT   ← archivos de datos (.dat, .idx)
 
+CLIENTES.DAT   ← datos reales (persisten)
+CLIENTES.FD    ← definición lógica (estructura - TABLA)
+CLIENTES.SEL   ← cómo se accede
+CLIENTES.CPY   ← copia reutilizable de estructuras
 
 
 :: por jose daniel JDGO

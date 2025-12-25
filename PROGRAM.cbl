@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. "CLIENTES-PROGRAM".
+       PROGRAM-ID. PROGRAM.
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
@@ -9,8 +9,7 @@
             COPY "./bin/clientes.sel".
        DATA DIVISION.
        FILE SECTION.
-            COPY "./bin/clientes.fd".
-            COPY "./bin/carro.fpy".
+            COPY "./bin/clientes.fd". 
        WORKING-STORAGE SECTION.
        01  ST-FILE    PIC XX.
        01  X          PIC X.
@@ -222,5 +221,5 @@
                    INTO MENSAJE
            DISPLAY MENSAJE LINE 24 COL 40.
 
-       END PROGRAM "CLIENTES-PROGRAM".
+       END PROGRAM PROGRAM.
 

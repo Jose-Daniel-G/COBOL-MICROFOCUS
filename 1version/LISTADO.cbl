@@ -9,11 +9,11 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           COPY "./bin/clientes.sel".
+           COPY "./clientes.sel".
 
        DATA DIVISION.
        FILE SECTION.
-           COPY "./bin/clientes.fd".
+           COPY "./clientes.fd".
 
        WORKING-STORAGE SECTION.
        01  ST-FILE        PIC XX.

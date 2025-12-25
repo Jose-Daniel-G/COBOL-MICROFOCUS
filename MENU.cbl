@@ -1,0 +1,245 @@
+
+       >>SOURCE FORMAT FREE
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. MENU.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           CRT STATUS IS WS-KEY. 
+       INPUT-OUTPUT SECTION. 
+       DATA DIVISION. 
+       WORKING-STORAGE SECTION.
+       *>Aqui puedes poner tus cpy
+       COPY "./CPY/TECLAS.cpy".
+       01  WS-KEY            PIC 9(4). 
+       01  WS-FILA-CONF      PIC 9 VALUE 1. *> 1:Listar, 2:Alta/Mod, 3:Salir
+       01  WS-FIN-CONF       PIC X VALUE "N".
+       01  OPCION-CAPTURA    PIC X VALUE SPACE.
+       01  MODULO-ACTUAL     PIC 9 VALUE 2. *> 1:Finan, 2:Comer, 3:Manuf
+       01  FECHA-SISTEMA     PIC X(17) VALUE "DECEMBER 24, 2025".
+       01  OPCION-VENTANA    PIC X VALUE SPACE.
+       *> VARIABLES PARA LA NAVEGACION
+       01  WS-FILA-ACTUAL     PIC 9 VALUE 1. *> 1:Facturas, 2:Cobros, 3:Notas, 4:Salir
+       01  WS-FIN-SUBMENU     PIC X VALUE "N".
+        
+
+       SCREEN SECTION.
+       *> --- BARRA SUPERIOR DINAMICA ---
+       01  BARRA-SUPERIOR.
+           05 LINE 1 COL 1 VALUE " TEST 8.5  " BACKGROUND-COLOR 4
+                                               FOREGROUND-COLOR 7.
+           05 LINE 1 COL 65 FROM FECHA-SISTEMA BACKGROUND-COLOR 4
+                                               FOREGROUND-COLOR 7.
+           05 LINE 2 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.   *> 2. LA BARRA DE MEN� HORIZONTAL (Gris con letras rojas)
+
+       *> --- MENU VERTICAL DESPLEGABLE ---
+
+       01  FINANCIERO.
+           05 LINE 03 COL 10 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 LINE 04 COL 10 VALUE "| Financiero               |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 LINE 05 COL 10 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 LINE 06 COL 10 VALUE "| P. Program               |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 07 COL 10 VALUE "| C. Clientes              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 08 COL 10 VALUE "| N. Notas Credito         |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 09 COL 10 VALUE "| S. Salir al Menu Sup.    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 10 COL 10 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0. 
+      *>     05 SC-OPC-V LINE 12 COL 29 PIC X TO OPCION-VENTANA.
+       
+       01  MENU-CONFRONTACION.
+            05  GRUPO-VERDE BACKGROUND-COLOR 6 FOREGROUND-COLOR 7.*> Grupo con color Turquesa/Verde (Fondo 6 o 3 dependiendo del terminal)
+            10 LINE 07 COL 33 VALUE "+-----------------------------+".
+            10 LINE 08 COL 33 VALUE "| A.B.M CLIENTES              |".
+            10 LINE 09 COL 33 VALUE "+-----------------------------+".
+            10 LINE 10 COL 33 VALUE "| Listar                      |". 
+            10 LINE 11 COL 33 VALUE "| Regresar                    |". 
+            10 LINE 12 COL 33 VALUE "+-----------------------------+".  
+      *>      05 SC-OPC-CONF LINE 15 COL 57 PIC X TO OPCION-VENTANA.
+
+       PROCEDURE DIVISION.
+       MAIN-LOGIC.
+           SET ENVIRONMENT "COB_SCREEN_EXCEPTIONS" TO "Y".               *> Habilita teclas especiales 
+           DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1.     *> Borramos pantalla solo una vez al inicio
+           PERFORM UNTIL FUNCTION UPPER-CASE(OPCION-CAPTURA) = "S"
+               DISPLAY BARRA-SUPERIOR
+               PERFORM DIBUJAR-OPCIONES
+              
+               ACCEPT OPCION-CAPTURA LINE 24 COL 10
+
+               EVALUATE FUNCTION UPPER-CASE(OPCION-CAPTURA)
+                   WHEN "E"
+                       PERFORM LIMPIAR-AREA-MENU
+                       MOVE 1 TO MODULO-ACTUAL
+                   WHEN "F"
+                       PERFORM LIMPIAR-AREA-MENU
+                       MOVE 2 TO MODULO-ACTUAL
+                       PERFORM DESPLEGAR-FINANCIERO
+               END-EVALUATE
+           END-PERFORM.
+           STOP RUN.
+
+       DIBUJAR-OPCIONES.
+           IF MODULO-ACTUAL = 1         *> --- Estructura basica ---
+              DISPLAY "[E]" LINE 2 COL 5
+                      BACKGROUND-COLOR 0 FOREGROUND-COLOR 7
+           ELSE
+              DISPLAY "[" LINE 2 COL 5 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+              DISPLAY "E" LINE 2 COL 6 BACKGROUND-COLOR 7 FOREGROUND-COLOR 4
+              DISPLAY "]" LINE 2 COL 7 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+           END-IF.
+           IF MODULO-ACTUAL = 2        *> --- OPCION FINANCIERO ---
+              DISPLAY " Financiero " LINE 2 COL 10
+                      BACKGROUND-COLOR 0 FOREGROUND-COLOR 7
+           ELSE
+              DISPLAY " " LINE 2 COL 10 BACKGROUND-COLOR 7
+              DISPLAY "F" LINE 2 COL 11 BACKGROUND-COLOR 7 FOREGROUND-COLOR 4
+              DISPLAY "inanciero" LINE 2 COL 12 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+           END-IF.
+
+       LIMPIAR-AREA-MENU.
+           DISPLAY " " LINE 3 COL 1 ERASE EOS BACKGROUND-COLOR 1. *> Limpia de la linea 3 hacia abajo
+       DESPLEGAR-FINANCIERO.
+           MOVE "N" TO WS-FIN-SUBMENU
+           MOVE 1 TO WS-FILA-ACTUAL
+
+           PERFORM UNTIL WS-FIN-SUBMENU = "S"
+
+               DISPLAY BARRA-SUPERIOR  
+               PERFORM DIBUJAR-OPCIONES
+               DISPLAY FINANCIERO
+             *> DIBUJAR LAS OPCIONES CON RESALTADO DINAMICO
+               IF WS-FILA-ACTUAL = 1
+                  DISPLAY "| P. Program               |" LINE 06 COL 10 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| P. Program               |" LINE 06 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+               END-IF
+       
+               IF WS-FILA-ACTUAL = 2
+                  DISPLAY "| C. Clientes              |" LINE 07 COL 10 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| C. Clientes              |" LINE 07 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+               END-IF
+       
+               IF WS-FILA-ACTUAL = 3
+                  DISPLAY "| N. Notas Credito         |" LINE 08 COL 10 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| N. Notas Credito         |" LINE 08 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+               END-IF
+       
+               IF WS-FILA-ACTUAL = 4
+                  DISPLAY "| S. Salir al Menu Sup.    |" LINE 09 COL 10 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| S. Salir al Menu Sup.    |" LINE 09 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+               END-IF
+       
+               *> ACCEPT "INVISIBLE" PARA CAPTURAR LA TECLA
+               ACCEPT OPCION-VENTANA LINE 12 COL 19
+               
+               EVALUATE WS-KEY
+                   WHEN KEY-UP *> FLECHA ARRIBA
+                       IF WS-FILA-ACTUAL > 1 SUBTRACT 1 FROM WS-FILA-ACTUAL
+                   WHEN KEY-DOWN *> FLECHA ABAJO
+                       IF WS-FILA-ACTUAL < 4 ADD 1 TO WS-FILA-ACTUAL
+               WHEN KEY-ENTER
+                      EVALUATE WS-FILA-ACTUAL
+                          WHEN 1  
+                            PERFORM DESPLEGAR-CONFRONTACION
+       
+                           WHEN 2  
+                             DISPLAY "LLAMANDO A PROGRAM..." LINE 15 COL 10
+                              CALL "CLIENTES" 
+                              ON EXCEPTION
+                                 DISPLAY "ERROR: NO SE ENCONTRO CLIENTES" LINE 15 COL 10
+                              END-CALL 
+                           WHEN 3 DISPLAY "ABRIENDO NOTAS CREDITO..." LINE 15 COL 10
+                           WHEN 4 
+                               PERFORM LIMPIAR-AREA-MENU
+                               MOVE "S" TO WS-FIN-SUBMENU
+                       END-EVALUATE
+               END-EVALUATE
+               
+               *> SALIDA POR TECLADO SI ESCRIBEN "S" 
+               IF FUNCTION UPPER-CASE(OPCION-VENTANA) = "S" AND WS-KEY = 0
+                   PERFORM LIMPIAR-AREA-MENU
+                  MOVE "S" TO WS-FIN-SUBMENU
+               END-IF
+           END-PERFORM.
+
+       DESPLEGAR-CONFRONTACION.
+           MOVE "N" TO WS-FIN-CONF
+           MOVE 1 TO WS-FILA-CONF
+           
+           PERFORM UNTIL WS-FIN-CONF = "S"
+               *> Redibujamos lo anterior para que no se pierda
+               DISPLAY BARRA-SUPERIOR
+               PERFORM DIBUJAR-OPCIONES
+               DISPLAY FINANCIERO
+               
+               *> Dibujamos la caja del menú de confrontación
+               DISPLAY MENU-CONFRONTACION
+               
+               *> --- LÓGICA DE RESALTADO DINÁMICO ---
+               IF WS-FILA-CONF = 1
+                  DISPLAY "| A.B.M CLIENTES              |" LINE 08 COL 33 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| A.B.M CLIENTES              |" LINE 08 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+               END-IF
+
+               IF WS-FILA-CONF = 2
+                  DISPLAY "| Listar                      |" LINE 10 COL 33 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| Listar                      |" LINE 10 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+               END-IF
+               
+               IF WS-FILA-CONF = 3
+                  DISPLAY "| Regresar                    |" LINE 11 COL 33 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| Regresar                    |" LINE 11 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+               END-IF
+
+               ACCEPT OPCION-VENTANA LINE 15 COL 57
+
+
+               EVALUATE WS-KEY
+                   WHEN KEY-UP *> FLECHA ARRIBA
+                       IF WS-FILA-CONF > 1 
+                          SUBTRACT 1 FROM WS-FILA-CONF
+                       END-IF
+                   WHEN KEY-DOWN *> FLECHA ABAJO
+                       IF WS-FILA-CONF < 3 
+                          ADD 1 TO WS-FILA-CONF
+                       END-IF
+                   WHEN KEY-ENTER    *> TECLA ENTER
+                       EVALUATE WS-FILA-CONF
+                           WHEN 1
+                               CALL "CLIENTES" 
+                               ON EXCEPTION
+                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
+                               END-CALL
+                               PERFORM REFRESCAR-PANTALLA-TOTAL
+                           WHEN 2 
+                               CALL "LISTADO" 
+                               ON EXCEPTION
+                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
+                               END-CALL
+                               PERFORM REFRESCAR-PANTALLA-TOTAL
+                           WHEN 3
+                               MOVE "S" TO WS-FIN-CONF
+                       END-EVALUATE
+                   WHEN 2001 *> Tecla ESC (Si tu compilador lo soporta como 2001)
+                       MOVE "S" TO WS-FIN-CONF
+               END-EVALUATE
+
+               *> Opción de salida por letra
+               IF FUNCTION UPPER-CASE(OPCION-VENTANA) = "S"
+                  MOVE "S" TO WS-FIN-CONF
+               END-IF
+           END-PERFORM.
+
+           *> Al salir, limpiamos el área derecha (el cuadro verde)
+           DISPLAY " " LINE 4 COL 45 ERASE EOS BACKGROUND-COLOR 1.
+
+       REFRESCAR-PANTALLA-TOTAL.
+           DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
+           DISPLAY BARRA-SUPERIOR
+           PERFORM DIBUJAR-OPCIONES
+           DISPLAY FINANCIERO. 

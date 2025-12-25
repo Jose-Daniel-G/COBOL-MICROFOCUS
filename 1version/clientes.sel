@@ -1,4 +1,4 @@
-           SELECT OPTIONAL CLIENTES ASSIGN TO "./bin/clientes.dat"
+           SELECT OPTIONAL CLIENTES ASSIGN TO "./clientes.dat"
                   ORGANIZATION INDEXED
                   ACCESS MODE IS DYNAMIC
                   RECORD KEY IS ID_CLIENTE
