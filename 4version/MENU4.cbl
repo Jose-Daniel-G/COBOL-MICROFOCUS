@@ -47,7 +47,8 @@
        *> --- MENU VERTICAL DESPLEGABLE ---
 
        01  FINANCIERO.
-           05 LINE 03 COL 10 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 LINE 03 COL 10 VALUE "+--------------------------+" 
+                                   BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 LINE 04 COL 10 VALUE "| Financiero               |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 LINE 05 COL 10 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 LINE 06 COL 10 VALUE "| M. SUBMENU               |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.

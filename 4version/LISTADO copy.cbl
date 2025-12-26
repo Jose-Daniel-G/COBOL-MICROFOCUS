@@ -1,4 +1,4 @@
->>SOURCE FORMAT FREE
+       >>SOURCE FORMAT FREE
        IDENTIFICATION DIVISION.
        PROGRAM-ID. LISTADO.
 
@@ -16,8 +16,8 @@
            COPY "./clientes.fd".
 
        WORKING-STORAGE SECTION.
-           COPY "./CPY/TECLAS.cpy".
        01  ST-FILE        PIC XX.
+       01  MENSAJE        PIC X(70).
        01  WS-KEY         PIC 9(4).
        01  WS-FIN-LISTA   PIC X VALUE "N".
        
@@ -46,7 +46,7 @@
            05 LINE 3 COL 2  VALUE "ID"          BACKGROUND-COLOR 1.
            05 LINE 3 COL 15 VALUE "NOMBRE"      BACKGROUND-COLOR 1.
            05 LINE 3 COL 47 VALUE "DIRECCION"   BACKGROUND-COLOR 1.
-           05 LINE 3 COL 69 VALUE "CATEGORIA"          BACKGROUND-COLOR 1.
+           05 LINE 3 COL 78 VALUE "C"          BACKGROUND-COLOR 1.
            05 LINE 4 COL 1  PIC X(80) FROM ALL "_" BACKGROUND-COLOR 1.
            05 LINE 25 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
            05 LINE 25 COL 2 VALUE "[FLECHAS] Navegar  [ENTER] Seleccionar  [ESC] Retorna" 
@@ -57,14 +57,22 @@
            SET ENVIRONMENT "COB_SCREEN_EXCEPTIONS" TO "Y".
            SET ENVIRONMENT "COB_SCREEN_ESC"        TO "Y".
            
-           PERFORM ABRO-ARCHIVO.
+           OPEN INPUT CLIENTES.
+           IF ST-FILE NOT = "00"
+               DISPLAY "ERROR AL ABRIR ARCHIVO: " ST-FILE LINE 10 COL 20
+               ACCEPT WS-PAUSA
+               GOBACK
+           END-IF.
 
            DISPLAY PANTALLA-LISTADO.
+           
+           *> IMPORTANTE: Limpiar banderas antes de empezar
            MOVE "N" TO WS-FIN-LISTA.
-           MOVE 9999 TO WS-KEY. 
+           MOVE 9999 TO WS-KEY. *> Valor inicial para que no entre con 0 o 2005
            
            PERFORM MOSTRAR-REGISTROS.
            
+           *> Verificar si se cargaron registros antes de navegar
            IF WS-FILA-MAX >= WS-FILA-INICIO
                PERFORM NAVEGACION-BUCLE
            ELSE
@@ -76,20 +84,21 @@
            GOBACK.
 
        NAVEGACION-BUCLE.
-           PERFORM UNTIL WS-KEY = KEY-ESC OR WS-KEY = KEY-ENTER
+           *> El bucle se mantiene mientras no sea ESC (2005) o ENTER (0)
+           PERFORM UNTIL WS-KEY = 2005 OR WS-KEY = 0
                PERFORM RESALTAR-FILA
                
-               *> Usamos la misma logica del ejemplo del menu
-               ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
+               *> Este ACCEPT es el que detiene el programa y espera la flecha
+               ACCEPT WS-PAUSA LINE WS-PUNTERO COL 1 WITH NO-ECHO
                
                EVALUATE WS-KEY
-                   WHEN KEY-DOWN *> Flecha Abajo (o el codigo que use tu sistema)
+                   WHEN 2002 *> Flecha Abajo
                        IF WS-PUNTERO < WS-FILA-MAX
                           PERFORM NORMALIZAR-FILA
                           ADD 1 TO WS-PUNTERO
                           ADD 1 TO WS-INDICE
                        END-IF
-                   WHEN KEY-UP *> Flecha Arriba (o el codigo que use tu sistema)
+                   WHEN 2001 *> Flecha Arriba
                        IF WS-PUNTERO > WS-FILA-INICIO
                           PERFORM NORMALIZAR-FILA
                           SUBTRACT 1 FROM WS-PUNTERO
@@ -101,7 +110,8 @@
        MOSTRAR-REGISTROS.
            MOVE ZERO TO CLI_ID.
            START CLIENTES KEY IS NOT LESS THAN CLI_ID
-               INVALID KEY MOVE "S" TO WS-FIN-LISTA
+               INVALID KEY
+                   MOVE "S" TO WS-FIN-LISTA
            END-START.
 
            MOVE WS-FILA-INICIO TO WS-FILA. 
@@ -115,14 +125,18 @@
                        MOVE CLI_NOMBRE    TO T-NOM(WS-INDICE)
                        MOVE CLI_DIRECCION TO T-DIR(WS-INDICE)
                        MOVE CLI_CATEGORIA TO T-CAT(WS-INDICE)
+                       
                        PERFORM NORMALIZAR-PINTADO
                        ADD 1 TO WS-FILA
                        ADD 1 TO WS-INDICE
                END-READ
            END-PERFORM.
            
+           *> Guardamos el limite real de lo que se pinto
            MOVE WS-FILA TO WS-FILA-MAX.
            SUBTRACT 1 FROM WS-FILA-MAX.
+           
+           *> Reset de punteros al primer registro de la lista
            MOVE 1 TO WS-INDICE.
            MOVE WS-FILA-INICIO TO WS-PUNTERO.
 
@@ -133,34 +147,13 @@
            DISPLAY T-CAT(WS-INDICE) LINE WS-FILA COL 78 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
 
        RESALTAR-FILA.
-           *> 1. Franja blanca completa
-           DISPLAY ALL " " LINE WS-PUNTERO COL 1 SIZE 80 BACKGROUND-COLOR 7.
-           *> 2. Datos en Negro sobre Blanco
            DISPLAY T-ID(WS-INDICE)  LINE WS-PUNTERO COL 2  BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            DISPLAY T-NOM(WS-INDICE) LINE WS-PUNTERO COL 15 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            DISPLAY T-DIR(WS-INDICE) LINE WS-PUNTERO COL 47 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            DISPLAY T-CAT(WS-INDICE) LINE WS-PUNTERO COL 78 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
 
        NORMALIZAR-FILA.
-           *> 1. Limpiar franja volviendo a Azul
-           DISPLAY ALL " " LINE WS-PUNTERO COL 1 SIZE 80 BACKGROUND-COLOR 1.
-           *> 2. Datos en Blanco sobre Azul
            DISPLAY T-ID(WS-INDICE)  LINE WS-PUNTERO COL 2  BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            DISPLAY T-NOM(WS-INDICE) LINE WS-PUNTERO COL 15 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            DISPLAY T-DIR(WS-INDICE) LINE WS-PUNTERO COL 47 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            DISPLAY T-CAT(WS-INDICE) LINE WS-PUNTERO COL 78 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-
-       ABRO-ARCHIVO.
-           OPEN I-O CLIENTES.
-           *> Si el archivo no existe (Error 35), lo creamos
-           IF ST-FILE = "35" 
-               OPEN OUTPUT CLIENTES 
-               CLOSE CLIENTES 
-               OPEN I-O CLIENTES.
-
-           IF ST-FILE > "07"                                 
-             STRING "Error al abrir Clientes " ST-FILE DELIMITED BY SIZE
-                     INTO MENSAJE
-              DISPLAY MENSAJE LINE 10 COL 20
-              MOVE "S" TO FIN.       
-           

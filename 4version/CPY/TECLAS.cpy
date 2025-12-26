@@ -6,8 +6,11 @@
       78 KEY-ENTER      VALUE 0.
       78 KEY-UP         VALUE 2003.
       78 KEY-DOWN       VALUE 2004.
-      78 KEY-ESC       VALUE 2005.
+      78 KEY-ESC        VALUE 2005.
 
-      78 KEY-TAB      VALUE 2007.
-      78 KEY-BACKTAB  VALUE 2008.
+      78 KEY-TAB       VALUE 2007.
+      78 KEY-BACKTAB   VALUE 2008.
+
+      *> 78 KEY-SPACE     VALUE 32.
+      78 KEY-F1            VALUE 1001.
       

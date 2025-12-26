@@ -41,7 +41,7 @@
                *> Limpiamos la línea de mensajes anterior
                DISPLAY "                                      " LINE 10 COL 5
                
-
+               IF WS-KEY NOT = 0
                   DISPLAY "CODIGO: " LINE 10 COL 5
                   DISPLAY WS-KEY     LINE 10 COL 13
                   
@@ -54,8 +54,7 @@
                       WHEN KEY-ESC
                           DISPLAY "- TECLA ESC"     LINE 10 COL 18
                       WHEN KEY-ENTER
-                          DISPLAY "-  TECLA ENTER"     LINE 10 COL 18
-                          DISPLAY WS-DUMMY         LINE 10 COL 20
+                          DISPLAY "- TECLA ENTER"     LINE 10 COL 18
                       WHEN KEY-TAB
                           DISPLAY "- FLECHA TAB" LINE 10 COL 18
                       WHEN KEY-BACKTAB
@@ -67,6 +66,10 @@
                       WHEN OTHER
                           DISPLAY "- OTRA TECLA"    LINE 10 COL 18
                   END-EVALUATE
+               ELSE
+                  DISPLAY "TECLA NORMAL: " LINE 10 COL 5
+                  DISPLAY WS-DUMMY         LINE 10 COL 20
+               END-IF
            END-PERFORM.
            STOP RUN.
            

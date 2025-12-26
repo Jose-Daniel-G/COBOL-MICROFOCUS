@@ -1,4 +1,4 @@
-       >>SOURCE FORMAT FREE
+>>SOURCE FORMAT FREE
        IDENTIFICATION DIVISION.
        PROGRAM-ID. CLIENTES.
 
@@ -16,9 +16,8 @@
            COPY "./clientes.fd".
 
        WORKING-STORAGE SECTION.
-       *>Aqui puedes poner tus cpy
-       COPY "./CPY/TECLAS.cpy".
        *> Estados de Archivo y Control
+           COPY "./CPY/TECLAS.cpy".
        01  ST-FILE        PIC XX.
        01  MENSAJE        PIC X(70).
        01  WS-PAUSA       PIC X.
@@ -90,26 +89,15 @@
                
                PERFORM INGRESO-ID
                
-               IF WS-KEY = KEY-ESC OR W-CLI-ID = 0
-                   DISPLAY "SALIR DEL PROGRAMA? [S/N]" LINE 22 COL 25
-                   ACCEPT RESPUESTA LINE 22 COL 52 WITH UPPER
-                   IF RESPUESTA = "S"
-                       MOVE "S" TO FIN
-                   END-IF
+               IF WS-KEY = KEY-ESC 
+                   MOVE "S" TO FIN
                ELSE
-                  DISPLAY "[ENTER] Editar  [B] Borrar" LINE 25 COL 2
-                  ACCEPT RESPUESTA LINE 25 COL 30 WITH NO-ECHO
-                   
-                  IF FUNCTION UPPER-CASE(RESPUESTA) = "B"
-                                PERFORM ELIMINAR-REGISTRO
-                            ELSE
-                               PERFORM LEO-CLIENTES
-                               PERFORM EDITAR-DATOS
-                                IF WS-KEY NOT = 2005
-                                    PERFORM CONFIRMAR-Y-GUARDAR
-                                END-IF
-                            END-IF
-                  END-IF
+                   PERFORM LEO-CLIENTES
+                   PERFORM EDITAR-DATOS
+                   IF WS-KEY NOT = KEY-ESC
+                      PERFORM CONFIRMAR-Y-GUARDAR
+                   END-IF
+               END-IF
            END-PERFORM.
 
            PERFORM CIERRO-ARCHIVO.
@@ -175,20 +163,6 @@
                ACCEPT WS-PAUSA LINE 23 COL 40
            END-IF.
 
-       ELIMINAR-REGISTRO.
-           DISPLAY "CONFIRMA ELIMINAR CLIENTE? [S/N]" LINE 22 COL 25 
-                   BACKGROUND-COLOR 4 FOREGROUND-COLOR 7.
-           ACCEPT RESPUESTA LINE 22 COL 60 WITH HIGHLIGHT.
-           
-           IF FUNCTION UPPER-CASE(RESPUESTA) = "S"
-               DELETE CLIENTES RECORD
-                   INVALID KEY 
-                       DISPLAY "ERROR: NO SE PUDO BORRAR" LINE 23 COL 25
-                   NOT INVALID KEY
-                       DISPLAY "REGISTRO ELIMINADO CON EXITO" LINE 23 COL 25
-               END-DELETE
-               ACCEPT WS-PAUSA LINE 23 COL 60
-           END-IF.
        CIERRO-ARCHIVO.
            CLOSE CLIENTES.
 
