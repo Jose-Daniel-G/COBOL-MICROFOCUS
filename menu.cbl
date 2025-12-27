@@ -82,8 +82,6 @@
            05 LINE 11 COL 45 VALUE "ACCION: [ ]" BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            05 SC-OPC-V LINE 11 COL 29 PIC X TO OPCION-VENTANA.
 
-       
-       
        01  MENU-CONFRONTACION.
             05  GRUPO-VERDE BACKGROUND-COLOR 6 FOREGROUND-COLOR 7.*> Grupo con color Turquesa/Verde (Fondo 6 o 3 dependiendo del terminal)
             10 LINE 04 COL 45 VALUE "+-----------------------------+".
@@ -201,6 +199,7 @@
               DISPLAY "mon" LINE 2 COL 50 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
            END-IF.
 
+       
        LIMPIAR-AREA-MENU.
            DISPLAY " " LINE 3 COL 1 ERASE EOS BACKGROUND-COLOR 1. *> Limpia de la linea 3 hacia abajo
 
@@ -215,7 +214,8 @@
 
                EVALUATE FUNCTION UPPER-CASE(OPCION-VENTANA)
                    WHEN "C"
-                       PERFORM DESPLEGAR-CONFRONTACION
+                       DISPLAY "ABRIENDO CONFRONTACION..." LINE 15 COL 20
+                       ACCEPT OPCION-VENTANA
                    WHEN "H"
                        DISPLAY "ABRIENDO CONFRONTACION..." LINE 15 COL 20
                        ACCEPT OPCION-VENTANA

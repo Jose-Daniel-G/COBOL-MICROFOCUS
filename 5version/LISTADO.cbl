@@ -35,8 +35,8 @@
           88 ARCHIVO-ERROR          VALUE "E".
 
        01  WS-FIN-LISTA       PIC X VALUE "N".
-           88 FIN-LISTA             VALUE "S".
-           88 NO-FIN-LISTA          VALUE "N".
+           88 FIN-LISTA          VALUE "S".
+           88 NO-FIN-LISTA       VALUE "N".
 
        01  TABLA-PANTALLA.
            05 REG-PANTALLA OCCURS 20 TIMES.
@@ -63,6 +63,7 @@
               BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
 
        PROCEDURE DIVISION.
+       
        MAIN-LOGIC.
            SET ENVIRONMENT "COB_SCREEN_EXCEPTIONS" TO "Y".
            SET ENVIRONMENT "COB_SCREEN_ESC"        TO "Y".
@@ -88,9 +89,8 @@
 
        NAVEGACION-BUCLE.
            PERFORM UNTIL WS-KEY = KEY-ESC OR WS-KEY = KEY-ENTER
-               PERFORM RESALTAR-FILA
-               
-               *> Usamos la misma logica del ejemplo del menu
+               PERFORM RESALTAR-FILA 
+
                ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
                
                EVALUATE WS-KEY

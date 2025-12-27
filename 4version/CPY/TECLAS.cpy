@@ -20,4 +20,6 @@
       78 KEY-F6            VALUE 1006.
       78 KEY-F7            VALUE 1007.
       78 KEY-F8            VALUE 1008.
+      78 KEY-F9            VALUE 1009.
+      78 KEY-F10           VALUE 1010.
       

@@ -10,7 +10,7 @@ cobc -x -free MENU.cbl -o sistema.exe
 ```
 cobc -x -free menu.cbl
 cobc -x -free MENU.cbl CLIENTES.cbl PROGRAM.cbl LISTADO.cbl -o sistema.exec
-cobc -x -free MENU4.cbl CLIENTES-PROGRAM.cbl CLIENTES.cbl LISTADO.cbl -o sistema.exec
+cobc -x -free MENU85.cbl CLIENTES-PROGRAM.cbl CLIENTES.cbl LISTADO.cbl -o sistema.exec
 ```
 
 ARCHIVOS COBOL
