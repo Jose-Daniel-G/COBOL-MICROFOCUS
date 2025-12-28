@@ -1,4 +1,4 @@
-           SELECT OPTIONAL CLIENTES ASSIGN TO "./clientes.dat"
+           SELECT OPTIONAL CLIENTES ASSIGN TO "./bin/DAT/clientes.dat"
                   ORGANIZATION INDEXED
                   ACCESS MODE IS DYNAMIC
                   RECORD KEY IS ID_CLIENTE
@@ -7,10 +7,10 @@
                   STATUS ST-FILE.
 
            SELECT CLIENTES-PLANO
-                  ASSIGN TO "clientes.txt"
+                  ASSIGN TO "./FILES/clientes.txt"
                   ORGANIZATION IS LINE SEQUENTIAL.
 
            SELECT CLIENTES-CSV
-                  ASSIGN TO "clientes.csv"
+                  ASSIGN TO "./FILES/clientes.csv"
                   ORGANIZATION IS LINE SEQUENTIAL.
        

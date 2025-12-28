@@ -70,61 +70,75 @@
            
            PERFORM ABRO-ARCHIVO.
 
-           DISPLAY PANTALLA-BASE.
-           MOVE "S" TO RESPUESTA
-           SET NO-FIN-LISTA TO TRUE.
-           MOVE 9999 TO WS-KEY. 
-           
-           PERFORM MOSTRAR-REGISTROS.
-           
-           IF WS-FILA-MAX >= WS-FILA-INICIO
-               PERFORM NAVEGACION-BUCLE
-           ELSE
-               DISPLAY "NO HAY DATOS PARA MOSTRAR" LINE 10 COL 30
-               ACCEPT WS-PAUSA LINE 25 COL 80
-           END-IF.
+           PERFORM UNTIL WS-KEY = KEY-ESC
+               DISPLAY PANTALLA-BASE
+               PERFORM RECARGAR-LISTADO
+               SET NO-FIN-LISTA TO TRUE
+               MOVE 0 TO WS-KEY
+               
+               PERFORM MOSTRAR-REGISTROS
+               
+               IF WS-FILA-MAX >= WS-FILA-INICIO
+                   PERFORM NAVEGACION-BUCLE
+               ELSE
+                   DISPLAY "NO HAY DATOS - [ESC] SALIR" LINE 12 COL 30
+                           WITH REVERSE-VIDEO
+                   ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
+                   *> Capturamos si el usuario presiona ESC aquí también
+               END-IF
+           END-PERFORM.
 
            CLOSE CLIENTES.
            GOBACK.
 
        NAVEGACION-BUCLE.
-           PERFORM UNTIL WS-KEY = KEY-ESC OR WS-KEY = KEY-ENTER
-               PERFORM RESALTAR-FILA 
-
-               ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
-               
-               EVALUATE WS-KEY
-                   WHEN KEY-DOWN *> Flecha Abajo
-                       IF WS-PUNTERO < WS-FILA-MAX
-                          PERFORM NORMALIZAR-FILA
-                          ADD 1 TO WS-PUNTERO
-                          ADD 1 TO WS-INDICE
-                       END-IF
-                   WHEN KEY-UP *> Flecha Arriba
-                       IF WS-PUNTERO > WS-FILA-INICIO
-                          PERFORM NORMALIZAR-FILA
-                          SUBTRACT 1 FROM WS-PUNTERO
-                          SUBTRACT 1 FROM WS-INDICE
-                       END-IF
-                   WHEN KEY-F8  *> tecla Suprimir/Delete
-                       PERFORM ELIMINAR-REGISTRO
-                   WHEN KEY-F9  *> tecla F9 (Generar Plano)
-                       PERFORM GENERAR-PLANO
-                       DISPLAY "Archivo plano 'clientes.txt' generado." 
-                           LINE 22 COL 20
-                       ACCEPT WS-PAUSA LINE 23 COL 55
-                   WHEN KEY-F10  *> tecla F10 (Generar CSV)
-                       PERFORM GENERAR-CSV
-                       DISPLAY "Archivo CSV 'clientes.CSV' generado." 
-                           LINE 22 COL 20
-                       ACCEPT WS-PAUSA LINE 23 COL 55
+           MOVE 0 TO WS-KEY.
+           PERFORM UNTIL WS-KEY = KEY-ESC
+               IF WS-FILA-MAX >= WS-FILA-INICIO
+                   PERFORM RESALTAR-FILA 
+                   ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
                    
-               END-EVALUATE
+                   EVALUATE WS-KEY
+                       WHEN KEY-DOWN
+                           IF WS-PUNTERO < WS-FILA-MAX
+                              PERFORM NORMALIZAR-FILA
+                              ADD 1 TO WS-PUNTERO
+                              ADD 1 TO WS-INDICE
+                           END-IF
+                       WHEN KEY-UP
+                           IF WS-PUNTERO > WS-FILA-INICIO
+                              PERFORM NORMALIZAR-FILA
+                              SUBTRACT 1 FROM WS-PUNTERO
+                              SUBTRACT 1 FROM WS-INDICE
+                           END-IF
+                       WHEN KEY-F8  *> tecla Suprimir/Delete
+                           PERFORM ELIMINAR-REGISTRO
+                       WHEN KEY-F9  *> tecla F9 (Generar Plano)
+                           PERFORM GENERAR-PLANO
+                           DISPLAY "Archivo plano 'clientes.txt' generado." 
+                               LINE 22 COL 20
+                           ACCEPT WS-PAUSA LINE 23 COL 55
+                       WHEN KEY-F10  *> tecla F10 (Generar CSV)
+                           PERFORM GENERAR-CSV
+                           DISPLAY "Archivo CSV 'clientes.CSV' generado." 
+                               LINE 22 COL 20
+                           ACCEPT WS-PAUSA LINE 23 COL 55
+                       WHEN KEY-ENTER
+                           *> Aquí iría tu lógica de EDITAR
+                           CONTINUE
+                   END-EVALUATE
+               ELSE
+                   *> Si no hay datos, solo esperamos el ESC
+                   DISPLAY "LISTA VACIA - PRESIONE [ESC] PARA SALIR" 
+                           LINE 12 COL 25 WITH REVERSE-VIDEO
+                   ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
+               END-IF
            END-PERFORM.
 
        MOSTRAR-REGISTROS.
-           MOVE ZERO TO CLI_ID.
-           START CLIENTES KEY IS NOT LESS THAN CLI_ID
+           SET NO-FIN-LISTA TO TRUE.  *> RESETEAR SIEMPRE
+           MOVE ZERO TO ID_CLIENTE.
+           START CLIENTES KEY IS NOT LESS THAN ID_CLIENTE
                INVALID KEY SET FIN-LISTA TO TRUE
            END-START.
 
@@ -135,7 +149,7 @@
                READ CLIENTES NEXT RECORD
                    AT END SET FIN-LISTA TO TRUE
                    NOT AT END
-                       MOVE CLI_ID        TO T-ID(WS-INDICE)
+                       MOVE ID_CLIENTE        TO T-ID(WS-INDICE)
                        MOVE CLI_NOMBRE    TO T-NOM(WS-INDICE)
                        MOVE CLI_DIRECCION TO T-DIR(WS-INDICE)
                        MOVE CLI_CATEGORIA TO T-CAT(WS-INDICE)
@@ -178,9 +192,9 @@
                
                IF FUNCTION UPPER-CASE(RESPUESTA) = "S"
                       
-                   MOVE T-ID(WS-INDICE) TO CLI_ID                       *> 1. Posicionar el archivo en el registro seleccionado
+                   MOVE T-ID(WS-INDICE) TO ID_CLIENTE                       *> 1. Posicionar el archivo en el registro seleccionado
                    READ CLIENTES
-                       KEY IS CLI_ID
+                       KEY IS ID_CLIENTE
                        INVALID KEY
                            DISPLAY "REGISTRO NO ENCONTRADO" 
                            LINE 23 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
@@ -193,6 +207,7 @@
                                 DISPLAY "REGISTRO ELIMINADO!" LINE 
                                 23 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55 
                                    PERFORM RECARGAR-LISTADO
+                                   MOVE 0 TO WS-KEY    *> RESET DE TECLA PARA NO SALIR
                            END-DELETE
                    END-READ
                END-IF.      
@@ -233,8 +248,8 @@
            OPEN OUTPUT CLIENTES-PLANO
            SET NO-FIN-LISTA TO TRUE
 
-           MOVE ZERO TO CLI_ID
-           START CLIENTES KEY IS NOT LESS THAN CLI_ID
+           MOVE ZERO TO ID_CLIENTE
+           START CLIENTES KEY IS NOT LESS THAN ID_CLIENTE
                INVALID KEY
                    CLOSE CLIENTES-PLANO
                    EXIT PARAGRAPH
@@ -246,7 +261,7 @@
                        SET FIN-LISTA TO TRUE
                    NOT AT END
                        STRING
-                           CLI_ID        DELIMITED BY SIZE
+                           ID_CLIENTE        DELIMITED BY SIZE
                            " | " 
                            CLI_NOMBRE    DELIMITED BY SIZE
                            " | "
@@ -266,8 +281,8 @@
            SET NO-FIN-LISTA TO TRUE                                     *> Reiniciar control de lectura
            OPEN OUTPUT CLIENTES-CSV                                     *> Abrir archivo plano CSV
           
-           MOVE ZERO TO CLI_ID                                          *> Posicionar archivo indexado al inicio
-           START CLIENTES KEY IS NOT LESS THAN CLI_ID
+           MOVE ZERO TO ID_CLIENTE                                          *> Posicionar archivo indexado al inicio
+           START CLIENTES KEY IS NOT LESS THAN ID_CLIENTE
                INVALID KEY
                    CLOSE CLIENTES-CSV
                    EXIT PARAGRAPH
@@ -281,7 +296,7 @@
                    NOT AT END
                        INITIALIZE REG-CSV
                        STRING
-                           CLI_ID        DELIMITED BY SIZE
+                           ID_CLIENTE        DELIMITED BY SIZE
                            ";"
                            CLI_NOMBRE    DELIMITED BY SIZE
                            ";"

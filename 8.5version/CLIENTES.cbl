@@ -124,7 +124,7 @@
 
        LEO-CLIENTES.
            MOVE "S" TO EXISTE.
-           MOVE W-CLI-ID TO CLI_ID.
+           MOVE W-CLI-ID TO ID_CLIENTE.
            READ CLIENTES INVALID KEY 
                MOVE "N" TO EXISTE.
            
@@ -147,7 +147,7 @@
            ACCEPT RESPUESTA LINE 22 COL 55 WITH HIGHLIGHT.
            
            IF FUNCTION UPPER-CASE(RESPUESTA) = "S"
-               MOVE W-CLI-ID TO CLI_ID
+               MOVE W-CLI-ID TO ID_CLIENTE
                MOVE W-NOMBRE TO CLI_NOMBRE
                MOVE W-DIR    TO CLI_DIRECCION
                MOVE W-CP     TO CLI_CODPOST

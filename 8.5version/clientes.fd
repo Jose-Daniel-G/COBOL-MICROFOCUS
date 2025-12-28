@@ -1,7 +1,6 @@
        FD CLIENTES.
        01 REG-CLIENTES.
-           03 ID_CLIENTE.
-              05 CLI_ID            PIC 9(8).
+           03 ID_CLIENTE           PIC 9(8).
            03 CLI_SALDO            PIC S9(7)V9(3).
            03 CLI_NOMBRE           PIC X(60).
            03 CLI_DIRECCION        PIC X(80).
