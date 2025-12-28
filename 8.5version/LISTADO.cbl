@@ -204,13 +204,11 @@
                                 DISPLAY "ERROR AL ELIMINAR" LINE 
                                 23 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
                               NOT INVALID KEY
-                                DISPLAY "REGISTRO ELIMINADO!" LINE 
-                                23 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55 
                                    PERFORM RECARGAR-LISTADO
                                    MOVE 0 TO WS-KEY    *> RESET DE TECLA PARA NO SALIR
                            END-DELETE
                    END-READ
-               END-IF.      
+               END-IF.   
        ABRO-ARCHIVO.
            MOVE SPACE TO WS-ESTADO-ARCHIVO       
            OPEN I-O CLIENTES.
