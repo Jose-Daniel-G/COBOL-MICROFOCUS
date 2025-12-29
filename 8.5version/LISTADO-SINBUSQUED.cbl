@@ -1,4 +1,4 @@
->>SOURCE FORMAT FREE
+       >>SOURCE FORMAT FREE
        IDENTIFICATION DIVISION.
        PROGRAM-ID. LISTADO.
 
@@ -18,36 +18,32 @@
        WORKING-STORAGE SECTION.
            COPY "./CPY/TECLAS.cpy".
 
+       01 WS-LINEA-PLANO PIC X(200).
        01  ST-FILE        PIC XX.
        01  WS-KEY         PIC 9(4).
-       01  WS-PAUSA       PIC X.
-       01  RESPUESTA      PIC X     VALUE "S".
-
-      *> Navegación y control de filas
+       01  MENSAJE    PIC X(70).
        01  WS-FILA        PIC 99.
        01  WS-FILA-INICIO PIC 99 VALUE 5.
        01  WS-FILA-MAX    PIC 99.
        01  WS-PUNTERO     PIC 99 VALUE 5.
        01  WS-INDICE      PIC 99 VALUE 1.
+       01  WS-PAUSA       PIC X.
+       01  RESPUESTA      PIC X     VALUE "S".
+
+       01 WS-ESTADO-ARCHIVO PIC X.
+          88 ARCHIVO-OK             VALUE "O".
+          88 ARCHIVO-ERROR          VALUE "E".
 
        01  WS-FIN-LISTA       PIC X VALUE "N".
            88 FIN-LISTA          VALUE "S".
            88 NO-FIN-LISTA       VALUE "N".
-       *>--------- --- BUSQUEDA --- -------------
-       01 WS-BUSCA-NOMBRE      PIC X(20).
-       01 WS-MODO-BUSQUEDA     PIC X VALUE "N".
-          88 BUSCANDO          VALUE "S".
-          88 NO-BUSCANDO       VALUE "N".           
-       *>----------------------------------------
-       01  MENSAJE    PIC X(70).
 
        01  TABLA-PANTALLA.
-          05 REG-PANTALLA OCCURS 20 TIMES.
-             10 T-ID      PIC 9(07).
-             10 T-NOM     PIC X(30).
-             10 T-DIR     PIC X(30).
-             10 T-CAT     PIC X(01).
-       01 WS-LINEA-PLANO PIC X(200).
+           05 REG-PANTALLA OCCURS 20 TIMES.
+              10 T-ID      PIC 9(07).
+              10 T-NOM     PIC X(30).
+              10 T-DIR     PIC X(30).
+              10 T-CAT     PIC X(01).
 
        SCREEN SECTION.
        01 PANTALLA-BASE.
@@ -63,12 +59,15 @@
            05 LINE 3 COL 69 VALUE "CATEGORIA"          BACKGROUND-COLOR 1.
            05 LINE 4 COL 01  PIC X(80) FROM ALL "_" BACKGROUND-COLOR 1.
            05 LINE 25 COL 01 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
-           05 LINE 25 COL 02 VALUE "[F7] BUSCAR [F8] DEL [F9] TXT [F10] CSV [ENTER] EDITAR  [ESC] Retorna" 
+           05 LINE 25 COL 02 VALUE "[F8] DEL [F9] TXT [F10] CSV [ENTER] EDITAR  [ESC] Retorna" 
               BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
 
        PROCEDURE DIVISION.
        
-       MAIN-LOGIC.           
+       MAIN-LOGIC.
+           SET ENVIRONMENT "COB_SCREEN_EXCEPTIONS" TO "Y".
+           SET ENVIRONMENT "COB_SCREEN_ESC"        TO "Y".
+           
            PERFORM ABRO-ARCHIVO.
 
            PERFORM UNTIL WS-KEY = KEY-ESC
@@ -85,6 +84,7 @@
                    DISPLAY "NO HAY DATOS - [ESC] SALIR" LINE 12 COL 30
                            WITH REVERSE-VIDEO
                    ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
+                   *> Capturamos si el usuario presiona ESC aquí también
                END-IF
            END-PERFORM.
 
@@ -111,8 +111,6 @@
                               SUBTRACT 1 FROM WS-PUNTERO
                               SUBTRACT 1 FROM WS-INDICE
                            END-IF
-                       WHEN KEY-F7  *> BÚSQUEDA POR NOMBRE
-                           PERFORM BUSCAR-CLIENTE
                        WHEN KEY-F8  *> tecla Suprimir/Delete
                            PERFORM ELIMINAR-REGISTRO
                        WHEN KEY-F9  *> tecla F9 (Generar Plano)
@@ -130,6 +128,7 @@
                            CONTINUE
                    END-EVALUATE
                ELSE
+                   *> Si no hay datos, solo esperamos el ESC
                    DISPLAY "LISTA VACIA - PRESIONE [ESC] PARA SALIR" 
                            LINE 12 COL 25 WITH REVERSE-VIDEO
                    ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
@@ -137,21 +136,11 @@
            END-PERFORM.
 
        MOSTRAR-REGISTROS.
-           SET NO-FIN-LISTA TO TRUE.
-           
-           *> Si estamos en modo búsqueda, usar la clave alternativa
-           IF BUSCANDO
-               MOVE WS-BUSCA-NOMBRE TO CLI_NOMBRE
-               START CLIENTES KEY IS NOT LESS THAN CLI_NOMBRE
-                   INVALID KEY SET FIN-LISTA TO TRUE
-               END-START
-           ELSE
-               *> Modo normal: mostrar todos desde el inicio
-               MOVE ZERO TO ID_CLIENTE
-               START CLIENTES KEY IS NOT LESS THAN ID_CLIENTE
-                   INVALID KEY SET FIN-LISTA TO TRUE
-               END-START
-           END-IF.
+           SET NO-FIN-LISTA TO TRUE.  *> RESETEAR SIEMPRE
+           MOVE ZERO TO ID_CLIENTE.
+           START CLIENTES KEY IS NOT LESS THAN ID_CLIENTE
+               INVALID KEY SET FIN-LISTA TO TRUE
+           END-START.
 
            MOVE WS-FILA-INICIO TO WS-FILA. 
            MOVE 1 TO WS-INDICE.
@@ -160,16 +149,13 @@
                READ CLIENTES NEXT RECORD
                    AT END SET FIN-LISTA TO TRUE
                    NOT AT END
-                       *> Si estamos buscando, filtrar por coincidencia parcial
-                       IF BUSCANDO
-                           IF CLI_NOMBRE(1:FUNCTION LENGTH(
-                              FUNCTION TRIM(WS-BUSCA-NOMBRE))) 
-                              = FUNCTION TRIM(WS-BUSCA-NOMBRE)
-                               PERFORM AGREGAR-A-TABLA
-                           END-IF
-                       ELSE
-                           PERFORM AGREGAR-A-TABLA
-                       END-IF
+                       MOVE ID_CLIENTE        TO T-ID(WS-INDICE)
+                       MOVE CLI_NOMBRE    TO T-NOM(WS-INDICE)
+                       MOVE CLI_DIRECCION TO T-DIR(WS-INDICE)
+                       MOVE CLI_CATEGORIA TO T-CAT(WS-INDICE)
+                       PERFORM NORMALIZAR-PINTADO
+                       ADD 1 TO WS-FILA
+                       ADD 1 TO WS-INDICE
                END-READ
            END-PERFORM.
            
@@ -177,15 +163,6 @@
            SUBTRACT 1 FROM WS-FILA-MAX.
            MOVE 1 TO WS-INDICE.
            MOVE WS-FILA-INICIO TO WS-PUNTERO.
-
-       AGREGAR-A-TABLA.
-           MOVE ID_CLIENTE        TO T-ID(WS-INDICE)
-           MOVE CLI_NOMBRE    TO T-NOM(WS-INDICE)
-           MOVE CLI_DIRECCION TO T-DIR(WS-INDICE)
-           MOVE CLI_CATEGORIA TO T-CAT(WS-INDICE)
-           PERFORM NORMALIZAR-PINTADO
-           ADD 1 TO WS-FILA
-           ADD 1 TO WS-INDICE.
 
        NORMALIZAR-PINTADO.
            DISPLAY T-ID(WS-INDICE)  LINE WS-FILA COL 2  BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
@@ -201,40 +178,12 @@
            DISPLAY T-CAT(WS-INDICE) LINE WS-PUNTERO COL 78 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
 
        NORMALIZAR-FILA.
-           DISPLAY ALL " " LINE WS-PUNTERO COL 1 SIZE 80 BACKGROUND-COLOR 1.
-           DISPLAY T-ID(WS-INDICE)  LINE WS-PUNTERO COL 2  BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+          
+           DISPLAY ALL " " LINE WS-PUNTERO COL 1 SIZE 80 BACKGROUND-COLOR 1. *> 1. Limpiar franja volviendo a Azul
+           DISPLAY T-ID(WS-INDICE)  LINE WS-PUNTERO COL 2  BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.*> 2. Datos en Blanco sobre Azul
            DISPLAY T-NOM(WS-INDICE) LINE WS-PUNTERO COL 15 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            DISPLAY T-DIR(WS-INDICE) LINE WS-PUNTERO COL 47 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            DISPLAY T-CAT(WS-INDICE) LINE WS-PUNTERO COL 78 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-
-       BUSCAR-CLIENTE.
-           *> Limpiar línea de búsqueda
-           DISPLAY ALL " " LINE 22 COL 1 SIZE 80 BACKGROUND-COLOR 1.
-           
-           DISPLAY "Ingrese nombre a buscar: " LINE 22 COL 20 
-                   BACKGROUND-COLOR 1 FOREGROUND-COLOR 7
-           
-           MOVE SPACES TO WS-BUSCA-NOMBRE
-           ACCEPT WS-BUSCA-NOMBRE LINE 22 COL 45 
-                  BACKGROUND-COLOR 1 FOREGROUND-COLOR 7
-           
-           *> Si ingresó algo, activar modo búsqueda
-           IF WS-BUSCA-NOMBRE NOT = SPACES
-               SET BUSCANDO TO TRUE
-               DISPLAY "MODO BUSQUEDA: " LINE 2 COL 2 
-                       BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
-               DISPLAY WS-BUSCA-NOMBRE LINE 2 COL 18
-                       BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
-           ELSE
-               *> Si no ingresó nada, desactivar búsqueda
-               SET NO-BUSCANDO TO TRUE
-               DISPLAY "MODO SELECCION" LINE 2 COL 2 
-                       BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
-           END-IF
-           
-           *> Recargar el listado con el filtro
-           PERFORM RECARGAR-LISTADO
-           MOVE 0 TO WS-KEY.
 
        ELIMINAR-REGISTRO. 
                DISPLAY "Desea ELIMINAR el cliente [S/N]? " LINE 22 
@@ -242,7 +191,8 @@
                ACCEPT RESPUESTA LINE 22 COL 53
                
                IF FUNCTION UPPER-CASE(RESPUESTA) = "S"
-                   MOVE T-ID(WS-INDICE) TO ID_CLIENTE
+                      
+                   MOVE T-ID(WS-INDICE) TO ID_CLIENTE                       *> 1. Posicionar el archivo en el registro seleccionado
                    READ CLIENTES
                        KEY IS ID_CLIENTE
                        INVALID KEY
@@ -255,13 +205,14 @@
                                 23 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
                               NOT INVALID KEY
                                    PERFORM RECARGAR-LISTADO
-                                   MOVE 0 TO WS-KEY
+                                   MOVE 0 TO WS-KEY    *> RESET DE TECLA PARA NO SALIR
                            END-DELETE
                    END-READ
                END-IF.   
-       
        ABRO-ARCHIVO.
+           MOVE SPACE TO WS-ESTADO-ARCHIVO       
            OPEN I-O CLIENTES.
+           *> Si el archivo no existe (Error 35), lo creamos
            IF ST-FILE = "35" 
                OPEN OUTPUT CLIENTES 
                CLOSE CLIENTES 
@@ -270,9 +221,10 @@
            IF ST-FILE > "07"                                 
              STRING "Error al abrir Clientes " ST-FILE DELIMITED BY SIZE
                      INTO MENSAJE
-              DISPLAY MENSAJE LINE 10 COL 20 
-              ACCEPT WS-PAUSA LINE 23 COL 55
-              GOBACK
+              DISPLAY MENSAJE LINE 10 COL 20
+              SET ARCHIVO-ERROR TO TRUE
+           ELSE
+              SET ARCHIVO-OK TO TRUE
            END-IF.      
            
        LIMPIAR-LISTADO.
@@ -280,15 +232,17 @@
                UNTIL WS-FILA > 22
                DISPLAY ALL " " LINE WS-FILA COL 1 SIZE 80 BACKGROUND-COLOR 1
            END-PERFORM.
-       
        RECARGAR-LISTADO.
            PERFORM LIMPIAR-LISTADO
+       
            MOVE "N" TO WS-FIN-LISTA
            MOVE WS-FILA-INICIO TO WS-PUNTERO
            MOVE 1 TO WS-INDICE
+       
            PERFORM MOSTRAR-REGISTROS.
        
-       GENERAR-PLANO.
+       GENERAR-PLANO.                                                   *>GENERA EL ARCHIVO PLANO .TXT
+
            OPEN OUTPUT CLIENTES-PLANO
            SET NO-FIN-LISTA TO TRUE
 
@@ -318,21 +272,22 @@
                END-READ
            END-PERFORM
            CLOSE CLIENTES-PLANO
-           SET NO-FIN-LISTA TO TRUE.
+           SET NO-FIN-LISTA TO TRUE.                                    *> Reiniciar control de lectura
 
        GENERAR-CSV.         
-           SET NO-FIN-LISTA TO TRUE
-           OPEN OUTPUT CLIENTES-CSV
+                                                   
+           SET NO-FIN-LISTA TO TRUE                                     *> Reiniciar control de lectura
+           OPEN OUTPUT CLIENTES-CSV                                     *> Abrir archivo plano CSV
           
-           MOVE ZERO TO ID_CLIENTE
+           MOVE ZERO TO ID_CLIENTE                                          *> Posicionar archivo indexado al inicio
            START CLIENTES KEY IS NOT LESS THAN ID_CLIENTE
                INVALID KEY
                    CLOSE CLIENTES-CSV
                    EXIT PARAGRAPH
            NOT INVALID KEY
-           MOVE "ID;NOMBRE;DIRECCION;CATEGORIA" TO REG-CSV
+           MOVE "ID;NOMBRE;DIRECCION;CATEGORIA" TO REG-CSV            *> (Opcional) Encabezado CSV
            WRITE REG-CSV
-           PERFORM UNTIL FIN-LISTA
+           PERFORM UNTIL FIN-LISTA                                      *> Leer y escribir registros
                READ CLIENTES NEXT RECORD
                    AT END
                        SET FIN-LISTA TO TRUE
@@ -352,5 +307,9 @@
                END-READ
            END-PERFORM
            END-START
+       
+
            CLOSE CLIENTES-CSV
-           SET NO-FIN-LISTA TO TRUE.
+           SET NO-FIN-LISTA TO TRUE.                                     *> Reiniciar control de lectura
+       
+       

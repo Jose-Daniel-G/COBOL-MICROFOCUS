@@ -9,11 +9,11 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           COPY "./clientes.sel".
+           COPY "./CPY/cliente.sel".
 
        DATA DIVISION.
        FILE SECTION.
-           COPY "./clientes.fd".
+           COPY "./CPY/cliente.fd".
 
        WORKING-STORAGE SECTION.
        *> Estados de Archivo y Control

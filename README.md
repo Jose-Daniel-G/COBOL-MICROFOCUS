@@ -32,8 +32,17 @@ CLIENTES.FD    ← definición lógica (estructura - TABLA)
 CLIENTES.SEL   ← cómo se accede
 CLIENTES.CPY   ← copia reutilizable de estructuras
 
+MAIN
+ ├─ Inicializa entorno
+ ├─ Abre archivos
+ ├─ LOOP PRINCIPAL
+ │   ├─ Muestra pantalla
+ │   ├─ Carga datos
+ │   └─ Navega (teclas)
+ └─ Cierra archivos
 
-:: por jose daniel JDGO
+
+:: por jose daniel JDGO en GnuCOBOL / Windows
 set COB_SCREEN_EXCEPTIONS=Y
 set COB_COPY_DIR=C:\GC32\cobol\CPY
 
