@@ -78,3 +78,22 @@ F2	1002
            SET ENVIRONMENT "COB_SCREEN_EXCEPTIONS" TO "Y".
            SET ENVIRONMENT "COB_SCREEN_ESC"        TO "Y". *> Agrega esta línea específica
 ```
+| Código | ✅ Estados “normales” (NO error)   |
+| ------ | ----------------------------------- |
+| `"00"` | Operación exitosa                   |
+| `"02"` | Registro duplicado (según contexto) |
+| `"04"` | Operación parcial                   |
+| `"05"` | Archivo opcional no existe          |
+| `"07"` | Fin de datos / condición esperada   |
+
+
+| Código |❌Estados de ERROR REAL              |
+| ------ | ------------------------------------|
+| `"10"` | Fin de archivo (EOF)                |
+| `"21"` | Registro no encontrado              |
+| `"23"` | Clave inválida                      |
+| `"30"` | Archivo no es el que se espera      |
+| `"35"` | Archivo no existe                   |
+| `"39"` | Archivo incompatible                |
+| `"41"` | Archivo ya abierto                  |
+| `"46"` | Archivo bloqueado                   |
