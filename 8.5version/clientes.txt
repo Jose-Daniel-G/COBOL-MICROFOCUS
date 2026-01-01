@@ -3,4 +3,32 @@
 00000003 | FRANCISCO                                                    | NAPOLEON                                                                         | 1
 00000005 | berto                                                        | rob 12                                                                           | 1
 00000007 | lugi mangioni                                                | 22 dir                                                                           | 7
-00000009 | HAVKER                                                       | DOCE 86                                                                          | 3
+00000009 | HAVKER                                                       | DOCE 86      
+
+8.5version/                ← proyecto cobol
+│
+├── CPY/                    ← copybooks (.cpy) (solo código reutilizable)
+│   ├── CLIENTES-FD.CPY
+│   ├── UTILIDADES.CPY
+│   └── OTRO-UTIL.CPY
+│
+├── FD/                     ← File Descriptions reales
+│   └── CLIENTES.FD
+│
+├── BIN/                     ← ejecutables (.exe)
+│   └── DAT/                 ← archivos de datos indexados/binarios
+│       └── CLIENTES.DAT
+│
+├── FILES/                   ← Archivos secuenciales
+│   ├── CLIENTES.TXT
+│   ├── CLIENTES.CSV
+│   └── SEL/                 ← Archivos de selección/control
+│       └── CLIENTES.SEL
+│
+├── SRC/                     ← programas COBOL (.cob ,.cbl)
+│   ├── PROGRAMA1.COB
+│   ├── PROGRAMA2.COB
+│   └── MENU.COB
+│
+└── LIB/                     ← Librerías externas o utilidades
+    └── LIBUTIL.CPY                                                                    | 3

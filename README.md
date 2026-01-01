@@ -36,34 +36,64 @@ ARCHIVOS COBOL
 
 - ORDEN CORRECTO
    
+<details open>
+  <summary><b>📁 8.5version (Proyecto COBOL)</b></summary>
+  <br>
 
-8.5version/                ← proyecto cobol
-│
-├── CPY/                    ← copybooks (.cpy) (solo código reutilizable)
-│   ├── CLIENTES-FD.CPY
-│   ├── UTILIDADES.CPY
-│   └── OTRO-UTIL.CPY
-│
-├── FD/                     ← File Descriptions reales
-│   └── CLIENTES.FD
-│
-├── BIN/                     ← ejecutables (.exe)
-│   └── DAT/                 ← archivos de datos indexados/binarios
-│       └── CLIENTES.DAT
-│
-├── FILES/                   ← Archivos secuenciales
-│   ├── CLIENTES.TXT
-│   ├── CLIENTES.CSV
-│   └── SEL/                 ← Archivos de selección/control
-│       └── CLIENTES.SEL
-│
-├── SRC/                     ← programas COBOL (.cob ,.cbl)
-│   ├── PROGRAMA1.COB
-│   ├── PROGRAMA2.COB
-│   └── MENU.COB
-│
-└── LIB/                     ← Librerías externas o utilidades
-    └── LIBUTIL.CPY
+  <details>
+    <summary>📂 <b>CPY/</b> - Copybooks (Código reutilizable)</summary>
+    <ul>
+      <li><code>CLIENTES-FD.CPY</code></li>
+      <li><code>UTILIDADES.CPY</code></li>
+      <li><code>OTRO-UTIL.CPY</code></li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>📂 <b>FD/</b> - File Descriptions reales</summary>
+    <ul>
+      <li><code>CLIENTES.FD</code></li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>📂 <b>BIN/</b> - Ejecutables y Datos</summary>
+    <details style="margin-left: 20px;">
+      <summary>📁 <b>DAT/</b> - Archivos indexados/binarios</summary>
+      <ul><li><code>CLIENTES.DAT</code></li></ul>
+    </details>
+  </details>
+
+  <details>
+    <summary>📂 <b>FILES/</b> - Archivos secuenciales</summary>
+    <ul>
+      <li><code>CLIENTES.TXT</code></li>
+      <li><code>CLIENTES.CSV</code></li>
+    </ul>
+    <details style="margin-left: 20px;">
+      <summary>📁 <b>SEL/</b> - Archivos de selección/control</summary>
+      <ul><li><code>CLIENTES.SEL</code></li></ul>
+    </details>
+  </details>
+
+  <details>
+    <summary>📂 <b>SRC/</b> - Programas COBOL (.cob, .cbl)</summary>
+    <ul>
+      <li><code>PROGRAMA1.COB</code></li>
+      <li><code>PROGRAMA2.COB</code></li>
+      <li><code>MENU.COB</code></li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>📂 <b>LIB/</b> - Librerías externas</summary>
+    <ul>
+      <li><code>LIBUTIL.CPY</code></li>
+    </ul>
+  </details>
+
+</details>
+
 
 
 CLIENTES.DAT   ← datos reales (persisten)
