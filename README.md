@@ -103,20 +103,20 @@ cobc -x -free MENU.cbl -o sistema.exe
 - CLIENTES.SEL   ← cómo se accede
 - CLIENTES.CPY   ← copia reutilizable de estructuras
 
-┌──────────────────────────────────────────────────┐
-│              FLUJO PRINCIPAL (MAIN)              │
-├──────────────────────────────────────────────────┤
-│                                                  │
-│  MAIN                                            │
-│   ├─ Inicializa entorno (Variables y Pantalla)   │
-│   ├─ Abre archivos (OPEN I-O / INPUT)            │
-│   ├─ LOOP PRINCIPAL                              │
-│   │   ├─ Muestra pantalla (DISPLAY SCREEN)       │
-│   │   ├─ Carga datos (READ / ACCEPT)             │
-│   │   └─ Navega (EVALUATE TECLAS)                │
-│   └─ Cierra archivos (CLOSE)                     │
-│                                                  │
-└──────────────────────────────────────────────────┘
+ 
+|              FLUJO PRINCIPAL (MAIN)              |
+|--------------------------------------------------|
+|                                                  |
+|  MAIN                                            |
+|   ├─ Inicializa entorno (Variables y Pantalla)   |
+|   ├─ Abre archivos (OPEN I-O / INPUT)            |
+|   ├─ LOOP PRINCIPAL                              |
+|   |   ├─ Muestra pantalla (DISPLAY SCREEN)       |
+|   |   ├─ Carga datos (READ / ACCEPT)             |
+|   |   └─ Navega (EVALUATE TECLAS)                |
+|   └─ Cierra archivos (CLOSE)                     |
+|                                                  |
+ 
 
 
 :: por jose daniel JDGO en GnuCOBOL / Windows
@@ -126,9 +126,9 @@ set COB_COPY_DIR=C:\GC32\cobol\CPY
 :: new cmd to stay open if not started directly from cmd.exe window
 
 
-┌──────────────┐
-│ Color	Código │
-├──────────────┤
+
+| Color	Código |
+|--------------|
 |   Negro	 0 |
 |   Azul	 1 |
 |   Verde	 2 |
@@ -136,8 +136,8 @@ set COB_COPY_DIR=C:\GC32\cobol\CPY
 |   Rojo	 4 |
 |   Magenta	 5 |
 |   Amarillo 6 |
-|   Blanco	 7 |
-└──────────────┘
+|   Blanco	 7 | 
+
 - EJEMPLOS DE COPYBOOKS (.CPY)
    78 COLOR-ROJO  VALUE 4.
    
