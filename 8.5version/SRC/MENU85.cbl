@@ -21,7 +21,7 @@
        01  OPCION-VENTANA    PIC X VALUE SPACE.
        *> VARIABLES PARA LA NAVEGACION
        01  WS-FILA-ACTUAL     PIC 9 VALUE 1. *> SUB-MENU 
-       01  WS-FIN-SUBMENU     PIC X VALUE "N".
+       01  WS-FIN-SUBMENU-CLI     PIC X VALUE "N".
        01  WS-FECHA-TECNICA.
            05  WS-ANIO-T         PIC 9(4).
            05  WS-MES-T          PIC 9(2).
@@ -73,7 +73,7 @@
                    WHEN "C"
                        PERFORM LIMPIAR-AREA-MENU
                        MOVE 4 TO MODULO-ACTUAL
-                       PERFORM DESPLEGAR-COMERCIAL
+                       PERFORM DESP-COMERCIAL
                    WHEN "N"
                        PERFORM LIMPIAR-AREA-MENU
                        MOVE 5 TO MODULO-ACTUAL
@@ -99,37 +99,37 @@
        LIMPIAR-AREA-MENU.
            DISPLAY " " LINE 3 COL 1 ERASE EOS BACKGROUND-COLOR 1. *> Limpia de la linea 3 hacia abajo
        DESPLEGAR-FINANCIERO.
-           MOVE "N" TO WS-FIN-SUBMENU
+           MOVE "N" TO WS-FIN-SUBMENU-CLI
            MOVE 1 TO WS-FILA-ACTUAL
 
-           PERFORM UNTIL WS-FIN-SUBMENU = "S"
+           PERFORM UNTIL WS-FIN-SUBMENU-CLI = "S"
 
                DISPLAY BARRA-SUPERIOR  
                PERFORM DIBUJAR-OPCIONES
                DISPLAY FINANCIERO
              *> DIBUJAR LAS OPCIONES CON RESALTADO DINAMICO
                IF WS-FILA-ACTUAL = 1
-                  DISPLAY "| M. SUBMENU               |" LINE 06 COL 10 WITH REVERSE-VIDEO
+                  DISPLAY "| 1. Clientes              |" LINE 06 COL 10 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| M. SUBMENU               |" LINE 06 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| 1. Clientes              |" LINE 06 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
 
                IF WS-FILA-ACTUAL = 2
-                  DISPLAY "| P. Program               |" LINE 07 COL 10 WITH REVERSE-VIDEO
+                  DISPLAY "| 2. Facturas              |" LINE 07 COL 10 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| P. Program               |" LINE 07 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| 2. Facturas              |" LINE 07 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
        
                IF WS-FILA-ACTUAL = 3
-                  DISPLAY "| C. Clientes              |" LINE 08 COL 10 WITH REVERSE-VIDEO
+                  DISPLAY "| #. ........              |" LINE 08 COL 10 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| C. Clientes              |" LINE 08 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| #. ........              |" LINE 08 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
        
                IF WS-FILA-ACTUAL = 4
-                  DISPLAY "| L. LISTADO               |" LINE 09 COL 10 WITH REVERSE-VIDEO
+                  DISPLAY "| #. ........              |" LINE 09 COL 10 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| L. LISTADO               |" LINE 09 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| #. ........              |" LINE 09 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
        
                IF WS-FILA-ACTUAL = 5
@@ -149,21 +149,14 @@
                    WHEN KEY-ENTER    *> ENTER
                        EVALUATE WS-FILA-ACTUAL
                            WHEN 1   
-                              PERFORM DESPLEGAR-SUBMENU
+                              PERFORM SUBMENU-CLI
                               DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
                               DISPLAY BARRA-SUPERIOR
 
                            WHEN 2  
-                                 DISPLAY "CARGANDO ABM CLIENTES..." LINE 15 COL 10
-                              CALL "CLIENTES-PROGRAM" 
-                              ON EXCEPTION
-                                 DISPLAY "ERROR: NO SE ENCONTRO CLIENTES-PROGRAM" LINE 15 COL 10
-                              END-CALL
-                              CANCEL "CLIENTES-PROGRAM"
+                              PERFORM SUBMENU-FACT
                               DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
-                              DISPLAY BARRA-SUPERIOR
-                              DISPLAY FINANCIERO
-       
+                              DISPLAY BARRA-SUPERIOR      
                            WHEN 3
                               DISPLAY "CARGANDO CLIENTES..." LINE 15 COL 10
                               CALL "CLIENTES" 
@@ -187,21 +180,21 @@
                               DISPLAY FINANCIERO
                            WHEN 5 
                                PERFORM LIMPIAR-AREA-MENU
-                               MOVE "S" TO WS-FIN-SUBMENU
+                               MOVE "S" TO WS-FIN-SUBMENU-CLI
                        END-EVALUATE
                END-EVALUATE
                
                *> SALIDA POR TECLADO SI ESCRIBEN "S"
                IF FUNCTION UPPER-CASE(OPCION-VENTANA) = "S"
                   PERFORM LIMPIAR-AREA-MENU
-                  MOVE "S" TO WS-FIN-SUBMENU
+                  MOVE "S" TO WS-FIN-SUBMENU-CLI
                END-IF
            END-PERFORM.
-       DESPLEGAR-COMERCIAL.
-         MOVE "N" TO WS-FIN-SUBMENU
+       DESP-COMERCIAL.
+         MOVE "N" TO WS-FIN-SUBMENU-CLI
            MOVE 1 TO WS-FILA-ACTUAL
 
-           PERFORM UNTIL WS-FIN-SUBMENU = "S"
+           PERFORM UNTIL WS-FIN-SUBMENU-CLI = "S"
 
                DISPLAY BARRA-SUPERIOR  
                PERFORM DIBUJAR-OPCIONES
@@ -265,17 +258,17 @@
                               DISPLAY "CARGANDO LISTADO DE COMERCIAL..." LINE 15 COL 10 
                            WHEN 5 
                                PERFORM LIMPIAR-AREA-MENU
-                               MOVE "S" TO WS-FIN-SUBMENU
+                               MOVE "S" TO WS-FIN-SUBMENU-CLI
                        END-EVALUATE
                END-EVALUATE
                
                *> SALIDA POR TECLADO SI ESCRIBEN "S"
                IF FUNCTION UPPER-CASE(OPCION-VENTANA) = "S"
                   PERFORM LIMPIAR-AREA-MENU
-                  MOVE "S" TO WS-FIN-SUBMENU
+                  MOVE "S" TO WS-FIN-SUBMENU-CLI
                END-IF
            END-PERFORM.
-       DESPLEGAR-SUBMENU.
+       SUBMENU-CLI.
            MOVE "N" TO WS-FIN-CONF
            MOVE 1 TO WS-FILA-CONF
            
@@ -286,7 +279,7 @@
                DISPLAY FINANCIERO
                
                *> Dibujamos la caja del menú de SUMBMENU
-               DISPLAY MENU-SUBMENU
+               DISPLAY MENU-SUBMENU-CLI
                
                *> --- LÓGICA DE RESALTADO DINÁMICO ---
                IF WS-FILA-CONF = 1
@@ -302,6 +295,84 @@
                END-IF
                
                IF WS-FILA-CONF = 3
+                  DISPLAY "| Regresar                    |" LINE 09 COL 33 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| Regresar                    |" LINE 09 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+               END-IF
+
+               ACCEPT OPCION-VENTANA LINE 25 COL 80
+
+
+               EVALUATE WS-KEY
+                   WHEN KEY-UP *> FLECHA ARRIBA
+                       IF WS-FILA-CONF > 1 
+                          SUBTRACT 1 FROM WS-FILA-CONF
+                       END-IF
+                   WHEN KEY-DOWN *> FLECHA ABAJO
+                       IF WS-FILA-CONF < 3 
+                          ADD 1 TO WS-FILA-CONF
+                       END-IF
+                   WHEN KEY-ENTER    *> TECLA ENTER
+                       EVALUATE WS-FILA-CONF
+                           WHEN 1
+                               CALL "CLIENTES" 
+                               ON EXCEPTION
+                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
+                               END-CALL
+                               PERFORM REFRESCAR-PANTALLA-TOTAL
+                           WHEN 2 
+                               CALL "LISTADO" 
+                               ON EXCEPTION
+                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
+                               END-CALL
+                               PERFORM REFRESCAR-PANTALLA-TOTAL
+                           WHEN 3
+                               MOVE "S" TO WS-FIN-CONF
+                       END-EVALUATE
+                   WHEN 2001 *> Tecla ESC (Si tu compilador lo soporta como 2001)
+                       MOVE "S" TO WS-FIN-CONF
+               END-EVALUATE
+
+               *> Opción de salida por letra
+               IF FUNCTION UPPER-CASE(OPCION-VENTANA) = "S"
+                  MOVE "S" TO WS-FIN-CONF
+               END-IF
+           END-PERFORM.
+
+           *> Al salir, limpiamos el área derecha (el cuadro verde)
+           DISPLAY " " LINE 4 COL 45 ERASE EOS BACKGROUND-COLOR 1.
+       SUBMENU-FAC.
+           MOVE "N" TO WS-FIN-CONF
+           MOVE 1 TO WS-FILA-CONF
+           
+           PERFORM UNTIL WS-FIN-CONF = "S"
+               *> Redibujamos lo anterior para que no se pierda
+               DISPLAY BARRA-SUPERIOR
+               PERFORM DIBUJAR-OPCIONES
+               DISPLAY FINANCIERO
+               
+               *> Dibujamos la caja del menú de SUMBMENU
+               DISPLAY MENU-SUBMENU-CLI
+               
+               *> --- LÓGICA DE RESALTADO DINÁMICO ---
+               IF WS-FILA-CONF = 1
+                  DISPLAY "| 1. NUEVA FACTURA            |" LINE 06 COL 33 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| 1. NUEVA FACTURA            |" LINE 06 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+               END-IF
+
+               IF WS-FILA-CONF = 2
+                  DISPLAY "| 2. CONSULTAR FACTURA        |" LINE 08 COL 33 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| 2. CONSULTAR FACTURA        |" LINE 08 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+               END-IF
+               
+               IF WS-FILA-CONF = 3
+                  DISPLAY "| 3. ANULAR FACTURA           |" LINE 09 COL 33 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "| 3. ANULAR FACTURA           |" LINE 09 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+               END-IF
+               IF WS-FILA-CONF = 4
                   DISPLAY "| Regresar                    |" LINE 09 COL 33 WITH REVERSE-VIDEO
                ELSE
                   DISPLAY "| Regresar                    |" LINE 09 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
