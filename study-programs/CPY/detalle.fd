@@ -1,0 +1,6 @@
+       FD DETALLE-FILE.
+       01 DETALLE-REG.
+          05 DET-FAC-NRO   PIC 9(7).
+          05 DET-ITEM      PIC 9(3).
+          05 DET-VEH-ID    PIC 9(5).
+          05 DET-PRECIO    PIC 9(9)V99.

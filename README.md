@@ -1,3 +1,19 @@
+cobc -x SRC\MENU85.cbl SRC\LISTADO.cbl SRC\CLIENTES.cbl SRC\CLIENTES-PROGRAM.cbl -I CPY -I FD -I FILES\SEL
+
+
+Cuando domines CRUD:
+
+🔹 Archivos con llaves alternas
+🔹 Control de concurrencia (LOCK)
+🔹 Pantallas formateadas (LINE/COL)
+🔹 Modularización (CALL)
+🔹 Logs de errores
+
+🔜 FASES
+1️⃣ Corregimos ACTUALIZAR sin UPDATE (versión final estable)✅
+2️⃣ Pasamos a FASE 3: Clientes + Ventas + Factura
+3️⃣ Pantallas tipo SIESA (SCREEN SECTION)
+
 ![menu](images/menu.png)
 ![menu](images/read.png)
 ![program](images/program.png)
@@ -19,13 +35,36 @@ ARCHIVOS COBOL
 .SEL
 
 - ORDEN CORRECTO
-  
-  C:\GC32\COBOL
- ├── SRC   ← programas COBOL (.cob)
- ├── CPY   ← copybooks (.cpy)
- ├── OBJ   ← objetos intermedios (opcional)
- └── BIN   ← ejecutables (.exe)
-      └── DAT   ← archivos de datos (.dat, .idx)
+   
+
+8.5version/                ← proyecto cobol
+│
+├── CPY/                    ← copybooks (.cpy) (solo código reutilizable)
+│   ├── CLIENTES-FD.CPY
+│   ├── UTILIDADES.CPY
+│   └── OTRO-UTIL.CPY
+│
+├── FD/                     ← File Descriptions reales
+│   └── CLIENTES.FD
+│
+├── BIN/                     ← ejecutables (.exe)
+│   └── DAT/                 ← archivos de datos indexados/binarios
+│       └── CLIENTES.DAT
+│
+├── FILES/                   ← Archivos secuenciales
+│   ├── CLIENTES.TXT
+│   ├── CLIENTES.CSV
+│   └── SEL/                 ← Archivos de selección/control
+│       └── CLIENTES.SEL
+│
+├── SRC/                     ← programas COBOL (.cob ,.cbl)
+│   ├── PROGRAMA1.COB
+│   ├── PROGRAMA2.COB
+│   └── MENU.COB
+│
+└── LIB/                     ← Librerías externas o utilidades
+    └── LIBUTIL.CPY
+
 
 CLIENTES.DAT   ← datos reales (persisten)
 CLIENTES.FD    ← definición lógica (estructura - TABLA)

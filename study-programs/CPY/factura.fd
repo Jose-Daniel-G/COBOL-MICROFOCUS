@@ -1,0 +1,12 @@
+             FD FACTURAS.
+             01 FACTURA-REG.
+                05 FAC-NRO       PIC 9(7).
+                05 FAC-FECHA     PIC 9(8).     *> AAAAMMDD
+                05 FAC-CLI-ID    PIC 9(5).
+                05 FAC-SUBTOTAL  PIC 9(11)V99.
+                05 FAC-IVA       PIC 9(11)V99.
+                05 FAC-TOTAL     PIC 9(11)V99.
+                05 FAC-ESTADO    PIC X.   *> T = Temporal / C = Confirmada
+                   88 CLI-ACTIVO             VALUE "T".
+                   88 CLI-INACTIVO           VALUE "C".
+                   

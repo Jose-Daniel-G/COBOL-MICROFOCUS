@@ -1,0 +1,2 @@
+      01 BARRA-LINEA.
+       05 FILLER PIC X(80) VALUE ALL X"C4".

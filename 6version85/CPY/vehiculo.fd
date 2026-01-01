@@ -1,0 +1,29 @@
+       FD VEHICULOS.
+       01 REG-VEHICULOS.
+          03 ID-VEHICULO   PIC 9(8).
+          03 VEH-PLACA     PIC X(10).
+          03 VEH-MARCA     PIC X(30).
+          03 VEH-MODELO    PIC X(30).
+          03 VEH-TIPO      PIC X(10).
+          03 VEH-USO       PIC X(01). *> P/C
+          03 VEH-ESTADO    PIC X(01).
+          03 FILLER        PIC X(260).
+       
+
+       FD VEHICULOS-PLANO.
+       01 REG-PLANO PIC X(200).
+
+       FD VEHICULOS-CSV.
+       01 REG-CSV PIC X(200).
+
+       *> Particular
+       *> 
+       *> Público
+       *> 
+       *> Oficial
+       *> 
+       *> Comercial
+       *> 
+       *> Transporte especial
+       *> 
+       *> Escolar

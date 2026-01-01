@@ -1,0 +1,9 @@
+       FD CLIENTES.
+       01 CLIENTE-REG.
+          05 CLI-ID        PIC 9(5).
+          05 CLI-NOMBRE    PIC X(30).
+          05 CLI-TELEFONO  PIC X(15).
+          05 CLI-ESTADO    PIC X.      *> A=Activo  I=Inactivo
+             88 CLI-ACTIVO             VALUE "A".
+             88 CLI-INACTIVO           VALUE "I".
+             
