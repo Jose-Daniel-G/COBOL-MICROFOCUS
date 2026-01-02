@@ -41,14 +41,16 @@
            PERFORM ABRIR-ARCHIVOS
            PERFORM VALIDAR-CLIENTE
            IF WS-OK NOT = "S"
-               DISPLAY "NO SE PUEDE CONTINUAR" LINE 10 COL 10
+               DISPLAY "PRESIONE UNA TECLA PARA REGRESAR AL MENU..." LINE 11 COL 10
+               ACCEPT WS-PAUSA LINE 11 COL 55
+               PERFORM CERRAR-ARCHIVOS
                GOBACK
            END-IF
            PERFORM CREAR-FACTURA
            DISPLAY "FACTURA TEMPORAL CREADA" LINE 12 COL 10
            ACCEPT WS-PAUSA LINE 14 COL 10
            PERFORM CERRAR-ARCHIVOS
-           STOP RUN.
+           GOBACK.
 
        ABRIR-ARCHIVOS.
            OPEN I-O CLIENTES
@@ -92,6 +94,7 @@
                NOT INVALID KEY
                    IF CLI-ESTADO NOT = "A"
                        DISPLAY "CLIENTE INACTIVO" LINE 9 COL 10
+                       ACCEPT WS-PAUSA LINE 9 COL 55
                    ELSE
                        DISPLAY "CLIENTE: " CLI-NOMBRE LINE 9 COL 10
                        MOVE "S" TO WS-OK

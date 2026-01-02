@@ -36,6 +36,7 @@
            05 W-DIR       PIC X(30).
            05 W-CP        PIC X(10).
            05 W-CAT       PIC X(01).
+           05 W-ESTADO    PIC X(01).
 
        SCREEN SECTION.
        01 PANTALLA-BASE.
@@ -151,7 +152,8 @@
                MOVE W-DIR    TO CLI-DIRECCION
                MOVE W-CP     TO CLI-CODPOST
                MOVE W-CAT    TO CLI-CATEGORIA
-               
+               SET CLI-ACTIVO TO TRUE
+
                IF EXISTE = "S"
                    REWRITE REG-CLIENTES
                ELSE

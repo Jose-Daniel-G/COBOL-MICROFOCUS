@@ -305,6 +305,7 @@
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
+                               CANCEL "CLIENTES"
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                                DISPLAY FINANCIERO 
 
@@ -313,6 +314,7 @@
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
+                               CANCEL "LISTADO" 
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                                DISPLAY FINANCIERO 
                            WHEN 3
@@ -386,17 +388,19 @@
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
+                               CANCEL "VENFAC01"
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                            WHEN 2 
                                CALL "LISTADO" 
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
+                               CANCEL "LISTADO"
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                            WHEN 4
                                MOVE "S" TO WS-FIN-CONF
                        END-EVALUATE
-                   WHEN 2001 *> Tecla ESC (Si tu compilador lo soporta como 2001)
+                   WHEN KEY-ESC 
                        MOVE "S" TO WS-FIN-CONF
                END-EVALUATE
 

@@ -6,11 +6,11 @@
                   ALTERNATE KEY CLI-NOMBRE WITH DUPLICATES
                   STATUS ST-CLIENTES.
 
-      *>    SELECT CLIENTES-PLANO
-      *>           ASSIGN TO "./FILES/clientes.txt"
-      *>           ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT CLIENTES-PLANO
+                  ASSIGN TO "./FILES/clientes.txt"
+                  ORGANIZATION IS LINE SEQUENTIAL.
 
-      *>    SELECT CLIENTES-CSV
-      *>           ASSIGN TO "./FILES/clientes.csv"
-      *>           ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT CLIENTES-CSV
+                  ASSIGN TO "./FILES/clientes.csv"
+                  ORGANIZATION IS LINE SEQUENTIAL.
        

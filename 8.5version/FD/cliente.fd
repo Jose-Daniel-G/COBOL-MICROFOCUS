@@ -7,11 +7,13 @@
            03 CLI-CODPOST          PIC X(10).
            03 CLI-CATEGORIA        PIC X. 
            03 CLI-ESTADO           PIC X.
+               88 CLI-ACTIVO           VALUE "A".
+               88 CLI-INACTIVO         VALUE "I".
            03 FILLER               PIC X(240).
 
-      *>FD CLIENTES-PLANO.
-      *>01 REG-PLANO PIC X(200).
+       FD CLIENTES-PLANO.
+       01 REG-PLANO PIC X(200).
 
-      *>FD CLIENTES-CSV.
-      *>01 REG-CSV PIC X(200).
+       FD CLIENTES-CSV.
+       01 REG-CSV PIC X(200).
 

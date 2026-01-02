@@ -32,3 +32,13 @@
 │
 └── LIB/                     ← Librerías externas o utilidades
     └── LIBUTIL.CPY                                                                    | 3
+
+
+| Nombre     | Uso                      |
+| ---------- | ------------------------ |
+| `VENFAC01` | Crear factura de venta   |
+| `VENFAC02` | Consulta de facturas     |
+| `VENDET01` | Mantenimiento de detalle |
+| `CLIVAL01` | Validación de clientes   |
+| `FACIMP01` | Impresión de factura     |
+| `FACANU01` | Anulación de factura     |
