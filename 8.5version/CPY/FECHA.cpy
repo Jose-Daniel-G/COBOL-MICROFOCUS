@@ -29,7 +29,7 @@
           05 FILLER              VALUE ", ".
           05 WS-ANIO-TXT         PIC 9(4).
 
-       01  WS-FECHA.
+       01  WS-FECHA-SISTEM.
            05  WS-DIA-F          PIC 9(2).
            05  FILLER            VALUE "/".
            05  WS-MES-F          PIC 9(2).

@@ -5,11 +5,11 @@
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           COPY "productos.sel".
+           COPY "producto.sel".
 
        DATA DIVISION.
        FILE SECTION.
-           COPY "productos.fd".
+           COPY "producto.fd".
 
        WORKING-STORAGE SECTION.
 
@@ -33,11 +33,11 @@
 
        MAIN.
            PERFORM ABRIR-ARCHIVO
-           PERFORM MENU
+           PERFORM MENU-PROGRAM
            PERFORM CERRAR-ARCHIVO
            GOBACK.
 
-       MENU.
+       MENU-PROGRAM.
            PERFORM UNTIL WS-OPCION = "5"
                DISPLAY PANTALLA-PROD
                ACCEPT WS-OPCION LINE 10 COL 18

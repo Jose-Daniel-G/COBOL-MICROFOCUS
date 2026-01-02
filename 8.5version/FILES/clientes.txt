@@ -1,0 +1,4 @@
+00000001 | kette                                                        | 1                                                                                | 1
+00000002 | mario                                                        | dar                                                                              | 2
+00000003 | HATAKE                                                       | CRE 12                                                                           | 1
+00000012 | JHOSUA                                                       | DAN 15                                                                           | 2

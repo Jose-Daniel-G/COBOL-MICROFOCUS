@@ -3,6 +3,7 @@ Repositorio de gestión y desarrollo en GnuCOBOL. Este proyecto implementa una a
 ```
 cobc -x -free SRC\MENU85.cbl SRC\LISTADO.cbl SRC\CLIENTES.cbl SRC\CLIENTES-PROGRAM.cbl -I CPY -I FD -I FILES\SEL
 cobc -m -free SRC\VENFAC01.cbl -I CPY -I FD -I FILES\SEL
+cobc -m -free SRC\INVPRO01.cbl -I CPY -I FD -I FILES\SEL
 ```
 
 Cuando domines CRUD:
@@ -20,7 +21,7 @@ Cuando domines CRUD:
 
 ![menu](images/menu.png)
 ![menu](images/read.png)
-![program](images/program.png)
+![program](images/menu0.png)
 
 
 ### CUANDO LA ESRTUCUTURA NO ESTA DEFINIDA (ANTERIORMENTE) 

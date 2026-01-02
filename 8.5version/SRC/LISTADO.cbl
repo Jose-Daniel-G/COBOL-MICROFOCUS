@@ -28,8 +28,7 @@
        01  WS-PAUSA       PIC X.
        01  RESPUESTA      PIC X     VALUE "S".
 
-      *> Navegación y control de filas
-       01  WS-FILA        PIC 99.
+       01  WS-FILA        PIC 99.      *> Navegación y control de filas
        01  WS-FILA-INICIO PIC 99 VALUE 5.
        01  WS-FILA-MAX    PIC 99.
        01  WS-PUNTERO     PIC 99 VALUE 5.
@@ -38,13 +37,11 @@
        01  WS-FIN-LISTA       PIC X VALUE "N".
            88 FIN-LISTA          VALUE "S".
            88 NO-FIN-LISTA       VALUE "N".
-       *>--------- --- BUSQUEDA --- -------------
-       01 WS-BUSCA-NOMBRE      PIC X(20).
+       01 WS-BUSCA-NOMBRE      PIC X(20).       *>--------- --- BUSQUEDA --- -------------
        01 WS-MODO-BUSQUEDA     PIC X VALUE "N".
           88 BUSCANDO          VALUE "S".
           88 NO-BUSCANDO       VALUE "N".           
-       *>----------------------------------------
-       01  MENSAJE    PIC X(70).
+       01  MENSAJE    PIC X(70).       *>----------------------------------------
 
        01  TABLA-PANTALLA.
           05 REG-PANTALLA OCCURS 20 TIMES.
@@ -67,8 +64,7 @@
        
        MAIN-LOGIC.
 
-           *> 1. Configuras los datos del encabezado
-           MOVE "LISTADO INDEXADO DE CLIENTES" TO WS-TITULO-PANTALLA
+           MOVE "LISTADO INDEXADO DE CLIENTES" TO WS-TITULO-PANTALLA           *> 1. Configuras los datos del encabezado
            MOVE "MODO CONSULTA"                TO WS-MODULO-PANTALLA
            MOVE "VERSION.01" TO WS-PROGRAMA
 
@@ -119,18 +115,17 @@
                        WHEN KEY-F8  *> tecla Suprimir/Delete
                            PERFORM ELIMINAR-REGISTRO
                        WHEN KEY-F9  *> tecla F9 (Generar Plano)
-      *>                     PERFORM GENERAR-PLANO
-                           DISPLAY "Archivo plano 'clientes.txt' generado." 
+                           PERFORM GENERAR-PLANO
+                           DISPLAY "Archivo plano 'clientes.txt' generado."   
                                LINE 22 COL 20
                            ACCEPT WS-PAUSA LINE 23 COL 55
                        WHEN KEY-F10  *> tecla F10 (Generar CSV)
-      *>                     PERFORM GENERAR-CSV
-                           DISPLAY "Archivo CSV 'clientes.CSV' generado." 
+                           PERFORM GENERAR-CSV
+                           DISPLAY "Archivo CSV 'clientes.CSV' generado."    
                                LINE 22 COL 20
                            ACCEPT WS-PAUSA LINE 23 COL 55
                        WHEN KEY-ENTER
-                           *> Aquí iría tu lógica de EDITAR
-                           CONTINUE
+                           CONTINUE                                          *> Aquí iría tu lógica de EDITAR
                    END-EVALUATE
                ELSE
                    DISPLAY "LISTA VACIA - PRESIONE [ESC] PARA SALIR" 
@@ -142,15 +137,13 @@
        MOSTRAR-REGISTROS.
            SET NO-FIN-LISTA TO TRUE.
            
-           *> Si estamos en modo búsqueda, usar la clave alternativa
-           IF BUSCANDO
+           IF BUSCANDO                                                         *> Si estamos en modo búsqueda, usar la clave alternativa
                MOVE WS-BUSCA-NOMBRE TO CLI-NOMBRE
                START CLIENTES KEY IS NOT LESS THAN CLI-NOMBRE
                    INVALID KEY SET FIN-LISTA TO TRUE
                END-START
            ELSE
-               *> Modo normal: mostrar todos desde el inicio
-               MOVE ZERO TO CLI-ID
+               MOVE ZERO TO CLI-ID                                             *> Modo normal: mostrar todos desde el inicio
                START CLIENTES KEY IS NOT LESS THAN CLI-ID
                    INVALID KEY SET FIN-LISTA TO TRUE
                END-START
@@ -163,8 +156,7 @@
                READ CLIENTES NEXT RECORD
                    AT END SET FIN-LISTA TO TRUE
                    NOT AT END
-                       *> Si estamos buscando, filtrar por coincidencia parcial
-                       IF BUSCANDO
+                       IF BUSCANDO                                      *> Si estamos buscando, filtrar por coincidencia parcial
                            IF CLI-NOMBRE(1:FUNCTION LENGTH(
                               FUNCTION TRIM(WS-BUSCA-NOMBRE))) 
                               = FUNCTION TRIM(WS-BUSCA-NOMBRE)
@@ -211,8 +203,7 @@
            DISPLAY T-CAT(WS-INDICE) LINE WS-PUNTERO COL 78 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
 
        BUSCAR-CLIENTE.
-           *> Limpiar línea de búsqueda
-           DISPLAY ALL " " LINE 22 COL 1 SIZE 80 BACKGROUND-COLOR 1.
+           DISPLAY ALL " " LINE 22 COL 1 SIZE 80 BACKGROUND-COLOR 1.    *> Limpiar línea de búsqueda
            
            DISPLAY "Ingrese nombre a buscar: " LINE 22 COL 20 
                    BACKGROUND-COLOR 1 FOREGROUND-COLOR 7
@@ -221,22 +212,19 @@
            ACCEPT WS-BUSCA-NOMBRE LINE 22 COL 45 
                   BACKGROUND-COLOR 1 FOREGROUND-COLOR 7
            
-           *> Si ingresó algo, activar modo búsqueda
-           IF WS-BUSCA-NOMBRE NOT = SPACES
+           IF WS-BUSCA-NOMBRE NOT = SPACES                              *> Si ingresó algo, activar modo búsqueda
                SET BUSCANDO TO TRUE
                DISPLAY "MODO BUSQUEDA: " LINE 2 COL 2 
                        BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                DISPLAY WS-BUSCA-NOMBRE LINE 2 COL 18
                        BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
            ELSE
-               *> Si no ingresó nada, desactivar búsqueda
-               SET NO-BUSCANDO TO TRUE
+               SET NO-BUSCANDO TO TRUE                                  *> Si no ingresó nada, desactivar búsqueda
                DISPLAY "MODO SELECCION" LINE 2 COL 2 
                        BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
            END-IF
            
-           *> Recargar el listado con el filtro
-           PERFORM RECARGAR-LISTADO
+           PERFORM RECARGAR-LISTADO                                     *> Recargar el listado con el filtro
            MOVE 0 TO WS-KEY.
 
        ELIMINAR-REGISTRO. 

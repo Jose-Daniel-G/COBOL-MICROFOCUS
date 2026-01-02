@@ -38,9 +38,7 @@
        PROCEDURE DIVISION.
        MAIN-LOGIC.
            CALL "SYSTEM" USING "MODE CON: COLS=80 LINES=25".
-           PERFORM FECHA-SISTEMA-TEXT. 
-      *>     MOVE "LISTADO INDEXADO DE CLIENTES" TO WS-TITULO-PANTALLA
-      *>     MOVE "MODO CONSULTA"                TO WS-MODO-PANTALLA
+           PERFORM FECHA-SISTEMA-TEXT.  
            DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1.     *> Borramos pantalla solo una vez al inicio
            
            PERFORM UNTIL FUNCTION UPPER-CASE(OPCION-CAPTURA) = "S"
@@ -457,18 +455,18 @@
                    WHEN KEY-ENTER    *> TECLA ENTER
                        EVALUATE WS-FILA-CONF
                            WHEN 1
+                               CALL "INVPRO01" 
+                               ON EXCEPTION
+                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
+                               END-CALL
+                               CANCEL "INVPRO01"
+                               PERFORM REFRESCAR-PANTALLA-TOTAL
+                           WHEN 2 
                                CALL "VENFAC01" 
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
                                CANCEL "VENFAC01"
-                               PERFORM REFRESCAR-PANTALLA-TOTAL
-                           WHEN 2 
-                               CALL "LISTADO" 
-                               ON EXCEPTION
-                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
-                               END-CALL
-                               CANCEL "LISTADO"
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                            WHEN 3 
                                CALL "LISTADO" 
@@ -497,7 +495,7 @@
            DISPLAY BARRA-SUPERIOR
            PERFORM DIBUJAR-OPCIONES.
 
-       FECHA-SISTEMA.
+       FECHA-SISTEM.
            ACCEPT WS-FECHA-TECNICA FROM DATE YYYYMMDD.           *> Captura la fecha en formato AAAAMMDD
            
            MOVE WS-DIA-T TO WS-DIA-F.                            *> Mueve los datos individuales al formato DD/MM/AAAA
