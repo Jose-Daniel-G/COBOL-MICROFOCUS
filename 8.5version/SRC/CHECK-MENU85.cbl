@@ -39,10 +39,7 @@
        MAIN-LOGIC.
            CALL "SYSTEM" USING "MODE CON: COLS=80 LINES=25".
            PERFORM FECHA-SISTEMA-TEXT. 
-      *>     MOVE "LISTADO INDEXADO DE CLIENTES" TO WS-TITULO-PANTALLA
-      *>     MOVE "MODO CONSULTA"                TO WS-MODO-PANTALLA
            DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1.     *> Borramos pantalla solo una vez al inicio
-           
            PERFORM UNTIL FUNCTION UPPER-CASE(OPCION-CAPTURA) = "S"
                DISPLAY BARRA-SUPERIOR
                PERFORM DIBUJAR-OPCIONES
@@ -50,16 +47,35 @@
                ACCEPT OPCION-CAPTURA LINE 25 COL 80
 
                EVALUATE FUNCTION UPPER-CASE(OPCION-CAPTURA)
+                   WHEN "A"
+                       PERFORM LIMPIAR-AREA-MENU
+                       MOVE 1 TO MODULO-ACTUAL
+                   WHEN "E"
+                       PERFORM LIMPIAR-AREA-MENU
+                       MOVE 2 TO MODULO-ACTUAL
                    WHEN "F"
                        PERFORM LIMPIAR-AREA-MENU
                        MOVE 3 TO MODULO-ACTUAL
-                       PERFORM DESP-FINANCIERO
+                       PERFORM DESPLEGAR-FINANCIERO
                    WHEN "C"
                        PERFORM LIMPIAR-AREA-MENU
                        MOVE 4 TO MODULO-ACTUAL
                        PERFORM DESP-COMERCIAL
-                   WHEN KEY-ESC 
-                       MOVE "S" TO WS-FIN-CONF                       
+                   WHEN "N"
+                       PERFORM LIMPIAR-AREA-MENU
+                       MOVE 5 TO MODULO-ACTUAL
+                   WHEN "D"
+                       PERFORM LIMPIAR-AREA-MENU
+                       MOVE 6 TO MODULO-ACTUAL
+                   WHEN "O"
+                       PERFORM LIMPIAR-AREA-MENU
+                       MOVE 7 TO MODULO-ACTUAL
+                   WHEN "I"
+                       PERFORM LIMPIAR-AREA-MENU
+                       MOVE 8 TO MODULO-ACTUAL
+                   WHEN "M"
+                       PERFORM LIMPIAR-AREA-MENU
+                       MOVE 9 TO MODULO-ACTUAL
                END-EVALUATE
            END-PERFORM.
            STOP RUN.
@@ -69,7 +85,7 @@
 
        LIMPIAR-AREA-MENU.
            DISPLAY " " LINE 3 COL 1 ERASE EOS BACKGROUND-COLOR 1. *> Limpia de la linea 3 hacia abajo
-       DESP-FINANCIERO.
+       DESPLEGAR-FINANCIERO.
            MOVE "N" TO WS-FIN-SUBMENU-CLI
            MOVE 1 TO WS-FILA-ACTUAL
 
@@ -104,9 +120,9 @@
                END-IF
        
                IF WS-FILA-ACTUAL = 5
-                  DISPLAY "| Regresar                 |" LINE 10 COL 10 WITH REVERSE-VIDEO
+                  DISPLAY "| S. Salir al Menu Sup.    |" LINE 10 COL 10 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| Regresar                 |" LINE 10 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| S. Salir al Menu Sup.    |" LINE 10 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
        
                *> ACCEPT "INVISIBLE" PARA CAPTURAR LA TECLA
@@ -120,12 +136,12 @@
                    WHEN KEY-ENTER    *> ENTER
                        EVALUATE WS-FILA-ACTUAL
                            WHEN 1   
-                              PERFORM SUB-FINAN-CLI
+                              PERFORM DES-SUBMENU-CLI
                               DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
                               DISPLAY BARRA-SUPERIOR
 
                            WHEN 2  
-                              PERFORM SUB-FINAN-FACT
+                              PERFORM DES-SUBMENU-FACT
                               DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
                               DISPLAY BARRA-SUPERIOR      
                            WHEN 3
@@ -152,7 +168,7 @@
                            WHEN 5 
                                PERFORM LIMPIAR-AREA-MENU
                                MOVE "S" TO WS-FIN-SUBMENU-CLI
-                       END-EVALUATE                     
+                       END-EVALUATE
                END-EVALUATE
                
                *> SALIDA POR TECLADO SI ESCRIBEN "S"
@@ -162,7 +178,7 @@
                END-IF
            END-PERFORM.
        DESP-COMERCIAL.
-           MOVE "N" TO WS-FIN-SUBMENU-CLI
+         MOVE "N" TO WS-FIN-SUBMENU-CLI
            MOVE 1 TO WS-FILA-ACTUAL
 
            PERFORM UNTIL WS-FIN-SUBMENU-CLI = "S"
@@ -173,38 +189,33 @@
              *> DIBUJAR LAS OPCIONES CON RESALTADO DINAMICO
                IF WS-FILA-ACTUAL = 1
  
-                  DISPLAY "| #. ??                    |" LINE 06 COL 23 WITH REVERSE-VIDEO   *>V. Ventas
+                  DISPLAY "| C. Ventas                |" LINE 06 COL 23 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| #. ??                    |" LINE 06 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1   *>V. Ventas
+                  DISPLAY "| C. Ventas                |" LINE 06 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
 
                IF WS-FILA-ACTUAL = 2
-                  DISPLAY "| #. ??                    |" LINE 07 COL 23 WITH REVERSE-VIDEO   *>C. Compras
+                  DISPLAY "| V. Compras               |" LINE 07 COL 23 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| #. ??                    |" LINE 07 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1   *>C. Compras
+                  DISPLAY "| V. Compras               |" LINE 07 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
        
                IF WS-FILA-ACTUAL = 3
-                  DISPLAY "| I. Inventarios           |" LINE 08 COL 23 WITH REVERSE-VIDEO
+                  DISPLAY "| A. Actualizacion         |" LINE 08 COL 23 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| I. Inventarios           |" LINE 08 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| A. Actualizacion         |" LINE 08 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
+       
                IF WS-FILA-ACTUAL = 4
-                  DISPLAY "| #. ??                    |" LINE 09 COL 23 WITH REVERSE-VIDEO *> A. Actualizacion
+                  DISPLAY "| R. Retiro                |" LINE 09 COL 23 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| #. ??                    |" LINE 09 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1 *> A. Actualizacion
+                  DISPLAY "| R. Retiro                |" LINE 09 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
        
                IF WS-FILA-ACTUAL = 5
-                  DISPLAY "| #. ??                    |" LINE 10 COL 23 WITH REVERSE-VIDEO *> R. Retiro
+                  DISPLAY "| S. Salir al Menu Sup.    |" LINE 10 COL 23 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| #. ??                    |" LINE 10 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1 *> R. Retiro
-               END-IF
-       
-               IF WS-FILA-ACTUAL = 6
-                  DISPLAY "| Regresar                 |" LINE 11 COL 23 WITH REVERSE-VIDEO
-               ELSE
-                  DISPLAY "| Regresar                 |" LINE 11 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| S. Salir al Menu Sup.    |" LINE 10 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
        
                *> ACCEPT "INVISIBLE" PARA CAPTURAR LA TECLA
@@ -214,32 +225,28 @@
                    WHEN KEY-UP       *> FLECHA ARRIBA
                        IF WS-FILA-ACTUAL > 1 SUBTRACT 1 FROM WS-FILA-ACTUAL
                    WHEN KEY-DOWN     *> FLECHA ABAJO
-                       IF WS-FILA-ACTUAL < 6 ADD 1 TO WS-FILA-ACTUAL
+                       IF WS-FILA-ACTUAL < 5 ADD 1 TO WS-FILA-ACTUAL
                    WHEN KEY-ENTER    *> ENTER
                        EVALUATE WS-FILA-ACTUAL
                            WHEN 1   
                               DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
                               DISPLAY BARRA-SUPERIOR
 
-                           WHEN 2
+                           WHEN 2  
+                                 DISPLAY "CARGANDO ABM COMERCIAL..." LINE 15 COL 10 
+                           WHEN 3
                               DISPLAY "CARGANDO COMERCIAL..." LINE 15 COL 10
                               CALL "COMERCIAL" 
                               ON EXCEPTION
                                  DISPLAY "ERROR: NO SE ENCONTRO COMERCIAL" LINE 15 COL 10
                               END-CALL
                               CANCEL "COMERCIAL"
-                           WHEN 3  
-                              PERFORM SUB-COM-INV
-                              DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
-                              DISPLAY BARRA-SUPERIOR
                            WHEN 4
                               DISPLAY "CARGANDO LISTADO DE COMERCIAL..." LINE 15 COL 10 
                            WHEN 5 
-                              DISPLAY "CARGANDO LISTADO DE COMERCIAL..." LINE 15 COL 10 
-                           WHEN 6 
                                PERFORM LIMPIAR-AREA-MENU
                                MOVE "S" TO WS-FIN-SUBMENU-CLI
-                       END-EVALUATE                  
+                       END-EVALUATE
                END-EVALUATE
                
                *> SALIDA POR TECLADO SI ESCRIBEN "S"
@@ -248,7 +255,7 @@
                   MOVE "S" TO WS-FIN-SUBMENU-CLI
                END-IF
            END-PERFORM.
-       SUB-FINAN-CLI.
+       DES-SUBMENU-CLI.
            MOVE "N" TO WS-FIN-CONF
            MOVE 1 TO WS-FILA-CONF
            
@@ -325,7 +332,7 @@
 
            *> Al salir, limpiamos el área derecha (el cuadro verde)
            DISPLAY " " LINE 4 COL 45 ERASE EOS BACKGROUND-COLOR 1.
-       SUB-FINAN-FACT.
+       DES-SUBMENU-FACT.
            MOVE "N" TO WS-FIN-CONF
            MOVE 1 TO WS-FILA-CONF
            
@@ -384,93 +391,6 @@
                                CANCEL "VENFAC01"
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                            WHEN 2 
-                               CALL "LISTADO" 
-                               ON EXCEPTION
-                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
-                               END-CALL
-                               CANCEL "LISTADO"
-                               PERFORM REFRESCAR-PANTALLA-TOTAL
-                           WHEN 4
-                               MOVE "S" TO WS-FIN-CONF
-                       END-EVALUATE
-                   WHEN KEY-ESC 
-                       MOVE "S" TO WS-FIN-CONF
-               END-EVALUATE
-
-               *> Opción de salida por letra
-               IF FUNCTION UPPER-CASE(OPCION-VENTANA) = "S"
-                  MOVE "S" TO WS-FIN-CONF
-               END-IF
-           END-PERFORM.
-
-           *> Al salir, limpiamos el área derecha (el cuadro verde)
-           DISPLAY " " LINE 4 COL 45 ERASE EOS BACKGROUND-COLOR 1.
-       SUB-COM-INV.
-           MOVE "N" TO WS-FIN-CONF
-           MOVE 1 TO WS-FILA-CONF
-           
-           PERFORM UNTIL WS-FIN-CONF = "S"
-               *> Redibujamos lo anterior para que no se pierda
-               DISPLAY BARRA-SUPERIOR
-               PERFORM DIBUJAR-OPCIONES
-               DISPLAY COMERCIAL
-               
-               *> Dibujamos la caja del menú de SUMBMENU
-               DISPLAY SUBMENU-COM
-               
-               *> --- LÓGICA DE RESALTADO DINÁMICO ---
-               IF WS-FILA-CONF = 1
-                  DISPLAY "| 1. Productos (ABM)          |" LINE 08 COL 49 WITH REVERSE-VIDEO
-               ELSE
-                  DISPLAY "| 1. Productos (ABM)          |" LINE 08 COL 49 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
-               END-IF
-
-               IF WS-FILA-CONF = 2
-                  DISPLAY "| 2. Stock                    |" LINE 10 COL 49 WITH REVERSE-VIDEO
-               ELSE
-                  DISPLAY "| 2. Stock                    |" LINE 10 COL 49 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
-               END-IF
-               
-               IF WS-FILA-CONF = 3
-                  DISPLAY "| 3. Consulta General         |" LINE 11 COL 49 WITH REVERSE-VIDEO
-               ELSE
-                  DISPLAY "| 3. Consulta General         |" LINE 11 COL 49 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
-               END-IF
-               IF WS-FILA-CONF = 4
-                  DISPLAY "| Regresar                    |" LINE 12 COL 49 WITH REVERSE-VIDEO
-               ELSE
-                  DISPLAY "| Regresar                    |" LINE 12 COL 49 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
-               END-IF
-
-               *> ACCEPT "INVISIBLE" PARA CAPTURAR LA TECLA
-               ACCEPT OPCION-VENTANA LINE 25 COL 80
-
-               EVALUATE WS-KEY
-                   WHEN KEY-UP *> FLECHA ARRIBA
-                       IF WS-FILA-CONF > 1 
-                          SUBTRACT 1 FROM WS-FILA-CONF
-                       END-IF
-                   WHEN KEY-DOWN *> FLECHA ABAJO
-                       IF WS-FILA-CONF < 4 
-                          ADD 1 TO WS-FILA-CONF
-                       END-IF
-                   WHEN KEY-ENTER    *> TECLA ENTER
-                       EVALUATE WS-FILA-CONF
-                           WHEN 1
-                               CALL "VENFAC01" 
-                               ON EXCEPTION
-                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
-                               END-CALL
-                               CANCEL "VENFAC01"
-                               PERFORM REFRESCAR-PANTALLA-TOTAL
-                           WHEN 2 
-                               CALL "LISTADO" 
-                               ON EXCEPTION
-                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
-                               END-CALL
-                               CANCEL "LISTADO"
-                               PERFORM REFRESCAR-PANTALLA-TOTAL
-                           WHEN 3 
                                CALL "LISTADO" 
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45

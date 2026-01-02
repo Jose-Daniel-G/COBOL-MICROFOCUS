@@ -18,6 +18,11 @@
        WORKING-STORAGE SECTION.
        *> Estados de Archivo y Control
            COPY "TECLAS.cpy".
+       01 WS-UI-CONTROLES.
+          05 WS-TITULO-PANTALLA    PIC X(40) VALUE SPACES.
+          05 WS-MODULO-PANTALLA    PIC X(26) VALUE SPACES.
+          05 WS-PROGRAMA           PIC X(10) VALUE SPACES.
+
        01  ST-CLIENTES        PIC XX.
        01  MENSAJE        PIC X(70).
        01  WS-PAUSA       PIC X.
@@ -40,15 +45,7 @@
 
        SCREEN SECTION.
        01 PANTALLA-BASE.
-           05 BLANK SCREEN BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           *> Encabezado Siesa
-           05 LINE 1 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
-           05 LINE 1 COL 2 VALUE "TEST 8.5" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 1 COL 25 VALUE "        A.B.M   CLIENTES           " 
-              BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           05 LINE 2 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
-           05 LINE 2 COL 2 VALUE "VERSION.01                  CREAR/EDITAR USUARIO" 
-              BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           COPY "HEADER.cpy". 
            05 LINE 2 COL 70 VALUE " JD-TWINS "
               BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
            05 LINE 4 COL 2  VALUE "  +-------------------------[ PARAMETROS ]-----------------------+"
@@ -78,7 +75,9 @@
 
        PROCEDURE DIVISION.
        MAIN-LOGIC. 
-
+           MOVE "        A.B.M   CLIENTES        " TO WS-TITULO-PANTALLA
+           MOVE "VERSION.01" TO WS-PROGRAMA
+           MOVE "CREAR/EDITAR USUARIO" TO WS-MODULO-PANTALLA
            PERFORM ABRO-ARCHIVO.
            
            PERFORM UNTIL FIN = "S"

@@ -19,36 +19,48 @@
        01 ST-FACTURAS      PIC XX.
 
        01 WS-CLI-ID        PIC 9(5).
-       01 WS-OK            PIC X VALUE "N".
+       01 WS-CLIENTE-OK    PIC X VALUE "N".
+       01 WS-ULT-FAC-NRO   PIC 9(7) VALUE 0.
+
        01 WS-PAUSA         PIC X.
 
        01 WS-MENSAJE       PIC X(80).
 
        SCREEN SECTION.
-
        01 PANTALLA-BASE.
-           05 BLANK SCREEN.
-           05 LINE 01 COL 02 VALUE "TEST 85 VER 1.0".
-           05 LINE 01 COL 30 VALUE "VENTAS - FACTURACION".
-           05 LINE 03 COL 02 VALUE "1. Validar Cliente".
-           05 LINE 04 COL 02 VALUE "2. Crear Factura (temporal)".
-           05 LINE 05 COL 02 VALUE "3. Confirmar Venta".
-
+           05 BLANK SCREEN BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           05 LINE 01 COL 01 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
+           05 LINE 01 COL 02 VALUE "TEST 8.5 VER 1.0" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 01 COL 30 VALUE "VENTAS - FACTURACION" BACKGROUND-COLOR 1.
+           05 LINE 02 COL 01 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
+           05 LINE 02 COL 02 VALUE "MODO SELECCION" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 05 COL 03 VALUE "1. Validar Cliente" BACKGROUND-COLOR 1.
+           05 LINE 06 COL 03 VALUE "2. Crear Factura (temporal)" BACKGROUND-COLOR 1.
+           05 LINE 07 COL 03 VALUE "3. Confirmar Venta"   BACKGROUND-COLOR 1. 
+      *>     05 LINE 04 COL 01  PIC X(80) FROM ALL "_" BACKGROUND-COLOR 1.
+           05 LINE 25 COL 01 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
+           05 LINE 25 COL 02 VALUE "  [ESC] Retorna" 
+              BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
        PROCEDURE DIVISION.
 
        MAIN.
            DISPLAY PANTALLA-BASE
            PERFORM ABRIR-ARCHIVOS
            PERFORM VALIDAR-CLIENTE
-           IF WS-OK NOT = "S"
-               DISPLAY "PRESIONE UNA TECLA PARA REGRESAR AL MENU..." LINE 11 COL 10
+           IF WS-CLIENTE-OK = "S"
+               PERFORM CREAR-FACTURA
+      *>         PERFORM AGREGAR-DETALLE
+      *>         PERFORM CALCULAR-TOTALES
+      *>         PERFORM CONFIRMAR
+      *>         PERFORM GRABAR
+               DISPLAY "FACTURA TEMPORAL CREADA" LINE 12 COL 10
+               ACCEPT WS-PAUSA LINE 14 COL 10
+           ELSE
+               DISPLAY "PRESIONE UNA TECLA PARA BUSCAR NUEVAMENTE..." LINE 11 COL 10
                ACCEPT WS-PAUSA LINE 11 COL 55
-               PERFORM CERRAR-ARCHIVOS
+               PERFORM VALIDAR-CLIENTE
                GOBACK
            END-IF
-           PERFORM CREAR-FACTURA
-           DISPLAY "FACTURA TEMPORAL CREADA" LINE 12 COL 10
-           ACCEPT WS-PAUSA LINE 14 COL 10
            PERFORM CERRAR-ARCHIVOS
            GOBACK.
 
@@ -82,34 +94,65 @@
            END-IF.
 
        VALIDAR-CLIENTE.
-           MOVE "N" TO WS-OK
-           DISPLAY "ID CLIENTE: " LINE 8 COL 10
-           ACCEPT WS-CLI-ID LINE 8 COL 25
+           MOVE "N" TO WS-CLIENTE-OK
+           DISPLAY "ID: " LINE 16 COL 10
+           ACCEPT WS-CLI-ID LINE 16 COL 25
 
            MOVE WS-CLI-ID TO CLI-ID
 
            READ CLIENTES
-               INVALID KEY
-                   DISPLAY "CLIENTE NO EXISTE" LINE 9 COL 10
-               NOT INVALID KEY
-                   IF CLI-ESTADO NOT = "A"
-                       DISPLAY "CLIENTE INACTIVO" LINE 9 COL 10
-                       ACCEPT WS-PAUSA LINE 9 COL 55
-                   ELSE
-                       DISPLAY "CLIENTE: " CLI-NOMBRE LINE 9 COL 10
-                       MOVE "S" TO WS-OK
-                   END-IF
-           END-READ.
+           END-READ
+           
+           EVALUATE ST-CLIENTES
+              WHEN "00"
+                 IF CLI-ESTADO NOT = "A"
+                     DISPLAY "CLIENTE INACTIVO" LINE 9 COL 10
+                     ACCEPT WS-PAUSA LINE 9 COL 55
+                 ELSE
+                     DISPLAY "CLIENTE: " CLI-NOMBRE LINE 9 COL 10
+                     MOVE "S" TO WS-CLIENTE-OK
+                 END-IF
+           
+              WHEN "23"
+                 DISPLAY "CLIENTE NO EXISTE" LINE 9 COL 10
+                 ACCEPT WS-PAUSA LINE 9 COL 55
+           
+              WHEN OTHER
+                 STRING "ERROR CLIENTES: " ST-CLIENTES
+                    INTO WS-MENSAJE
+                 DISPLAY WS-MENSAJE LINE 20 COL 10
+                 STOP RUN
+           END-EVALUATE.
+
 
        CREAR-FACTURA.
-           MOVE 0 TO FAC-NRO
-           ADD 1 TO FAC-NRO
-           MOVE WS-CLI-ID TO FAC-CLI-ID
+       
+           *> Obtener último número de factura
+           MOVE 0 TO WS-ULT-FAC-NRO
+       
+           READ FACTURAS
+               AT END
+                   MOVE 1 TO WS-ULT-FAC-NRO
+               NOT AT END
+                   MOVE FAC-NRO TO WS-ULT-FAC-NRO
+                   ADD 1 TO WS-ULT-FAC-NRO
+           END-READ
+       
+           *> Crear factura temporal
+           MOVE WS-ULT-FAC-NRO TO FAC-NRO
+           MOVE WS-CLI-ID      TO FAC-CLI-ID
            MOVE FUNCTION CURRENT-DATE(1:8) TO FAC-FECHA
            MOVE 0 TO FAC-SUBTOTAL FAC-IVA FAC-TOTAL
            MOVE "T" TO FAC-ESTADO
-           WRITE FACTURA-REG.
-
+       
+           WRITE FACTURA-REG
+       
+           IF ST-FACTURAS NOT = "00"
+               STRING "ERROR AL CREAR FACTURA: " ST-FACTURAS
+                   INTO WS-MENSAJE
+               DISPLAY WS-MENSAJE LINE 22 COL 10
+               STOP RUN
+           END-IF.
        CERRAR-ARCHIVOS.
            CLOSE CLIENTES
            CLOSE FACTURAS.

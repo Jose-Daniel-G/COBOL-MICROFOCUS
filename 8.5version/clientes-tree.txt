@@ -42,3 +42,28 @@
 | `CLIVAL01` | Validación de clientes   |
 | `FACIMP01` | Impresión de factura     |
 | `FACANU01` | Anulación de factura     |
+
+VENFAC01  → Cliente + Factura Temporal
+VENFAC02  → Detalle
+VENFAC03  → Calcular Totales
+VENFAC04  → Confirmar / Grabar
+
+
+MENU
+ ├─ CLIENTES
+ │   └─ ABM CLIENTES
+ ├─ INVENTARIO
+ │   ├─ ABM PRODUCTOS
+ │   ├─ AJUSTES DE STOCK
+ └─ FACTURACIÓN
+     ├─ NUEVA FACTURA   → FACTURA01
+     ├─ CONSULTAR       → FACTURA02
+     └─ ANULAR          → FACTURA03
+
+
+| Función       | Programa   |
+| ------------- | ---------- |
+| ABM Productos | `INVPRO01` |
+| ABM Stock     | `INVSTK01` |
+| Consulta      | `INVCON01` |
+

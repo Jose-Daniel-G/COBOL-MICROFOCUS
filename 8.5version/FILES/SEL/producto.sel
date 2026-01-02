@@ -1,0 +1,6 @@
+       SELECT OPTIONAL PRODUCTOS
+           ASSIGN TO "./DAT/productos.dat"
+           ORGANIZATION IS INDEXED
+           ACCESS MODE IS DYNAMIC
+           RECORD KEY IS PRD-CODIGO
+           STATUS IS ST-PRODUCTOS.

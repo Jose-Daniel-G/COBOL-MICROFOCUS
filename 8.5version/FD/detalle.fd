@@ -1,0 +1,10 @@
+       FD DETALLES.
+       01 DETALLE-REG.
+          05 DET-FAC-NRO     PIC 9(7).
+          05 DET-ITEM        PIC 9(3).
+          05 DET-PROD-ID     PIC X(10).
+          05 DET-DESCRIP     PIC X(30).
+          05 DET-CANT        PIC 9(3).
+          05 DET-PRECIO      PIC 9(11)V99.
+          05 DET-SUBTOTAL    PIC 9(11)V99.
+       

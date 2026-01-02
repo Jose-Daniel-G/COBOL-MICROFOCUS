@@ -1,0 +1,7 @@
+       FD  PRODUCTOS.
+       01  PRODUCTO-REG.
+           05 PRD-CODIGO        PIC X(10).
+           05 PRD-DESCRIPCION   PIC X(40).
+           05 PRD-PRECIO        PIC 9(9)V99.
+           05 PRD-IVA           PIC 99.
+           05 PRD-ESTADO        PIC X. *> A=Activo / I=Inactivo

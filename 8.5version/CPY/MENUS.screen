@@ -6,7 +6,7 @@
            05 LINE 07 COL 10 VALUE "| V. Ventas - Facturacion  |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
            05 LINE 08 COL 10 VALUE "| #. ........              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
            05 LINE 09 COL 10 VALUE "| #. ........              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 10 COL 10 VALUE "| S. Salir al Menu Sup.    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 10 COL 10 VALUE "| Regresar                 |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
            05 LINE 11 COL 10 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
 
        01  SUBMENU-CLI.
@@ -23,41 +23,29 @@
             10 LINE 07 COL 35 VALUE "| 1. NUEVA FACTURA            |".
             10 LINE 08 COL 35 VALUE "| 2. CONSULTAR FACTURA        |".
             10 LINE 09 COL 35 VALUE "| 3. ANULAR FACTURA           |". 
-            10 LINE 10 COL 35 VALUE "| 4. REGRESAR                 |". 
+            10 LINE 10 COL 35 VALUE "| Regresar                    |". 
             10 LINE 11 COL 35 VALUE "+-----------------------------+". 
 
        01  COMERCIAL.
            05 LINE 03 COL 23 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 LINE 04 COL 23 VALUE "| Comercial                |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 LINE 05 COL 23 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 LINE 06 COL 23 VALUE "| C. Ventas                |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 07 COL 23 VALUE "| V. Compras               |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 08 COL 23 VALUE "| A. Actualizacion         |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 09 COL 23 VALUE "| R. Retiro                |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 10 COL 23 VALUE "| S. Salir al Menu Sup.    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 11 COL 23 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-      *>    05 LINE 13 COL 23 VALUE "ACCION: [ ]" BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-      *>    05 SC-OPC-V LINE 13 COL 29 PIC X TO OPCION-VENTANA.  
+           05 LINE 06 COL 23 VALUE "| #. ??                    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>V. Ventas
+           05 LINE 07 COL 23 VALUE "| #. ??                    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>C. Compras
+           05 LINE 08 COL 23 VALUE "| I. Inventarios           |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 09 COL 23 VALUE "| #. ??                    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>A. Actualizacion
+           05 LINE 10 COL 23 VALUE "| #. ??                    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>R. Retiro
+           05 LINE 11 COL 23 VALUE "| Regresar                 |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 12 COL 23 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
 
-       01  MANUFACTURA.
-              05 LINE 03 COL 33 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-              05 LINE 04 COL 33 VALUE "| Manufactura              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-              05 LINE 05 COL 33 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-              05 LINE 06 COL 33 VALUE "| M. Ordenes de Produccion |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-              05 LINE 07 COL 33 VALUE "| I. Inventarios           |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-              05 LINE 08 COL 33 VALUE "| P. Planificacion         |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-              05 LINE 09 COL 33 VALUE "| S. Salir al Menu Sup.    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-              05 LINE 10 COL 33 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-      *>       05 LINE 12 COL 33 VALUE "ACCION: [ ]" BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-      *>       05 SC-OPC-V LINE 12 COL 41 PIC X TO OPCION-VENTANA.
-       01  ADMON.
-           05 LINE 03 COL 45 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 LINE 04 COL 45 VALUE "| Administracion          |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 LINE 05 COL 45 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 LINE 06 COL 45 VALUE "| U. Usuarios              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 07 COL 45 VALUE "| P. Perfiles              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 08 COL 45 VALUE "| S. Salir al Menu Sup.    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 09 COL 45 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-      *>    05 LINE 11 COL 45 VALUE "ACCION: [ ]" BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-      *>    05 SC-OPC-V LINE 11 COL 29 PIC X TO OPCION-VENTANA. 
-      
+       01  SUBMENU-COM.
+            05  GRUPO-VERDE BACKGROUND-COLOR 6 FOREGROUND-COLOR 7.*> Grupo con color Turquesa/Verde (Fondo 6 o 3 dependiendo del terminal)
+            10 LINE 05 COL 49 VALUE "+-----------------------------+".
+            10 LINE 06 COL 49 VALUE "| INVENTARIO                  |".
+            10 LINE 07 COL 49 VALUE "+-----------------------------+".
+            10 LINE 08 COL 49 VALUE "| 1. Productos (ABM)          |".
+            10 LINE 09 COL 49 VALUE "| 2. Stock                    |".
+            10 LINE 10 COL 49 VALUE "| 3. Consulta General         |".
+            10 LINE 11 COL 49 VALUE "| Regresar                    |".
+            10 LINE 12 COL 49 VALUE "+-----------------------------+".
+            

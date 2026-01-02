@@ -17,8 +17,13 @@
 
        WORKING-STORAGE SECTION.
            COPY "TECLAS.cpy".
+           
+       01 WS-UI-CONTROLES.
+          05 WS-TITULO-PANTALLA    PIC X(40) VALUE SPACES.
+          05 WS-MODULO-PANTALLA    PIC X(26) VALUE SPACES.
+          05 WS-PROGRAMA           PIC X(10) VALUE SPACES.
 
-       01  ST-CLIENTES        PIC XX.
+       01  ST-CLIENTES    PIC XX.
        01  WS-KEY         PIC 9(4).
        01  WS-PAUSA       PIC X.
        01  RESPUESTA      PIC X     VALUE "S".
@@ -47,28 +52,26 @@
              10 T-NOM     PIC X(30).
              10 T-DIR     PIC X(30).
              10 T-CAT     PIC X(01).
-       *>01 WS-LINEA-PLANO PIC X(200).
+       01 WS-LINEA-PLANO PIC X(200).
 
        SCREEN SECTION.
        01 PANTALLA-BASE.
-           05 BLANK SCREEN BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           05 LINE 1 COL 01 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
-           05 LINE 1 COL 02 VALUE "TEST 8.5" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 1 COL 30 VALUE "LISTADO INDEXADO DE CLIENTES" BACKGROUND-COLOR 1.
-           05 LINE 2 COL 01 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
-           05 LINE 2 COL 02 VALUE "MODO SELECCION" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 3 COL 02  VALUE "ID"          BACKGROUND-COLOR 1.
-           05 LINE 3 COL 15 VALUE "NOMBRE"      BACKGROUND-COLOR 1.
-           05 LINE 3 COL 47 VALUE "DIRECCION"   BACKGROUND-COLOR 1.
-           05 LINE 3 COL 69 VALUE "CATEGORIA"          BACKGROUND-COLOR 1.
-           05 LINE 4 COL 01  PIC X(80) FROM ALL "_" BACKGROUND-COLOR 1.
-           05 LINE 25 COL 01 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
-           05 LINE 25 COL 02 VALUE "[F7] BUSCAR [F8] DEL [F9] TXT [F10] CSV [ENTER] EDITAR  [ESC] Retorna" 
-              BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           COPY "HEADER.cpy". 
+           05 LINE 03 COL 02  VALUE "ID"         BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           05 LINE 03 COL 15 VALUE "NOMBRE"      BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           05 LINE 03 COL 47 VALUE "DIRECCION"   BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           05 LINE 03 COL 69 VALUE "CATEGORIA"   BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           05 LINE 04 COL 01  PIC X(80) FROM ALL "_" BACKGROUND-COLOR 1. 
 
        PROCEDURE DIVISION.
        
-       MAIN-LOGIC.           
+       MAIN-LOGIC.
+
+           *> 1. Configuras los datos del encabezado
+           MOVE "LISTADO INDEXADO DE CLIENTES" TO WS-TITULO-PANTALLA
+           MOVE "MODO CONSULTA"                TO WS-MODULO-PANTALLA
+           MOVE "VERSION.01" TO WS-PROGRAMA
+
            PERFORM ABRO-ARCHIVO.
 
            PERFORM UNTIL WS-KEY = KEY-ESC
@@ -288,69 +291,69 @@
            MOVE 1 TO WS-INDICE
            PERFORM MOSTRAR-REGISTROS.
        
-      *> GENERAR-PLANO.
-      *>     OPEN OUTPUT CLIENTES-PLANO
-      *>     SET NO-FIN-LISTA TO TRUE
-*> 
-      *>     MOVE ZERO TO CLI-ID
-      *>     START CLIENTES KEY IS NOT LESS THAN CLI-ID
-      *>         INVALID KEY
-      *>             CLOSE CLIENTES-PLANO
-      *>             EXIT PARAGRAPH
-      *>     END-START
-      *> 
-      *>     PERFORM UNTIL FIN-LISTA
-      *>         READ CLIENTES NEXT RECORD
-      *>             AT END
-      *>                 SET FIN-LISTA TO TRUE
-      *>             NOT AT END
-      *>                 STRING
-      *>                     CLI-ID        DELIMITED BY SIZE
-      *>                     " | " 
-      *>                     CLI-NOMBRE    DELIMITED BY SIZE
-      *>                     " | "
-      *>                     CLI-DIRECCION DELIMITED BY SIZE
-      *>                     " | "
-      *>                     CLI-CATEGORIA DELIMITED BY SIZE
-      *>                     INTO WS-LINEA-PLANO
-      *> 
-      *>                 WRITE REG-PLANO FROM WS-LINEA-PLANO
-      *>         END-READ
-      *>     END-PERFORM
-      *>     CLOSE CLIENTES-PLANO
-      *>     SET NO-FIN-LISTA TO TRUE.
+       GENERAR-PLANO.
+           OPEN OUTPUT CLIENTES-PLANO
+           SET NO-FIN-LISTA TO TRUE
 
-      *> GENERAR-CSV.         
-      *>     SET NO-FIN-LISTA TO TRUE
-      *>     OPEN OUTPUT CLIENTES-CSV
-      *>    
-      *>     MOVE ZERO TO CLI-ID
-      *>     START CLIENTES KEY IS NOT LESS THAN CLI-ID
-      *>         INVALID KEY
-      *>             CLOSE CLIENTES-CSV
-      *>             EXIT PARAGRAPH
-      *>     NOT INVALID KEY
-      *>     MOVE "ID;NOMBRE;DIRECCION;CATEGORIA" TO REG-CSV
-      *>     WRITE REG-CSV
-      *>     PERFORM UNTIL FIN-LISTA
-      *>         READ CLIENTES NEXT RECORD
-      *>             AT END
-      *>                 SET FIN-LISTA TO TRUE
-      *>             NOT AT END
-      *>                 INITIALIZE REG-CSV
-      *>                 STRING
-      *>                     CLI-ID        DELIMITED BY SIZE
-      *>                     ";"
-      *>                     CLI-NOMBRE    DELIMITED BY SIZE
-      *>                     ";"
-      *>                     CLI-DIRECCION DELIMITED BY SIZE
-      *>                     ";"
-      *>                     CLI-CATEGORIA DELIMITED BY SIZE
-      *>                     INTO REG-CSV
-      *> 
-      *>                 WRITE REG-CSV
-      *>         END-READ
-      *>     END-PERFORM
-      *>     END-START
-      *>     CLOSE CLIENTES-CSV
-      *>     SET NO-FIN-LISTA TO TRUE.
+           MOVE ZERO TO CLI-ID
+           START CLIENTES KEY IS NOT LESS THAN CLI-ID
+               INVALID KEY
+                   CLOSE CLIENTES-PLANO
+                   EXIT PARAGRAPH
+           END-START
+       
+           PERFORM UNTIL FIN-LISTA
+               READ CLIENTES NEXT RECORD
+                   AT END
+                       SET FIN-LISTA TO TRUE
+                   NOT AT END
+                       STRING
+                           CLI-ID        DELIMITED BY SIZE
+                           " | " 
+                           CLI-NOMBRE    DELIMITED BY SIZE
+                           " | "
+                           CLI-DIRECCION DELIMITED BY SIZE
+                           " | "
+                           CLI-CATEGORIA DELIMITED BY SIZE
+                           INTO WS-LINEA-PLANO
+       
+                       WRITE REG-PLANO FROM WS-LINEA-PLANO
+               END-READ
+           END-PERFORM
+           CLOSE CLIENTES-PLANO
+           SET NO-FIN-LISTA TO TRUE.
+*> 
+       GENERAR-CSV.         
+           SET NO-FIN-LISTA TO TRUE
+           OPEN OUTPUT CLIENTES-CSV
+          
+           MOVE ZERO TO CLI-ID
+           START CLIENTES KEY IS NOT LESS THAN CLI-ID
+               INVALID KEY
+                   CLOSE CLIENTES-CSV
+                   EXIT PARAGRAPH
+           NOT INVALID KEY
+           MOVE "ID;NOMBRE;DIRECCION;CATEGORIA" TO REG-CSV
+           WRITE REG-CSV
+           PERFORM UNTIL FIN-LISTA
+               READ CLIENTES NEXT RECORD
+                   AT END
+                       SET FIN-LISTA TO TRUE
+                   NOT AT END
+                       INITIALIZE REG-CSV
+                       STRING
+                           CLI-ID        DELIMITED BY SIZE
+                           ";"
+                           CLI-NOMBRE    DELIMITED BY SIZE
+                           ";"
+                           CLI-DIRECCION DELIMITED BY SIZE
+                           ";"
+                           CLI-CATEGORIA DELIMITED BY SIZE
+                           INTO REG-CSV
+       
+                       WRITE REG-CSV
+               END-READ
+           END-PERFORM
+           END-START
+           CLOSE CLIENTES-CSV
+           SET NO-FIN-LISTA TO TRUE.
