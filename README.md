@@ -1,7 +1,8 @@
 🚀 Proyecto COBOL - Versión 8.5
 Repositorio de gestión y desarrollo en GnuCOBOL. Este proyecto implementa una arquitectura modular enfocada en CRUD, manejo de archivos indexados y pantallas interactivas.
 ```
-cobc -x SRC\MENU85.cbl SRC\LISTADO.cbl SRC\CLIENTES.cbl SRC\CLIENTES-PROGRAM.cbl -I CPY -I FD -I FILES\SEL
+cobc -x -free SRC\MENU85.cbl SRC\LISTADO.cbl SRC\CLIENTES.cbl SRC\CLIENTES-PROGRAM.cbl -I CPY -I FD -I FILES\SEL
+cobc -m -free SRC\VENFAC01.cbl -I CPY -I FD -I FILES\SEL
 ```
 
 Cuando domines CRUD:

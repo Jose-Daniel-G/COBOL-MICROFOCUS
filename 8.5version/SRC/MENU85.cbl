@@ -21,25 +21,14 @@
        01  OPCION-VENTANA    PIC X VALUE SPACE.
        *> VARIABLES PARA LA NAVEGACION
        01  WS-FILA-ACTUAL     PIC 9 VALUE 1. *> SUB-MENU 
-       01  WS-FIN-SUBMENU-CLI     PIC X VALUE "N".
-       01  WS-FECHA-TECNICA.
-           05  WS-ANIO-T         PIC 9(4).
-           05  WS-MES-T          PIC 9(2).
-           05  WS-DIA-T          PIC 9(2).
-
-       01  WS-FECHA-FORMATEADA.
-           05  WS-DIA-F          PIC 9(2).
-           05  FILLER            VALUE "/".
-           05  WS-MES-F          PIC 9(2).
-           05  FILLER            VALUE "/".
-           05  WS-ANIO-F         PIC 9(4).
+       01  WS-FIN-SUBMENU-CLI     PIC X VALUE "N". 
 
        SCREEN SECTION.
        *> --- BARRA SUPERIOR DINAMICA ---
        01  BARRA-SUPERIOR.
            05 LINE 1 COL 1 VALUE " TEST 8.5  " BACKGROUND-COLOR 4
                                                FOREGROUND-COLOR 7.
-           05 LINE 1 COL 64 FROM WS-FECHA-FORMATEADA BACKGROUND-COLOR 4
+           05 LINE 1 COL 63 FROM WS-FECHA-TEXT BACKGROUND-COLOR 4
                                                FOREGROUND-COLOR 7.
            05 LINE 2 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.   *> 2. LA BARRA DE MENU HORIZONTAL (Gris con letras rojas)
 
@@ -49,9 +38,7 @@
        PROCEDURE DIVISION.
        MAIN-LOGIC.
            CALL "SYSTEM" USING "MODE CON: COLS=80 LINES=25".
-           PERFORM OBTENER-FECHA-SISTEMA.
-           SET ENVIRONMENT "COB_SCREEN_EXCEPTIONS" TO "Y".               *> Habilita teclas especiales 
-           SET ENVIRONMENT "COB_CURSOR_MODE" TO "0".
+           PERFORM FECHA-SISTEMA-TEXT. 
            DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1.     *> Borramos pantalla solo una vez al inicio
            PERFORM UNTIL FUNCTION UPPER-CASE(OPCION-CAPTURA) = "S"
                DISPLAY BARRA-SUPERIOR
@@ -109,15 +96,15 @@
                DISPLAY FINANCIERO
              *> DIBUJAR LAS OPCIONES CON RESALTADO DINAMICO
                IF WS-FILA-ACTUAL = 1
-                  DISPLAY "| 1. Clientes              |" LINE 06 COL 10 WITH REVERSE-VIDEO
+                  DISPLAY "| C. Clientes              |" LINE 06 COL 10 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| 1. Clientes              |" LINE 06 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| C. Clientes              |" LINE 06 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
 
                IF WS-FILA-ACTUAL = 2
-                  DISPLAY "| 2. Facturas              |" LINE 07 COL 10 WITH REVERSE-VIDEO
+                  DISPLAY "| V. Ventas - Facturacion  |" LINE 07 COL 10 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| 2. Facturas              |" LINE 07 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| V. Ventas - Facturacion  |" LINE 07 COL 10 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
        
                IF WS-FILA-ACTUAL = 3
@@ -149,12 +136,12 @@
                    WHEN KEY-ENTER    *> ENTER
                        EVALUATE WS-FILA-ACTUAL
                            WHEN 1   
-                              PERFORM SUBMENU-CLI
+                              PERFORM DES-SUBMENU-CLI
                               DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
                               DISPLAY BARRA-SUPERIOR
 
                            WHEN 2  
-                              PERFORM SUBMENU-FACT
+                              PERFORM DES-SUBMENU-FACT
                               DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
                               DISPLAY BARRA-SUPERIOR      
                            WHEN 3
@@ -268,36 +255,35 @@
                   MOVE "S" TO WS-FIN-SUBMENU-CLI
                END-IF
            END-PERFORM.
-       SUBMENU-CLI.
+       DES-SUBMENU-CLI.
            MOVE "N" TO WS-FIN-CONF
            MOVE 1 TO WS-FILA-CONF
            
            PERFORM UNTIL WS-FIN-CONF = "S"
-               *> Redibujamos lo anterior para que no se pierda
-               DISPLAY BARRA-SUPERIOR
+               
+               DISPLAY BARRA-SUPERIOR                                   *> Redibujamos lo anterior para que no se pierda
                PERFORM DIBUJAR-OPCIONES
                DISPLAY FINANCIERO
                
-               *> Dibujamos la caja del menú de SUMBMENU
-               DISPLAY MENU-SUBMENU-CLI
+               DISPLAY SUBMENU-CLI                                      *> Dibujamos la caja del menú de SUMBMENU
                
                *> --- LÓGICA DE RESALTADO DINÁMICO ---
                IF WS-FILA-CONF = 1
-                  DISPLAY "| A.B.M CLIENTES              |" LINE 06 COL 33 WITH REVERSE-VIDEO
+                  DISPLAY "| A.B.M CLIENTES              |" LINE 06 COL 35 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| A.B.M CLIENTES              |" LINE 06 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| A.B.M CLIENTES              |" LINE 06 COL 35 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
 
                IF WS-FILA-CONF = 2
-                  DISPLAY "| Listar                      |" LINE 08 COL 33 WITH REVERSE-VIDEO
+                  DISPLAY "| Listar                      |" LINE 08 COL 35 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| Listar                      |" LINE 08 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| Listar                      |" LINE 08 COL 35 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
                
                IF WS-FILA-CONF = 3
-                  DISPLAY "| Regresar                    |" LINE 09 COL 33 WITH REVERSE-VIDEO
+                  DISPLAY "| Regresar                    |" LINE 09 COL 35 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| Regresar                    |" LINE 09 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| Regresar                    |" LINE 09 COL 35 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
 
                ACCEPT OPCION-VENTANA LINE 25 COL 80
@@ -320,12 +306,15 @@
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
                                PERFORM REFRESCAR-PANTALLA-TOTAL
+                               DISPLAY FINANCIERO 
+
                            WHEN 2 
                                CALL "LISTADO" 
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
                                PERFORM REFRESCAR-PANTALLA-TOTAL
+                               DISPLAY FINANCIERO 
                            WHEN 3
                                MOVE "S" TO WS-FIN-CONF
                        END-EVALUATE
@@ -341,7 +330,7 @@
 
            *> Al salir, limpiamos el área derecha (el cuadro verde)
            DISPLAY " " LINE 4 COL 45 ERASE EOS BACKGROUND-COLOR 1.
-       SUBMENU-FAC.
+       DES-SUBMENU-FACT.
            MOVE "N" TO WS-FIN-CONF
            MOVE 1 TO WS-FILA-CONF
            
@@ -352,34 +341,34 @@
                DISPLAY FINANCIERO
                
                *> Dibujamos la caja del menú de SUMBMENU
-               DISPLAY MENU-SUBMENU-CLI
+               DISPLAY SUBMENU-FACT
                
                *> --- LÓGICA DE RESALTADO DINÁMICO ---
                IF WS-FILA-CONF = 1
-                  DISPLAY "| 1. NUEVA FACTURA            |" LINE 06 COL 33 WITH REVERSE-VIDEO
+                  DISPLAY "| 1. NUEVA FACTURA            |" LINE 07 COL 35 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| 1. NUEVA FACTURA            |" LINE 06 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| 1. NUEVA FACTURA            |" LINE 07 COL 35 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
 
                IF WS-FILA-CONF = 2
-                  DISPLAY "| 2. CONSULTAR FACTURA        |" LINE 08 COL 33 WITH REVERSE-VIDEO
+                  DISPLAY "| 2. CONSULTAR FACTURA        |" LINE 08 COL 35 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| 2. CONSULTAR FACTURA        |" LINE 08 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| 2. CONSULTAR FACTURA        |" LINE 08 COL 35 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
                
                IF WS-FILA-CONF = 3
-                  DISPLAY "| 3. ANULAR FACTURA           |" LINE 09 COL 33 WITH REVERSE-VIDEO
+                  DISPLAY "| 3. ANULAR FACTURA           |" LINE 09 COL 35 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| 3. ANULAR FACTURA           |" LINE 09 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| 3. ANULAR FACTURA           |" LINE 09 COL 35 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
                IF WS-FILA-CONF = 4
-                  DISPLAY "| Regresar                    |" LINE 09 COL 33 WITH REVERSE-VIDEO
+                  DISPLAY "| Regresar                    |" LINE 10 COL 35 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| Regresar                    |" LINE 09 COL 33 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| Regresar                    |" LINE 10 COL 35 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
 
+               *> ACCEPT "INVISIBLE" PARA CAPTURAR LA TECLA
                ACCEPT OPCION-VENTANA LINE 25 COL 80
-
 
                EVALUATE WS-KEY
                    WHEN KEY-UP *> FLECHA ARRIBA
@@ -387,13 +376,13 @@
                           SUBTRACT 1 FROM WS-FILA-CONF
                        END-IF
                    WHEN KEY-DOWN *> FLECHA ABAJO
-                       IF WS-FILA-CONF < 3 
+                       IF WS-FILA-CONF < 4 
                           ADD 1 TO WS-FILA-CONF
                        END-IF
                    WHEN KEY-ENTER    *> TECLA ENTER
                        EVALUATE WS-FILA-CONF
                            WHEN 1
-                               CALL "CLIENTES" 
+                               CALL "VENFAC01" 
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
@@ -404,7 +393,7 @@
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
                                PERFORM REFRESCAR-PANTALLA-TOTAL
-                           WHEN 3
+                           WHEN 4
                                MOVE "S" TO WS-FIN-CONF
                        END-EVALUATE
                    WHEN 2001 *> Tecla ESC (Si tu compilador lo soporta como 2001)
@@ -422,20 +411,17 @@
        REFRESCAR-PANTALLA-TOTAL.
            DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
            DISPLAY BARRA-SUPERIOR
-           PERFORM DIBUJAR-OPCIONES
-           DISPLAY FINANCIERO. 
+           PERFORM DIBUJAR-OPCIONES.
 
-       OBTENER-FECHA-SISTEMA.
-           *> Captura la fecha en formato AAAAMMDD
-           ACCEPT WS-FECHA-TECNICA FROM DATE YYYYMMDD.
+       FECHA-SISTEMA.
+           ACCEPT WS-FECHA-TECNICA FROM DATE YYYYMMDD.           *> Captura la fecha en formato AAAAMMDD
            
-           *> Mueve los datos individuales al formato DD/MM/AAAA
-           MOVE WS-DIA-T TO WS-DIA-F.
+           MOVE WS-DIA-T TO WS-DIA-F.                            *> Mueve los datos individuales al formato DD/MM/AAAA
            MOVE WS-MES-T TO WS-MES-F.
            MOVE WS-ANIO-T TO WS-ANIO-F.
 
-       OBTENER-FECHA-SISTEMA-TEXT.
-           ACCEPT WS-FECHA-SISTEMA-TEC FROM DATE YYYYMMDD.
-           MOVE WS-DIA-TEC  TO WS-DIA-TXT.
-           MOVE NOMBRE-MES(WS-MES-TEC) TO WS-MES-TXT.
-           MOVE WS-ANIO-TEC TO WS-ANIO-TXT.
+       FECHA-SISTEMA-TEXT.
+           ACCEPT WS-FECHA-TECNICA FROM DATE YYYYMMDD.
+           MOVE WS-DIA-T  TO WS-DIA-TXT.
+           MOVE NOMBRE-MES(WS-MES-T) TO WS-MES-TXT.
+           MOVE WS-ANIO-T TO WS-ANIO-TXT.

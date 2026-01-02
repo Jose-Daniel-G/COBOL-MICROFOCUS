@@ -18,7 +18,7 @@
        WORKING-STORAGE SECTION.
        *> Estados de Archivo y Control
            COPY "TECLAS.cpy".
-       01  ST-FILE        PIC XX.
+       01  ST-CLIENTES        PIC XX.
        01  MENSAJE        PIC X(70).
        01  WS-PAUSA       PIC X.
        01  RESPUESTA      PIC X     VALUE "S".
@@ -76,9 +76,7 @@
            05 INP-CAT LINE 9 COL 25 PIC X(01) USING W-CAT    HIGHLIGHT.
 
        PROCEDURE DIVISION.
-       MAIN-LOGIC.
-           SET ENVIRONMENT "COB_SCREEN_EXCEPTIONS" TO "Y".
-           SET ENVIRONMENT "COB_SCREEN_ESC"        TO "Y". 
+       MAIN-LOGIC. 
 
            PERFORM ABRO-ARCHIVO.
            
@@ -106,13 +104,14 @@
        ABRO-ARCHIVO.
            OPEN I-O CLIENTES.
            *> Si el archivo no existe (Error 35), lo creamos
-           IF ST-FILE = "35" 
+           IF ST-CLIENTES = "35" 
                OPEN OUTPUT CLIENTES 
                CLOSE CLIENTES 
                OPEN I-O CLIENTES.
 
-           IF ST-FILE > "07"                                 
-             STRING "Error al abrir Clientes " ST-FILE DELIMITED BY SIZE
+           IF ST-CLIENTES > "07"                                 
+             STRING "Error al abrir Clientes " ST-CLIENTES 
+                     DELIMITED BY SIZE
                      INTO MENSAJE
               DISPLAY MENSAJE LINE 10 COL 20
               MOVE "S" TO FIN.
@@ -124,15 +123,15 @@
 
        LEO-CLIENTES.
            MOVE "S" TO EXISTE.
-           MOVE W-CLI-ID TO ID_CLIENTE.
+           MOVE W-CLI-ID TO CLI-ID.
            READ CLIENTES INVALID KEY 
                MOVE "N" TO EXISTE.
            
            IF EXISTE = "S"
-               MOVE CLI_NOMBRE    TO W-NOMBRE
-               MOVE CLI_DIRECCION TO W-DIR
-               MOVE CLI_CODPOST   TO W-CP
-               MOVE CLI_CATEGORIA TO W-CAT
+               MOVE CLI-NOMBRE    TO W-NOMBRE
+               MOVE CLI-DIRECCION TO W-DIR
+               MOVE CLI-CODPOST   TO W-CP
+               MOVE CLI-CATEGORIA TO W-CAT
                DISPLAY "MODO: EDICION" LINE 23 COL 1 BACKGROUND-COLOR 1
            ELSE
                INITIALIZE DATOS-TRABAJO
@@ -147,11 +146,11 @@
            ACCEPT RESPUESTA LINE 22 COL 55 WITH HIGHLIGHT.
            
            IF FUNCTION UPPER-CASE(RESPUESTA) = "S"
-               MOVE W-CLI-ID TO ID_CLIENTE
-               MOVE W-NOMBRE TO CLI_NOMBRE
-               MOVE W-DIR    TO CLI_DIRECCION
-               MOVE W-CP     TO CLI_CODPOST
-               MOVE W-CAT    TO CLI_CATEGORIA
+               MOVE W-CLI-ID TO CLI-ID
+               MOVE W-NOMBRE TO CLI-NOMBRE
+               MOVE W-DIR    TO CLI-DIRECCION
+               MOVE W-CP     TO CLI-CODPOST
+               MOVE W-CAT    TO CLI-CATEGORIA
                
                IF EXISTE = "S"
                    REWRITE REG-CLIENTES

@@ -11,29 +11,29 @@
            SELECT OPTIONAL CLIENTES ASSIGN TO "./clientes.dat"
                   ORGANIZATION INDEXED
                   ACCESS MODE IS DYNAMIC
-                  RECORD KEY IS ID_CLIENTE
-                  ALTERNATE KEY CLI_NOMBRE WITH DUPLICATES
-                  ALTERNATE KEY CLI_ALT_2  WITH DUPLICATES
-                  STATUS ST-FILE.
+                  RECORD KEY IS CLI-ID
+                  ALTERNATE KEY CLI-NOMBRE WITH DUPLICATES
+                  ALTERNATE KEY CLI-ALT-2  WITH DUPLICATES
+                  STATUS ST-CLIENTES.
        DATA DIVISION.
        FILE SECTION.
        FD CLIENTES.
        01 REG-CLIENTES.
-           03 ID_CLIENTE.
+           03 CLI-ID.
                05 CLI_ID            PIC 9(8).
-           03 CLI_SALDO            PIC S9(7)V9(3).
-           03 CLI_NOMBRE           PIC X(60).
-           03 CLI_DIRECCION        PIC X(80).
-           03 CLI_CODPOST          PIC X(10).
-           03 CLI_CATEGORIA        PIC X.
-           03 CLI_ALT_2.
-               05 CLI_CATEGORIA_2  PIC X.
-               05 CLI_NOMBRE_2     PIC X(60).
+           03 CLI-SALDO            PIC S9(7)V9(3).
+           03 CLI-NOMBRE           PIC X(60).
+           03 CLI-DIRECCION        PIC X(80).
+           03 CLI-CODPOST          PIC X(10).
+           03 CLI-CATEGORIA        PIC X.
+           03 CLI-ALT-2.
+               05 CLI-CATEGORIA-2  PIC X.
+               05 CLI-NOMBRE-2     PIC X(60).
            03 FILLER               PIC X(240).
 
        WORKING-STORAGE SECTION.
        01  WS-KEY         PIC 9(4).
-       01  ST-FILE    PIC XX.
+       01  ST-CLIENTES    PIC XX.
        01  X          PIC X.
 
        01  MENSAJE    PIC X(70).
@@ -72,8 +72,9 @@
 
        ABRO-ARCHIVO.
            OPEN I-O CLIENTES.
-           IF ST-FILE > "07"
-             STRING "Error al abrir Clientes " ST-FILE DELIMITED BY SIZE
+           IF ST-CLIENTES > "07"
+             STRING "Error al abrir Clientes " ST-CLIENTES 
+                     DELIMITED BY SIZE
                      INTO MENSAJE
               DISPLAY MENSAJE LINE 10 COL 20
               MOVE "S" TO FIN.
@@ -128,10 +129,10 @@
            DISPLAY SPACES LINE 23 COL 1 SIZE 80.
            MOVE W-CLI-ID TO CLI_ID.
            READ CLIENTES INVALID KEY MOVE "N" TO EXISTE.
-           IF ST-FILE = "99" GO TO LEO-CLIENTES.
+           IF ST-CLIENTES = "99" GO TO LEO-CLIENTES.
 
-           IF ST-FILE > "07" AND ST-FILE NOT = "23"
-              STRING "Error leyendo Clientes Status = " ST-FILE
+           IF ST-CLIENTES > "07" AND ST-CLIENTES NOT = "23"
+              STRING "Error leyendo Clientes Status = " ST-CLIENTES
                    DELIMITED BY SIZE INTO  MENSAJE
               DISPLAY MENSAJE LINE 23 COL 1
               MOVE 1   TO HUBO-ERROR
@@ -142,15 +143,15 @@
 
        MUESTRO-DATOS.
            IF EXISTE = "S"
-              MOVE CLI_NOMBRE    TO W-CLI-NOMBRE
-              MOVE CLI_DIRECCION TO W-CLI-DIRECCION
-              MOVE CLI_CODPOST   TO W-CLI-CODPOST
-              MOVE CLI_CATEGORIA TO W-CLI-CATEGORIA.
+              MOVE CLI-NOMBRE    TO W-CLI-NOMBRE
+              MOVE CLI-DIRECCION TO W-CLI-DIRECCION
+              MOVE CLI-CODPOST   TO W-CLI-CODPOST
+              MOVE CLI-CATEGORIA TO W-CLI-CATEGORIA.
 
-           DISPLAY CLI_NOMBRE    LINE 10 COL 37
-                   CLI_DIRECCION LINE 12 COL 37
-                   CLI_CODPOST   LINE 14 COL 37
-                   CLI_CATEGORIA LINE 16 COL 37.
+           DISPLAY CLI-NOMBRE    LINE 10 COL 37
+                   CLI-DIRECCION LINE 12 COL 37
+                   CLI-CODPOST   LINE 14 COL 37
+                   CLI-CATEGORIA LINE 16 COL 37.
        CARGO-DATOS.
            INITIALIZE DATOS.
 
@@ -209,26 +210,27 @@
                IF OPCION > 0 AND OPCION < 77 GO TO OPCIONES.
 
        GRABAR.
-           MOVE W-CLI-NOMBRE    TO CLI_NOMBRE CLI_NOMBRE_2.
-           MOVE W-CLI-DIRECCION TO CLI_DIRECCION.
-           MOVE W-CLI-CODPOST   TO CLI_CODPOST.
-           MOVE W-CLI-CATEGORIA TO CLI_CATEGORIA CLI_CATEGORIA_2.
+           MOVE W-CLI-NOMBRE    TO CLI-NOMBRE CLI-NOMBRE-2.
+           MOVE W-CLI-DIRECCION TO CLI-DIRECCION.
+           MOVE W-CLI-CODPOST   TO CLI-CODPOST.
+           MOVE W-CLI-CATEGORIA TO CLI-CATEGORIA CLI-CATEGORIA-2.
 
        GRABO.
            IF  EXISTE = "S" GO TO REGRABO.
            WRITE REG-CLIENTES.
-           IF ST-FILE = "99" GO TO GRABO.
-           IF ST-FILE > "07"
-           STRING "Error al grabar clientes " ST-FILE DELIMITED BY SIZE
+           IF ST-CLIENTES = "99" GO TO GRABO.
+           IF ST-CLIENTES > "07"
+           STRING "Error al grabar clientes " ST-CLIENTES 
+                   DELIMITED BY SIZE
                    INTO MENSAJE
            DISPLAY MENSAJE LINE 24 COL 40.
            GO TO F-GRABAR.
 
        REGRABO.
            REWRITE REG-CLIENTES.
-           IF ST-FILE = "99" GO TO REGRABO.
-           IF ST-FILE > "07"
-           STRING "Error al regrabar clientes " ST-FILE
+           IF ST-CLIENTES = "99" GO TO REGRABO.
+           IF ST-CLIENTES > "07"
+           STRING "Error al regrabar clientes " ST-CLIENTES
                    DELIMITED BY SIZE
                    INTO MENSAJE
            DISPLAY MENSAJE LINE 24 COL 40.
@@ -238,9 +240,9 @@
 
        BORRAR.
            DELETE CLIENTES.
-           IF ST-FILE = "99" GO TO BORRAR.
-                  IF ST-FILE > "07"
-           STRING "Error al borrar clientes " ST-FILE
+           IF ST-CLIENTES = "99" GO TO BORRAR.
+                  IF ST-CLIENTES > "07"
+           STRING "Error al borrar clientes " ST-CLIENTES
                    DELIMITED BY SIZE
                    INTO MENSAJE
            DISPLAY MENSAJE LINE 24 COL 40.

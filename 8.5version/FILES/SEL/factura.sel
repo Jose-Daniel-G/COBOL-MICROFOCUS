@@ -1,0 +1,6 @@
+           SELECT OPTIONAL FACTURAS
+               ASSIGN TO "./bin/DAT/facturas.dat"
+               ORGANIZATION IS SEQUENTIAL
+               ACCESS MODE IS SEQUENTIAL
+               FILE STATUS IS ST-FACTURAS.
+               

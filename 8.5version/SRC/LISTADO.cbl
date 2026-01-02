@@ -18,7 +18,7 @@
        WORKING-STORAGE SECTION.
            COPY "TECLAS.cpy".
 
-       01  ST-FILE        PIC XX.
+       01  ST-CLIENTES        PIC XX.
        01  WS-KEY         PIC 9(4).
        01  WS-PAUSA       PIC X.
        01  RESPUESTA      PIC X     VALUE "S".
@@ -47,7 +47,7 @@
              10 T-NOM     PIC X(30).
              10 T-DIR     PIC X(30).
              10 T-CAT     PIC X(01).
-       01 WS-LINEA-PLANO PIC X(200).
+       *>01 WS-LINEA-PLANO PIC X(200).
 
        SCREEN SECTION.
        01 PANTALLA-BASE.
@@ -116,12 +116,12 @@
                        WHEN KEY-F8  *> tecla Suprimir/Delete
                            PERFORM ELIMINAR-REGISTRO
                        WHEN KEY-F9  *> tecla F9 (Generar Plano)
-                           PERFORM GENERAR-PLANO
+      *>                     PERFORM GENERAR-PLANO
                            DISPLAY "Archivo plano 'clientes.txt' generado." 
                                LINE 22 COL 20
                            ACCEPT WS-PAUSA LINE 23 COL 55
                        WHEN KEY-F10  *> tecla F10 (Generar CSV)
-                           PERFORM GENERAR-CSV
+      *>                     PERFORM GENERAR-CSV
                            DISPLAY "Archivo CSV 'clientes.CSV' generado." 
                                LINE 22 COL 20
                            ACCEPT WS-PAUSA LINE 23 COL 55
@@ -141,14 +141,14 @@
            
            *> Si estamos en modo búsqueda, usar la clave alternativa
            IF BUSCANDO
-               MOVE WS-BUSCA-NOMBRE TO CLI_NOMBRE
-               START CLIENTES KEY IS NOT LESS THAN CLI_NOMBRE
+               MOVE WS-BUSCA-NOMBRE TO CLI-NOMBRE
+               START CLIENTES KEY IS NOT LESS THAN CLI-NOMBRE
                    INVALID KEY SET FIN-LISTA TO TRUE
                END-START
            ELSE
                *> Modo normal: mostrar todos desde el inicio
-               MOVE ZERO TO ID_CLIENTE
-               START CLIENTES KEY IS NOT LESS THAN ID_CLIENTE
+               MOVE ZERO TO CLI-ID
+               START CLIENTES KEY IS NOT LESS THAN CLI-ID
                    INVALID KEY SET FIN-LISTA TO TRUE
                END-START
            END-IF.
@@ -162,7 +162,7 @@
                    NOT AT END
                        *> Si estamos buscando, filtrar por coincidencia parcial
                        IF BUSCANDO
-                           IF CLI_NOMBRE(1:FUNCTION LENGTH(
+                           IF CLI-NOMBRE(1:FUNCTION LENGTH(
                               FUNCTION TRIM(WS-BUSCA-NOMBRE))) 
                               = FUNCTION TRIM(WS-BUSCA-NOMBRE)
                                PERFORM AGREGAR-A-TABLA
@@ -179,10 +179,10 @@
            MOVE WS-FILA-INICIO TO WS-PUNTERO.
 
        AGREGAR-A-TABLA.
-           MOVE ID_CLIENTE        TO T-ID(WS-INDICE)
-           MOVE CLI_NOMBRE    TO T-NOM(WS-INDICE)
-           MOVE CLI_DIRECCION TO T-DIR(WS-INDICE)
-           MOVE CLI_CATEGORIA TO T-CAT(WS-INDICE)
+           MOVE CLI-ID        TO T-ID(WS-INDICE)
+           MOVE CLI-NOMBRE    TO T-NOM(WS-INDICE)
+           MOVE CLI-DIRECCION TO T-DIR(WS-INDICE)
+           MOVE CLI-CATEGORIA TO T-CAT(WS-INDICE)
            PERFORM NORMALIZAR-PINTADO
            ADD 1 TO WS-FILA
            ADD 1 TO WS-INDICE.
@@ -242,9 +242,9 @@
                ACCEPT RESPUESTA LINE 22 COL 53
                
                IF FUNCTION UPPER-CASE(RESPUESTA) = "S"
-                   MOVE T-ID(WS-INDICE) TO ID_CLIENTE
+                   MOVE T-ID(WS-INDICE) TO CLI-ID
                    READ CLIENTES
-                       KEY IS ID_CLIENTE
+                       KEY IS CLI-ID
                        INVALID KEY
                            DISPLAY "REGISTRO NO ENCONTRADO" 
                            LINE 23 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
@@ -262,13 +262,13 @@
        
        ABRO-ARCHIVO.
            OPEN I-O CLIENTES.
-           IF ST-FILE = "35" 
+           IF ST-CLIENTES = "35" 
                OPEN OUTPUT CLIENTES 
                CLOSE CLIENTES 
                OPEN I-O CLIENTES.
 
-           IF ST-FILE > "07"                                 
-             STRING "Error al abrir Clientes " ST-FILE DELIMITED BY SIZE
+           IF ST-CLIENTES > "07"                                 
+             STRING "Error al abrir Clientes " ST-CLIENTES DELIMITED BY SIZE
                      INTO MENSAJE
               DISPLAY MENSAJE LINE 10 COL 20 
               ACCEPT WS-PAUSA LINE 23 COL 55
@@ -288,69 +288,69 @@
            MOVE 1 TO WS-INDICE
            PERFORM MOSTRAR-REGISTROS.
        
-       GENERAR-PLANO.
-           OPEN OUTPUT CLIENTES-PLANO
-           SET NO-FIN-LISTA TO TRUE
+      *> GENERAR-PLANO.
+      *>     OPEN OUTPUT CLIENTES-PLANO
+      *>     SET NO-FIN-LISTA TO TRUE
+*> 
+      *>     MOVE ZERO TO CLI-ID
+      *>     START CLIENTES KEY IS NOT LESS THAN CLI-ID
+      *>         INVALID KEY
+      *>             CLOSE CLIENTES-PLANO
+      *>             EXIT PARAGRAPH
+      *>     END-START
+      *> 
+      *>     PERFORM UNTIL FIN-LISTA
+      *>         READ CLIENTES NEXT RECORD
+      *>             AT END
+      *>                 SET FIN-LISTA TO TRUE
+      *>             NOT AT END
+      *>                 STRING
+      *>                     CLI-ID        DELIMITED BY SIZE
+      *>                     " | " 
+      *>                     CLI-NOMBRE    DELIMITED BY SIZE
+      *>                     " | "
+      *>                     CLI-DIRECCION DELIMITED BY SIZE
+      *>                     " | "
+      *>                     CLI-CATEGORIA DELIMITED BY SIZE
+      *>                     INTO WS-LINEA-PLANO
+      *> 
+      *>                 WRITE REG-PLANO FROM WS-LINEA-PLANO
+      *>         END-READ
+      *>     END-PERFORM
+      *>     CLOSE CLIENTES-PLANO
+      *>     SET NO-FIN-LISTA TO TRUE.
 
-           MOVE ZERO TO ID_CLIENTE
-           START CLIENTES KEY IS NOT LESS THAN ID_CLIENTE
-               INVALID KEY
-                   CLOSE CLIENTES-PLANO
-                   EXIT PARAGRAPH
-           END-START
-       
-           PERFORM UNTIL FIN-LISTA
-               READ CLIENTES NEXT RECORD
-                   AT END
-                       SET FIN-LISTA TO TRUE
-                   NOT AT END
-                       STRING
-                           ID_CLIENTE        DELIMITED BY SIZE
-                           " | " 
-                           CLI_NOMBRE    DELIMITED BY SIZE
-                           " | "
-                           CLI_DIRECCION DELIMITED BY SIZE
-                           " | "
-                           CLI_CATEGORIA DELIMITED BY SIZE
-                           INTO WS-LINEA-PLANO
-       
-                       WRITE REG-PLANO FROM WS-LINEA-PLANO
-               END-READ
-           END-PERFORM
-           CLOSE CLIENTES-PLANO
-           SET NO-FIN-LISTA TO TRUE.
-
-       GENERAR-CSV.         
-           SET NO-FIN-LISTA TO TRUE
-           OPEN OUTPUT CLIENTES-CSV
-          
-           MOVE ZERO TO ID_CLIENTE
-           START CLIENTES KEY IS NOT LESS THAN ID_CLIENTE
-               INVALID KEY
-                   CLOSE CLIENTES-CSV
-                   EXIT PARAGRAPH
-           NOT INVALID KEY
-           MOVE "ID;NOMBRE;DIRECCION;CATEGORIA" TO REG-CSV
-           WRITE REG-CSV
-           PERFORM UNTIL FIN-LISTA
-               READ CLIENTES NEXT RECORD
-                   AT END
-                       SET FIN-LISTA TO TRUE
-                   NOT AT END
-                       INITIALIZE REG-CSV
-                       STRING
-                           ID_CLIENTE        DELIMITED BY SIZE
-                           ";"
-                           CLI_NOMBRE    DELIMITED BY SIZE
-                           ";"
-                           CLI_DIRECCION DELIMITED BY SIZE
-                           ";"
-                           CLI_CATEGORIA DELIMITED BY SIZE
-                           INTO REG-CSV
-       
-                       WRITE REG-CSV
-               END-READ
-           END-PERFORM
-           END-START
-           CLOSE CLIENTES-CSV
-           SET NO-FIN-LISTA TO TRUE.
+      *> GENERAR-CSV.         
+      *>     SET NO-FIN-LISTA TO TRUE
+      *>     OPEN OUTPUT CLIENTES-CSV
+      *>    
+      *>     MOVE ZERO TO CLI-ID
+      *>     START CLIENTES KEY IS NOT LESS THAN CLI-ID
+      *>         INVALID KEY
+      *>             CLOSE CLIENTES-CSV
+      *>             EXIT PARAGRAPH
+      *>     NOT INVALID KEY
+      *>     MOVE "ID;NOMBRE;DIRECCION;CATEGORIA" TO REG-CSV
+      *>     WRITE REG-CSV
+      *>     PERFORM UNTIL FIN-LISTA
+      *>         READ CLIENTES NEXT RECORD
+      *>             AT END
+      *>                 SET FIN-LISTA TO TRUE
+      *>             NOT AT END
+      *>                 INITIALIZE REG-CSV
+      *>                 STRING
+      *>                     CLI-ID        DELIMITED BY SIZE
+      *>                     ";"
+      *>                     CLI-NOMBRE    DELIMITED BY SIZE
+      *>                     ";"
+      *>                     CLI-DIRECCION DELIMITED BY SIZE
+      *>                     ";"
+      *>                     CLI-CATEGORIA DELIMITED BY SIZE
+      *>                     INTO REG-CSV
+      *> 
+      *>                 WRITE REG-CSV
+      *>         END-READ
+      *>     END-PERFORM
+      *>     END-START
+      *>     CLOSE CLIENTES-CSV
+      *>     SET NO-FIN-LISTA TO TRUE.
