@@ -1,7 +1,15 @@
        FD  PRODUCTOS.
        01  PRODUCTO-REG.
-           05 PRD-CODIGO        PIC X(10).
-           05 PRD-DESCRIPCION   PIC X(40).
-           05 PRD-PRECIO        PIC 9(9)V99.
-           05 PRD-IVA           PIC 99.
-           05 PRD-ESTADO        PIC X. *> A=Activo / I=Inactivo
+          05 PRD-CODIGO        PIC 9(10).
+          05 PRD-DESCRIPCION   PIC X(40).
+          05 PRD-PRECIO        PIC 9(9)V99.
+          05 PRD-IVA           PIC 99.
+          05 PRD-ESTADO        PIC X.
+             88 PRD-ACTIVO     VALUE "A".
+             88 PRD-INACTIVO   VALUE "I".
+
+       FD PRODUCTOS-PLANO.
+       01 REG-PLANO PIC X(200).
+       
+       FD PRODUCTOS-CSV.
+       01 REG-CSV PIC X(200).       

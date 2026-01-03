@@ -4,48 +4,59 @@
            05 LINE 05 COL 10 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 LINE 06 COL 10 VALUE "| C. Clientes              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
            05 LINE 07 COL 10 VALUE "| V. Ventas - Facturacion  |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 08 COL 10 VALUE "| #. ........              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 09 COL 10 VALUE "| #. ........              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 08 COL 10 VALUE "| #. ........              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1. *> C. Cuentas por Cobrar 
+           05 LINE 09 COL 10 VALUE "| #. ........              |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1. *> R. Reportes Fiancieros
            05 LINE 10 COL 10 VALUE "| Regresar                 |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
            05 LINE 11 COL 10 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
 
        01  SUBMENU-CLI.
             05  GRUPO-VERDE BACKGROUND-COLOR 6 FOREGROUND-COLOR 7.*> Grupo con color Turquesa/Verde (Fondo 6 o 3 dependiendo del terminal)
-            10 LINE 05 COL 35 VALUE "+-----------------------------+".
-            10 LINE 06 COL 35 VALUE "| A.B.M CLIENTES              |".
-            10 LINE 07 COL 35 VALUE "+-----------------------------+".
-            10 LINE 08 COL 35 VALUE "| Listar                      |". 
-            10 LINE 09 COL 35 VALUE "| Regresar                    |". 
-            10 LINE 10 COL 35 VALUE "+-----------------------------+". 
+            10 LINE 05 COL 35 VALUE "+--------------------+".
+            10 LINE 06 COL 35 VALUE "| A.B.M CLIENTES     |".
+            10 LINE 07 COL 35 VALUE "+--------------------+".
+            10 LINE 08 COL 35 VALUE "| 1.  Crear / Editar |". 
+            10 LINE 09 COL 35 VALUE "| 2. Listar          |". 
+            10 LINE 10 COL 35 VALUE "| Regresar           |". 
+            10 LINE 11 COL 35 VALUE "+--------------------+". 
        01  SUBMENU-FACT.
             05  GRUPO-VERDE BACKGROUND-COLOR 6 FOREGROUND-COLOR 7.*> Grupo con color Turquesa/Verde (Fondo 6 o 3 dependiendo del terminal)
-            10 LINE 06 COL 35 VALUE "+-----------------------------+".
-            10 LINE 07 COL 35 VALUE "| 1. NUEVA FACTURA            |".
-            10 LINE 08 COL 35 VALUE "| 2. CONSULTAR FACTURA        |".
-            10 LINE 09 COL 35 VALUE "| 3. ANULAR FACTURA           |". 
-            10 LINE 10 COL 35 VALUE "| Regresar                    |". 
-            10 LINE 11 COL 35 VALUE "+-----------------------------+". 
+            10 LINE 06 COL 35 VALUE "+----------------------+".
+            10 LINE 07 COL 35 VALUE "| 1. Nueva Factura     |".
+            10 LINE 08 COL 35 VALUE "| 2. Consultar Factura |".
+            10 LINE 09 COL 35 VALUE "| 3. Anular Factura    |". 
+            10 LINE 10 COL 35 VALUE "| Regresar             |". 
+            10 LINE 11 COL 35 VALUE "+----------------------+". 
 
        01  COMERCIAL.
-           05 LINE 03 COL 23 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 LINE 04 COL 23 VALUE "| Comercial                |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 LINE 05 COL 23 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           05 LINE 06 COL 23 VALUE "| #. ??                    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>V. Ventas
-           05 LINE 07 COL 23 VALUE "| #. ??                    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>C. Compras
-           05 LINE 08 COL 23 VALUE "| I. Inventarios           |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 09 COL 23 VALUE "| #. ??                    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>A. Actualizacion
-           05 LINE 10 COL 23 VALUE "| #. ??                    |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>R. Retiro
-           05 LINE 11 COL 23 VALUE "| Regresar                 |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 12 COL 23 VALUE "+--------------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 LINE 03 COL 23 VALUE "+------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 LINE 04 COL 23 VALUE "| Comercial        |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 LINE 05 COL 23 VALUE "+------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           05 LINE 06 COL 23 VALUE "| #. ??            |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>V. Ventas
+           05 LINE 07 COL 23 VALUE "| #. ??            |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>C. Compras
+           05 LINE 08 COL 23 VALUE "| I. Inventarios   |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 09 COL 23 VALUE "| A. Actualizacion |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>A. Actualizacion
+           05 LINE 10 COL 23 VALUE "| #. ??            |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>R. Retiro
+           05 LINE 11 COL 23 VALUE "| Regresar         |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 12 COL 23 VALUE "+------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
 
        01  SUBMENU-COM.
             05  GRUPO-VERDE BACKGROUND-COLOR 6 FOREGROUND-COLOR 7.*> Grupo con color Turquesa/Verde (Fondo 6 o 3 dependiendo del terminal)
-            10 LINE 05 COL 49 VALUE "+-----------------------------+".
-            10 LINE 06 COL 49 VALUE "| INVENTARIO                  |".
-            10 LINE 07 COL 49 VALUE "+-----------------------------+".
-            10 LINE 08 COL 49 VALUE "| 1. Productos (ABM)          |".
-            10 LINE 09 COL 49 VALUE "| 2. Stock                    |".
-            10 LINE 10 COL 49 VALUE "| 3. Consulta General         |".
-            10 LINE 11 COL 49 VALUE "| Regresar                    |".
-            10 LINE 12 COL 49 VALUE "+-----------------------------+".
+            10 LINE 07 COL 40 VALUE "+----------------------+".
+            10 LINE 08 COL 40 VALUE "| 1. Productos (ABM)   |".
+            10 LINE 09 COL 40 VALUE "| 2. Entradas de Stock |".
+            10 LINE 10 COL 40 VALUE "| 3. Consulta Stock    |".
+            10 LINE 11 COL 40 VALUE "| 3. kardex            |".
+            10 LINE 12 COL 40 VALUE "|    Regresar          |".
+            10 LINE 13 COL 40 VALUE "+----------------------+".
+
+       01 SUBCOM-PROD.
+          05 GRUPO-VERDE BACKGROUND-COLOR GRN FOREGROUND-COLOR 7. 
+          10 LINE 07 COL 59 VALUE "+--------------------+".
+          10 LINE 08 COL 59 VALUE "| 1. Productos       |".  *> INVLP001
+          10 LINE 09 COL 59 VALUE "| 2. Listado General |".  *> INVLP001 
+          10 LINE 10 COL 59 VALUE "|    Regresar        |".
+          10 LINE 11 COL 59 VALUE "+--------------------+".
+
+
+
             

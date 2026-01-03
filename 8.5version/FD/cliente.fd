@@ -1,7 +1,7 @@
        FD CLIENTES.
        01 REG-CLIENTES.
-           03 CLI-ID           PIC 9(8).
-           03 CLI-SALDO            PIC S9(7)V9(3).
+           03 CLI-ID               PIC 9(08).
+           03 CLI-SALDO            PIC S9(7)V9(3).    *> NO SE ESTA LLENANDO   
            03 CLI-NOMBRE           PIC X(60).
            03 CLI-DIRECCION        PIC X(80).
            03 CLI-CODPOST          PIC X(10).

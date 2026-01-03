@@ -3,4 +3,16 @@
            ORGANIZATION IS INDEXED
            ACCESS MODE IS DYNAMIC
            RECORD KEY IS PRD-CODIGO
+           ALTERNATE KEY IS PRD-DESCRIPCION WITH DUPLICATES
            STATUS IS ST-PRODUCTOS.
+       
+       SELECT PRODUCTOS-PLANO
+            ASSIGN TO "./FILES/productos.txt"
+            ORGANIZATION IS LINE SEQUENTIAL.
+
+       
+       SELECT PRODUCTOS-CSV
+            ASSIGN TO "./FILES/productos.csv"
+            ORGANIZATION IS LINE SEQUENTIAL.
+
+       

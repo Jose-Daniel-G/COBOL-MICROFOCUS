@@ -16,8 +16,8 @@
 │   └── CLIENTES.FD
 │
 ├── BIN/                     ← ejecutables (.exe)
-│   └── DAT/                 ← archivos de datos indexados/binarios
-│       └── CLIENTES.DAT
+├── DAT/                     ← archivos de datos indexados/binarios
+|    └── CLIENTES.DAT
 │
 ├── FILES/                   ← Archivos secuenciales
 │   ├── CLIENTES.TXT
@@ -31,7 +31,7 @@
 │   └── MENU.COB
 │
 └── LIB/                     ← Librerías externas o utilidades
-    └── LIBUTIL.CPY                                                                    | 3
+    └── LIBUTIL.CPY                                                                      
 
 
 | Nombre     | Uso                      |
@@ -53,8 +53,17 @@ MENU
  ├─ CLIENTES
  │   └─ ABM CLIENTES
  ├─ INVENTARIO
- │   ├─ ABM PRODUCTOS
- │   ├─ AJUSTES DE STOCK
+ │   ├─ 1. Productos
+ │   │    ├─ 1. A.B.M
+ │   │    ├─ 2. Listados
+ │   │    ├─ 3. Consultas
+ │   │    └─ Regresar
+ │   │
+ │   ├─ 2. Stock
+ │        ├─ 1. Entradas
+ │        ├─ 2. Salidas
+ │        ├─ 3. Kardex
+ │        └─ Regresar
  └─ FACTURACIÓN
      ├─ NUEVA FACTURA   → FACTURA01
      ├─ CONSULTAR       → FACTURA02
@@ -67,3 +76,39 @@ MENU
 | ABM Stock     | `INVSTK01` |
 | Consulta      | `INVCON01` |
 
+🔜 SIGUIENTE PASO (FASE 2 – PASO 5)
+🔜 FASE 2 – PASO 6
+🔄 FLUJO REAL DE VENTA – PASO 1
+🔄 PASO 3 – CREAR FACTURA (TEMPORAL)
+👉 PASO 4 – AGREGAR DETALLE
+🧾 FASE 2 – PASO 4
+🏗️ ARQUITECTURA FINAL (como empresa)
+PASO 5 – CALCULAR TOTALES
+🔄 FLUJO REAL DE UN SISTEMA DE VENTAS (EMPRESA) 🏗️ ORDEN CORRECTO DE DESARROLLO
+    ✅ CLIENTES
+
+    ✅ PRODUCTOS / INVENTARIO
+
+    ✅ IMPUESTOS / PARÁMETROS
+
+FASE 2 – TRANSACCIONES
+
+Factura temporal
+
+Detalle
+
+Totales
+
+Confirmar venta
+
+FASE 3 – CONTROL
+
+Kardex / Movimientos
+
+Reportes
+
+Cierres
+📁 STOCK
+¿Aprender COBOL genérico? → El código que te di funciona perfecto
+¿Desarrollar para SIESA 8.5? → Necesitas capacitación en el 4GL de SIESA
+¿Integrar con SIESA? → Usar sus APIs/Web Services

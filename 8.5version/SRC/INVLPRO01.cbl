@@ -1,6 +1,6 @@
        >>SOURCE FORMAT FREE
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. LISTADO.
+       PROGRAM-ID. INVLPRO01.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -9,11 +9,11 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           COPY "cliente.sel".
+           COPY "producto.sel".
 
        DATA DIVISION.
        FILE SECTION.
-           COPY "cliente.fd".
+           COPY "producto.fd".
 
        WORKING-STORAGE SECTION.
            COPY "TECLAS.cpy".
@@ -23,7 +23,7 @@
           05 WS-MODULO-PANTALLA    PIC X(26) VALUE SPACES.
           05 WS-PROGRAMA           PIC X(10) VALUE SPACES.
 
-       01  ST-CLIENTES    PIC XX.
+       01  ST-PRODUCTOS    PIC XX.
        01  WS-KEY         PIC 9(4).
        01  WS-PAUSA       PIC X.
        01  RESPUESTA      PIC X     VALUE "S".
@@ -37,26 +37,29 @@
        01  WS-FIN-LISTA       PIC X VALUE "N".
            88 FIN-LISTA          VALUE "S".
            88 NO-FIN-LISTA       VALUE "N".
-       01 WS-BUSCA-NOMBRE      PIC X(20).       *>--------- --- BUSQUEDA --- -------------
+       01 WS-BUS-DESCRIPCION      PIC X(20).      
+        *>--------- --- BUSQUEDA --- -------------
        01 WS-MODO-BUSQUEDA     PIC X VALUE "N".
           88 BUSCANDO          VALUE "S".
           88 NO-BUSCANDO       VALUE "N".           
-       01  MENSAJE    PIC X(70).       *>----------------------------------------
+        *>----------------------------------------
+       01  MENSAJE    PIC X(70).      
 
        01  TABLA-PANTALLA.
           05 REG-PANTALLA OCCURS 20 TIMES.
-             10 T-ID      PIC 9(07).
-             10 T-NOM     PIC X(30).
-             10 T-DIR     PIC X(30).
-             10 T-CAT     PIC X(01).
+             10 T-COD     PIC 9(07).
+             10 T-DES     PIC X(30).
+             10 T-PRE     PIC Z(9).99.
+             10 T-IVA     PIC X(01).
+             10 T-EST     PIC X(01).
        01 WS-LINEA-PLANO PIC X(200).
 
        SCREEN SECTION.
        01 PANTALLA-BASE.
            COPY "HEADER.cpy". 
            05 LINE 03 COL 02  VALUE "ID"         BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           05 LINE 03 COL 15 VALUE "NOMBRE"      BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           05 LINE 03 COL 47 VALUE "DIRECCION"   BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           05 LINE 03 COL 15 VALUE "DESCRIPCION" BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           05 LINE 03 COL 47 VALUE "PRECIO"      BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            05 LINE 03 COL 69 VALUE "CATEGORIA"   BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            05 LINE 04 COL 01  PIC X(80) FROM ALL "_" BACKGROUND-COLOR 1. 
 
@@ -64,9 +67,9 @@
        
        MAIN-LOGIC.
 
-           MOVE "LISTADO INDEXADO DE CLIENTES" TO WS-TITULO-PANTALLA           *> 1. Configuras los datos del encabezado
-           MOVE "MODO CONSULTA"                TO WS-MODULO-PANTALLA
-           MOVE "VERSION.01" TO WS-PROGRAMA
+           MOVE "LISTADO INDEXADO DE PRODUCTOS" TO WS-TITULO-PANTALLA           *> 1. Configuras los datos del encabezado
+           MOVE "MODO CONSULTA"                 TO WS-MODULO-PANTALLA
+           MOVE "VERSION.01"                    TO WS-PROGRAMA
 
            PERFORM ABRO-ARCHIVO.
 
@@ -87,7 +90,7 @@
                END-IF
            END-PERFORM.
 
-           CLOSE CLIENTES.
+           CLOSE PRODUCTOS.
            GOBACK.
 
        NAVEGACION-BUCLE.
@@ -111,17 +114,17 @@
                               SUBTRACT 1 FROM WS-INDICE
                            END-IF
                        WHEN KEY-F7  *> BÚSQUEDA POR NOMBRE
-                           PERFORM BUSCAR-CLIENTE
+                           PERFORM BUSCAR-PRODUCTO
                        WHEN KEY-F8  *> tecla Suprimir/Delete
                            PERFORM ELIMINAR-REGISTRO
                        WHEN KEY-F9  *> tecla F9 (Generar Plano)
                            PERFORM GENERAR-PLANO
-                           DISPLAY "Archivo plano 'clientes.txt' generado."   
+                           DISPLAY "Archivo plano 'productos.txt' generado."   
                                LINE 22 COL 20
                            ACCEPT WS-PAUSA LINE 23 COL 55
                        WHEN KEY-F10  *> tecla F10 (Generar CSV)
                            PERFORM GENERAR-CSV
-                           DISPLAY "Archivo CSV 'clientes.CSV' generado."    
+                           DISPLAY "Archivo CSV 'productos.CSV' generado."    
                                LINE 22 COL 20
                            ACCEPT WS-PAUSA LINE 23 COL 55
                        WHEN KEY-ENTER
@@ -137,14 +140,14 @@
        MOSTRAR-REGISTROS.
            SET NO-FIN-LISTA TO TRUE.
            
-           IF BUSCANDO                                                         *> Si estamos en modo búsqueda, usar la clave alternativa
-               MOVE WS-BUSCA-NOMBRE TO CLI-NOMBRE
-               START CLIENTES KEY IS NOT LESS THAN CLI-NOMBRE
+           IF BUSCANDO                                                     *> Si estamos en modo búsqueda, usar la clave alternativa
+               MOVE WS-BUS-DESCRIPCION TO PRD-DESCRIPCION            
+                   START PRODUCTOS KEY IS NOT LESS THAN PRD-DESCRIPCION
                    INVALID KEY SET FIN-LISTA TO TRUE
                END-START
            ELSE
-               MOVE ZERO TO CLI-ID                                             *> Modo normal: mostrar todos desde el inicio
-               START CLIENTES KEY IS NOT LESS THAN CLI-ID
+               MOVE ZERO TO PRD-CODIGO                                             *> Modo normal: mostrar todos desde el inicio
+               START PRODUCTOS KEY IS NOT LESS THAN PRD-CODIGO
                    INVALID KEY SET FIN-LISTA TO TRUE
                END-START
            END-IF.
@@ -153,13 +156,13 @@
            MOVE 1 TO WS-INDICE.
            
            PERFORM UNTIL FIN-LISTA OR WS-FILA > 22
-               READ CLIENTES NEXT RECORD
+               READ PRODUCTOS NEXT RECORD
                    AT END SET FIN-LISTA TO TRUE
                    NOT AT END
-                       IF BUSCANDO                                      *> Si estamos buscando, filtrar por coincidencia parcial
-                           IF CLI-NOMBRE(1:FUNCTION LENGTH(
-                              FUNCTION TRIM(WS-BUSCA-NOMBRE))) 
-                              = FUNCTION TRIM(WS-BUSCA-NOMBRE)
+                       IF BUSCANDO                                  *> Si estamos buscando, filtrar por coincidencia parcial
+                           IF PRD-DESCRIPCION(1:FUNCTION LENGTH(
+                              FUNCTION TRIM(WS-BUS-DESCRIPCION))) 
+                              = FUNCTION TRIM(WS-BUS-DESCRIPCION)
                                PERFORM AGREGAR-A-TABLA
                            END-IF
                        ELSE
@@ -174,49 +177,49 @@
            MOVE WS-FILA-INICIO TO WS-PUNTERO.
 
        AGREGAR-A-TABLA.
-           MOVE CLI-ID        TO T-ID(WS-INDICE)
-           MOVE CLI-NOMBRE    TO T-NOM(WS-INDICE)
-           MOVE CLI-DIRECCION TO T-DIR(WS-INDICE)
-           MOVE CLI-CATEGORIA TO T-CAT(WS-INDICE)
+           MOVE PRD-CODIGO         TO T-COD(WS-INDICE)
+           MOVE PRD-DESCRIPCION    TO T-DES(WS-INDICE)
+           MOVE PRD-PRECIO         TO T-PRE(WS-INDICE)
+           MOVE PRD-ESTADO         TO T-EST(WS-INDICE)
            PERFORM NORMALIZAR-PINTADO
            ADD 1 TO WS-FILA
            ADD 1 TO WS-INDICE.
 
        NORMALIZAR-PINTADO.
-           DISPLAY T-ID(WS-INDICE)  LINE WS-FILA COL 2  BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           DISPLAY T-NOM(WS-INDICE) LINE WS-FILA COL 15 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           DISPLAY T-DIR(WS-INDICE) LINE WS-FILA COL 47 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           DISPLAY T-CAT(WS-INDICE) LINE WS-FILA COL 78 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           DISPLAY T-COD(WS-INDICE)  LINE WS-FILA COL 2  BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           DISPLAY T-DES(WS-INDICE) LINE WS-FILA COL 15 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           DISPLAY T-PRE(WS-INDICE) LINE WS-FILA COL 47 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           DISPLAY T-EST(WS-INDICE) LINE WS-FILA COL 78 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
 
        RESALTAR-FILA.
            DISPLAY ALL " " LINE WS-PUNTERO COL 1 SIZE 80 BACKGROUND-COLOR 7.
-           DISPLAY T-ID(WS-INDICE)  LINE WS-PUNTERO COL 2  BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           DISPLAY T-NOM(WS-INDICE) LINE WS-PUNTERO COL 15 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           DISPLAY T-DIR(WS-INDICE) LINE WS-PUNTERO COL 47 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
-           DISPLAY T-CAT(WS-INDICE) LINE WS-PUNTERO COL 78 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           DISPLAY T-COD(WS-INDICE)  LINE WS-PUNTERO COL 2  BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           DISPLAY T-DES(WS-INDICE) LINE WS-PUNTERO COL 15 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           DISPLAY T-PRE(WS-INDICE) LINE WS-PUNTERO COL 47 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
+           DISPLAY T-EST(WS-INDICE) LINE WS-PUNTERO COL 78 BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
 
        NORMALIZAR-FILA.
            DISPLAY ALL " " LINE WS-PUNTERO COL 1 SIZE 80 BACKGROUND-COLOR 1.
-           DISPLAY T-ID(WS-INDICE)  LINE WS-PUNTERO COL 2  BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           DISPLAY T-NOM(WS-INDICE) LINE WS-PUNTERO COL 15 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           DISPLAY T-DIR(WS-INDICE) LINE WS-PUNTERO COL 47 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           DISPLAY T-CAT(WS-INDICE) LINE WS-PUNTERO COL 78 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           DISPLAY T-COD(WS-INDICE) LINE WS-PUNTERO COL 02 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           DISPLAY T-DES(WS-INDICE) LINE WS-PUNTERO COL 15 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           DISPLAY T-PRE(WS-INDICE) LINE WS-PUNTERO COL 47 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           DISPLAY T-EST(WS-INDICE) LINE WS-PUNTERO COL 78 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
 
-       BUSCAR-CLIENTE.
+       BUSCAR-PRODUCTO.
            DISPLAY ALL " " LINE 22 COL 1 SIZE 80 BACKGROUND-COLOR 1.    *> Limpiar línea de búsqueda
            
            DISPLAY "Ingrese nombre a buscar: " LINE 22 COL 20 
                    BACKGROUND-COLOR 1 FOREGROUND-COLOR 7
            
-           MOVE SPACES TO WS-BUSCA-NOMBRE
-           ACCEPT WS-BUSCA-NOMBRE LINE 22 COL 45 
+           MOVE SPACES TO WS-BUS-DESCRIPCION
+           ACCEPT WS-BUS-DESCRIPCION LINE 22 COL 45 
                   BACKGROUND-COLOR 1 FOREGROUND-COLOR 7
            
-           IF WS-BUSCA-NOMBRE NOT = SPACES                              *> Si ingresó algo, activar modo búsqueda
+           IF WS-BUS-DESCRIPCION NOT = SPACES                              *> Si ingresó algo, activar modo búsqueda
                SET BUSCANDO TO TRUE
                DISPLAY "MODO BUSQUEDA: " LINE 2 COL 2 
                        BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
-               DISPLAY WS-BUSCA-NOMBRE LINE 2 COL 18
+               DISPLAY WS-BUS-DESCRIPCION LINE 2 COL 18
                        BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
            ELSE
                SET NO-BUSCANDO TO TRUE                                  *> Si no ingresó nada, desactivar búsqueda
@@ -228,19 +231,19 @@
            MOVE 0 TO WS-KEY.
 
        ELIMINAR-REGISTRO. 
-               DISPLAY "Desea ELIMINAR el cliente [S/N]? " LINE 22 
+               DISPLAY "Desea ELIMINAR el producto [S/N]? " LINE 22 
                        COL 20 WITH BACKGROUND-COLOR 4
                ACCEPT RESPUESTA LINE 22 COL 53
                
                IF FUNCTION UPPER-CASE(RESPUESTA) = "S"
-                   MOVE T-ID(WS-INDICE) TO CLI-ID
-                   READ CLIENTES
-                       KEY IS CLI-ID
+                   MOVE T-COD(WS-INDICE) TO PRD-CODIGO
+                   READ PRODUCTOS
+                       KEY IS PRD-CODIGO
                        INVALID KEY
                            DISPLAY "REGISTRO NO ENCONTRADO" 
                            LINE 23 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
                        NOT INVALID KEY
-                           DELETE CLIENTES RECORD
+                           DELETE PRODUCTOS RECORD
                               INVALID KEY
                                 DISPLAY "ERROR AL ELIMINAR" LINE 
                                 23 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
@@ -252,14 +255,14 @@
                END-IF.   
        
        ABRO-ARCHIVO.
-           OPEN I-O CLIENTES.
-           IF ST-CLIENTES = "35" 
-               OPEN OUTPUT CLIENTES 
-               CLOSE CLIENTES 
-               OPEN I-O CLIENTES.
+           OPEN I-O PRODUCTOS.
+           IF ST-PRODUCTOS = "35" 
+               OPEN OUTPUT PRODUCTOS 
+               CLOSE PRODUCTOS 
+               OPEN I-O PRODUCTOS.
 
-           IF ST-CLIENTES > "07"                                 
-             STRING "Error al abrir Clientes " ST-CLIENTES DELIMITED BY SIZE
+           IF ST-PRODUCTOS > "07"                                 
+             STRING "Error al abrir Clientes " ST-PRODUCTOS DELIMITED BY SIZE
                      INTO MENSAJE
               DISPLAY MENSAJE LINE 10 COL 20 
               ACCEPT WS-PAUSA LINE 23 COL 55
@@ -280,68 +283,73 @@
            PERFORM MOSTRAR-REGISTROS.
        
        GENERAR-PLANO.
-           OPEN OUTPUT CLIENTES-PLANO
+           OPEN OUTPUT PRODUCTOS-PLANO
            SET NO-FIN-LISTA TO TRUE
 
-           MOVE ZERO TO CLI-ID
-           START CLIENTES KEY IS NOT LESS THAN CLI-ID
+           MOVE ZERO TO PRD-CODIGO
+           START PRODUCTOS KEY IS NOT LESS THAN PRD-CODIGO
                INVALID KEY
-                   CLOSE CLIENTES-PLANO
+                   CLOSE PRODUCTOS-PLANO
                    EXIT PARAGRAPH
            END-START
        
            PERFORM UNTIL FIN-LISTA
-               READ CLIENTES NEXT RECORD
+               READ PRODUCTOS NEXT RECORD
                    AT END
                        SET FIN-LISTA TO TRUE
                    NOT AT END
                        STRING
-                           CLI-ID        DELIMITED BY SIZE
-                           " | " 
-                           CLI-NOMBRE    DELIMITED BY SIZE
+                           PRD-CODIGO     DELIMITED BY SIZE
+                           " | "                        
+                           PRD-DESCRIPCION     DELIMITED BY SIZE
                            " | "
-                           CLI-DIRECCION DELIMITED BY SIZE
+                           PRD-PRECIO     DELIMITED BY SIZE
+                           " | "    
+                           PRD-IVA     DELIMITED BY SIZE
                            " | "
-                           CLI-CATEGORIA DELIMITED BY SIZE
+                           PRD-ESTADO DELIMITED BY SIZE
                            INTO WS-LINEA-PLANO
        
                        WRITE REG-PLANO FROM WS-LINEA-PLANO
                END-READ
            END-PERFORM
-           CLOSE CLIENTES-PLANO
+           CLOSE PRODUCTOS-PLANO
            SET NO-FIN-LISTA TO TRUE.
 *> 
        GENERAR-CSV.         
            SET NO-FIN-LISTA TO TRUE
-           OPEN OUTPUT CLIENTES-CSV
+           OPEN OUTPUT PRODUCTOS-CSV
           
-           MOVE ZERO TO CLI-ID
-           START CLIENTES KEY IS NOT LESS THAN CLI-ID
+           MOVE ZERO TO PRD-CODIGO
+           START PRODUCTOS KEY IS NOT LESS THAN PRD-CODIGO
                INVALID KEY
-                   CLOSE CLIENTES-CSV
+                   CLOSE PRODUCTOS-CSV
                    EXIT PARAGRAPH
            NOT INVALID KEY
-           MOVE "ID;NOMBRE;DIRECCION;CATEGORIA" TO REG-CSV
+           MOVE "ID;CODIGO;DESCRIPCION;PRECIO;IVA;ESTADO" TO REG-CSV
            WRITE REG-CSV
            PERFORM UNTIL FIN-LISTA
-               READ CLIENTES NEXT RECORD
+               READ PRODUCTOS NEXT RECORD
                    AT END
                        SET FIN-LISTA TO TRUE
                    NOT AT END
                        INITIALIZE REG-CSV
                        STRING
-                           CLI-ID        DELIMITED BY SIZE
+                           PRD-CODIGO DELIMITED BY SIZE
+                           ";"                        
+                           PRD-DESCRIPCION DELIMITED BY SIZE
                            ";"
-                           CLI-NOMBRE    DELIMITED BY SIZE
+                           PRD-PRECIO DELIMITED BY SIZE
                            ";"
-                           CLI-DIRECCION DELIMITED BY SIZE
+                           PRD-IVA DELIMITED BY SIZE
                            ";"
-                           CLI-CATEGORIA DELIMITED BY SIZE
+                           PRD-ESTADO DELIMITED BY SIZE
                            INTO REG-CSV
        
                        WRITE REG-CSV
                END-READ
            END-PERFORM
            END-START
-           CLOSE CLIENTES-CSV
+           CLOSE PRODUCTOS-CSV
            SET NO-FIN-LISTA TO TRUE.
+

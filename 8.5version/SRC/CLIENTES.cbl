@@ -32,7 +32,7 @@
        01  WS-KEY         PIC 9(4).
        
        *> Variables de Trabajo para el ID
-       01  W-CLI-ID       PIC 9(07).
+       01  W-CLI-ID       PIC 9(08).
        01  W-CLI-ID-Z     PIC Z(06)9.
 
        *> Variables para capturar datos en pantalla
@@ -41,7 +41,7 @@
            05 W-DIR       PIC X(30).
            05 W-CP        PIC X(10).
            05 W-CAT       PIC X(01).
-           05 W-ESTADO    PIC X(01).
+      *>     05 W-ESTADO    PIC X(01).
 
        SCREEN SECTION.
        01 PANTALLA-BASE.
@@ -77,7 +77,7 @@
        MAIN-LOGIC. 
            MOVE "        A.B.M   CLIENTES        " TO WS-TITULO-PANTALLA
            MOVE "VERSION.01" TO WS-PROGRAMA
-           MOVE "CREAR/EDITAR USUARIO" TO WS-MODULO-PANTALLA
+           MOVE "CREAR/EDITAR CLIENTE" TO WS-MODULO-PANTALLA
            PERFORM ABRO-ARCHIVO.
            
            PERFORM UNTIL FIN = "S"
@@ -101,20 +101,6 @@
            PERFORM CIERRO-ARCHIVO.
            EXIT PROGRAM.
 
-       ABRO-ARCHIVO.
-           OPEN I-O CLIENTES.
-           *> Si el archivo no existe (Error 35), lo creamos
-           IF ST-CLIENTES = "35" 
-               OPEN OUTPUT CLIENTES 
-               CLOSE CLIENTES 
-               OPEN I-O CLIENTES.
-
-           IF ST-CLIENTES > "07"                                 
-             STRING "Error al abrir Clientes " ST-CLIENTES 
-                     DELIMITED BY SIZE
-                     INTO MENSAJE
-              DISPLAY MENSAJE LINE 10 COL 20
-              MOVE "S" TO FIN.
        INGRESO-ID.
            MOVE 0 TO W-CLI-ID.
            ACCEPT W-CLI-ID LINE 5 COL 25 WITH PROMPT HIGHLIGHT.
@@ -162,6 +148,20 @@
                        BACKGROUND-COLOR 2 FOREGROUND-COLOR 7
                ACCEPT WS-PAUSA LINE 23 COL 40
            END-IF.
+       ABRO-ARCHIVO.
+           OPEN I-O CLIENTES. 
+
+           IF ST-CLIENTES = "35" 
+               OPEN OUTPUT CLIENTES 
+               CLOSE CLIENTES 
+               OPEN I-O CLIENTES.
+
+           IF ST-CLIENTES > "07"                                 
+             STRING "Error al abrir Clientes " ST-CLIENTES 
+                     DELIMITED BY SIZE
+                     INTO MENSAJE
+              DISPLAY MENSAJE LINE 10 COL 20
+              MOVE "S" TO FIN.
 
        CIERRO-ARCHIVO.
            CLOSE CLIENTES.

@@ -1,5 +1,5 @@
        SELECT OPTIONAL DETALLES
-           ASSIGN TO "./bin/DAT/detalles.dat"
+           ASSIGN TO "./DAT/detalles.dat"
            ORGANIZATION IS SEQUENTIAL
            FILE STATUS IS ST-DETALLES.
        

@@ -1,5 +1,5 @@
            SELECT OPTIONAL CLIENTES 
-                  ASSIGN TO "./bin/DAT/clientes.dat"
+                  ASSIGN TO "./DAT/clientes.dat"
                   ORGANIZATION INDEXED
                   ACCESS MODE IS DYNAMIC
                   RECORD KEY IS CLI-ID
