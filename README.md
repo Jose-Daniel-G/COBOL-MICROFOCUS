@@ -23,6 +23,8 @@ Cuando domines CRUD:
 ![menu](images/menu.png)
 ![menu](images/read.png)
 ![program](images/menu0.png)
+![program](images/submenu.png)
+
 
 
 ### CUANDO LA ESRTUCUTURA NO ESTA DEFINIDA (ANTERIORMENTE) 
