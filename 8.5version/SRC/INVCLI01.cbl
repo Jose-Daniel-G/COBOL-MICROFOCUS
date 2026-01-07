@@ -63,8 +63,7 @@
            05 LINE 10 COL 2 VALUE "  +--------------------------------------------------------------+"
               BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            *> Barra inferior
-           05 LINE 25 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
-      *>     05 LINE 25 COL 53 VALUE "F10=Termina" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
+           05 LINE 25 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.      *>     05 LINE 25 COL 53 VALUE "F10=Termina" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
            05 LINE 25 COL 67 VALUE "<ESC>=Retorna" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
 
        01 FORMULARIO.
@@ -82,7 +81,7 @@
            
            PERFORM UNTIL FIN = "S"
                DISPLAY PANTALLA-BASE
-               INITIALIZE DATOS-TRABAJO REG-CLIENTES
+               INITIALIZE DATOS-TRABAJO CLIENTES-REG
                MOVE "S" TO RESPUESTA
                
                PERFORM INGRESO-ID
@@ -140,9 +139,9 @@
                SET CLI-ACTIVO TO TRUE
 
                IF EXISTE = "S"
-                   REWRITE REG-CLIENTES
+                   REWRITE CLIENTES-REG
                ELSE
-                   WRITE REG-CLIENTES
+                   WRITE CLIENTES-REG
                END-IF
                DISPLAY "GRABADO EXITOSO! Presione una tecla..." LINE 23 COL 1 
                        BACKGROUND-COLOR 2 FOREGROUND-COLOR 7

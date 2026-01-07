@@ -112,3 +112,11 @@ Cierres
 ¿Aprender COBOL genérico? → El código que te di funciona perfecto
 ¿Desarrollar para SIESA 8.5? → Necesitas capacitación en el 4GL de SIESA
 ¿Integrar con SIESA? → Usar sus APIs/Web Services
+
+
+/SRC
+ ├── VENFAC01.cbl   *> Crear factura
+ ├── VENDET01.cbl   *> Detalle factura
+ ├── CLIVAL01.cbl   *> Validar cliente
+ ├── VEHVAL01.cbl   *> Validar vehículo
+ └── VENIMP01.cbl   *> Imprimir factura

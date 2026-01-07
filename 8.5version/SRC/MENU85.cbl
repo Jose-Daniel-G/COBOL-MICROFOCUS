@@ -149,39 +149,21 @@
                DISPLAY COMERCIAL
              *> DIBUJAR LAS OPCIONES CON RESALTADO DINAMICO
                IF WS-FILA-ACTUAL = 1
- 
-                  DISPLAY "| #. ??            |" LINE 06 COL 23 WITH REVERSE-VIDEO   *>V. Ventas
+                  DISPLAY "| I. Inventarios   |" LINE 06 COL 23 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| #. ??            |" LINE 06 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1   *>V. Ventas
+                  DISPLAY "| I. Inventarios   |" LINE 06 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
 
                IF WS-FILA-ACTUAL = 2
                   DISPLAY "| #. ??            |" LINE 07 COL 23 WITH REVERSE-VIDEO   *>C. Compras
                ELSE
                   DISPLAY "| #. ??            |" LINE 07 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1   *>C. Compras
-               END-IF
+               END-IF 
        
                IF WS-FILA-ACTUAL = 3
-                  DISPLAY "| I. Inventarios   |" LINE 08 COL 23 WITH REVERSE-VIDEO
+                  DISPLAY "| Regresar         |" LINE 08 COL 23 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| I. Inventarios   |" LINE 08 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
-               END-IF
-               IF WS-FILA-ACTUAL = 4
-                  DISPLAY "| A. Actualizacion |" LINE 09 COL 23 WITH REVERSE-VIDEO *> A. Actualizacion
-               ELSE
-                  DISPLAY "| A. Actualizacion |" LINE 09 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1 *> A. Actualizacion
-               END-IF
-       
-               IF WS-FILA-ACTUAL = 5
-                  DISPLAY "| #. ??            |" LINE 10 COL 23 WITH REVERSE-VIDEO *> R. Retiro
-               ELSE
-                  DISPLAY "| #. ??            |" LINE 10 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1 *> R. Retiro
-               END-IF
-       
-               IF WS-FILA-ACTUAL = 6
-                  DISPLAY "| Regresar         |" LINE 11 COL 23 WITH REVERSE-VIDEO
-               ELSE
-                  DISPLAY "| Regresar         |" LINE 11 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
+                  DISPLAY "| Regresar         |" LINE 08 COL 23 BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                END-IF
        
                *> ACCEPT "INVISIBLE" PARA CAPTURAR LA TECLA
@@ -195,25 +177,17 @@
                    WHEN KEY-ENTER    *> ENTER
                        EVALUATE WS-FILA-ACTUAL
                            WHEN 1   
+                              PERFORM COM-INVENTARIO
                               DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
-                              DISPLAY BARRA-SUPERIOR
-
-                           WHEN 2
+                              DISPLAY BARRA-SUPERIOR 
+                           WHEN 2  
                               DISPLAY "CARGANDO COMERCIAL..." LINE 15 COL 10
                               CALL "COMERCIAL" 
                               ON EXCEPTION
                                  DISPLAY "ERROR: NO SE ENCONTRO COMERCIAL" LINE 15 COL 10
                               END-CALL
-                              CANCEL "COMERCIAL"
-                           WHEN 3  
-                              PERFORM COM-INVENTARIO
-                              DISPLAY " " LINE 1 COL 1 BLANK SCREEN BACKGROUND-COLOR 1
-                              DISPLAY BARRA-SUPERIOR
-                           WHEN 4
-                              DISPLAY "CARGANDO LISTADO DE COMERCIAL..." LINE 15 COL 10 
-                           WHEN 5 
-                              DISPLAY "CARGANDO LISTADO DE COMERCIAL..." LINE 15 COL 10 
-                           WHEN 6 
+                              CANCEL "COMERCIAL" 
+                           WHEN 3 
                                PERFORM LIMPIAR-AREA-MENU
                                MOVE "S" TO WS-MENU      
                        END-EVALUATE                  
@@ -407,19 +381,24 @@
                END-IF
                
                IF WS-FILA-CONF = 3
-                  DISPLAY "| 3. Consulta Stock    |" LINE 10 COL 40 WITH REVERSE-VIDEO
+                  DISPLAY "| 3. Bodegas (ABM)     |" LINE 10 COL 40 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| 3. Consulta Stock    |" LINE 10 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| 3. Bodegas (ABM)     |" LINE 10 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
                IF WS-FILA-CONF = 4
-                  DISPLAY "| 3. kardex            |" LINE 11 COL 40 WITH REVERSE-VIDEO
+                  DISPLAY "| 4. Consulta Stock    |" LINE 11 COL 40 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| 3. kardex            |" LINE 11 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| 4. Consulta Stock    |" LINE 11 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
                IF WS-FILA-CONF = 5
-                  DISPLAY "|    Regresar          |" LINE 12 COL 40 WITH REVERSE-VIDEO
+                  DISPLAY "| 5. kardex            |" LINE 12 COL 40 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "|    Regresar          |" LINE 12 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| 5. kardex            |" LINE 12 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+               END-IF
+               IF WS-FILA-CONF = 6
+                  DISPLAY "|    Regresar          |" LINE 13 COL 40 WITH REVERSE-VIDEO
+               ELSE
+                  DISPLAY "|    Regresar          |" LINE 13 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
 
                *> ACCEPT "INVISIBLE" PARA CAPTURAR LA TECLA
@@ -431,7 +410,7 @@
                           SUBTRACT 1 FROM WS-FILA-CONF
                        END-IF
                    WHEN KEY-DOWN *> FLECHA ABAJO
-                       IF WS-FILA-CONF < 5 
+                       IF WS-FILA-CONF < 6 
                           ADD 1 TO WS-FILA-CONF
                        END-IF
                    WHEN KEY-ENTER    *> TECLA ENTER
@@ -440,22 +419,16 @@
                                PERFORM SUBCOM-PRODUCTOS
                                PERFORM REFRESCAR-PANTALLA-TOTAL 
                            WHEN 2
-                               CALL "LISTADO" 
-                               ON EXCEPTION
-                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
-                               END-CALL
-                               CANCEL "LISTADO"
-                               PERFORM REFRESCAR-PANTALLA-TOTAL 
+                               PERFORM SUBCOM-STOCK
+                               PERFORM REFRESCAR-PANTALLA-TOTAL  
                            WHEN 3 
-                               CALL "LISTADO" 
-                               ON EXCEPTION
-                                  DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
-                               END-CALL
-                               CANCEL "LISTADO"
-                               PERFORM REFRESCAR-PANTALLA-TOTAL
+                               PERFORM SUBCOM-BODEGAS
+                               PERFORM REFRESCAR-PANTALLA-TOTAL  
                            WHEN 4
                                MOVE "S" TO WS-SUBM
                            WHEN 5
+                               MOVE "S" TO WS-SUBM
+                           WHEN 6
                                MOVE "S" TO WS-SUBM
                        END-EVALUATE
                    WHEN KEY-ESC 
@@ -523,6 +496,131 @@
                            WHEN 2
                                CALL "INVLPRO01"
                                CANCEL "INVLPRO01"
+                               PERFORM REFRESCAR-PANTALLA-TOTAL
+               
+                           WHEN 3
+                               MOVE 1   TO WS-FILA-CONF
+                               MOVE "S" TO WS-SUBN
+                       END-EVALUATE
+               
+                   WHEN KEY-ESC
+                       MOVE "S" TO WS-SUBN
+               END-EVALUATE
+           END-PERFORM.
+       SUBCOM-STOCK.                                                 *> TERCER NIVEL STOCK COMERCIAL
+           MOVE "N" TO WS-SUBN
+           MOVE 1   TO WS-FILA-CONF
+       
+           PERFORM UNTIL WS-SUBN = "S"
+               DISPLAY BARRA-SUPERIOR
+               PERFORM DIBUJAR-OPCIONES
+               DISPLAY COMERCIAL       
+               DISPLAY SUBMENU-COM       
+               DISPLAY SUBCOM-STK
+       
+               IF WS-FILA-CONF = 1
+                   DISPLAY "| 1. Stock     |" LINE 09 COL 59 WITH REVERSE-VIDEO
+               ELSE
+                   DISPLAY "| 1. Stock     |" LINE 09 COL 59 BACKGROUND-COLOR GRN FOREGROUND-COLOR 7
+               END-IF
+       
+               IF WS-FILA-CONF = 2
+                   DISPLAY "| 2. Listado   |" LINE 10 COL 59 WITH REVERSE-VIDEO
+               ELSE
+                   DISPLAY "| 2. Listado   |" LINE 10 COL 59 BACKGROUND-COLOR GRN FOREGROUND-COLOR 7
+               END-IF
+       
+               IF WS-FILA-CONF = 3
+                   DISPLAY "|    Regresar  |" LINE 11 COL 59 WITH REVERSE-VIDEO
+               ELSE
+                   DISPLAY "|    Regresar  |" LINE 11 COL 59 BACKGROUND-COLOR GRN FOREGROUND-COLOR 7
+               END-IF
+       
+               ACCEPT OPCION-VENTANA LINE 25 COL 80
+               
+               EVALUATE WS-KEY
+                   WHEN KEY-UP
+                       IF WS-FILA-CONF > 1
+                           SUBTRACT 1 FROM WS-FILA-CONF
+                       END-IF
+               
+                   WHEN KEY-DOWN
+                       IF WS-FILA-CONF < 3
+                           ADD 1 TO WS-FILA-CONF
+                       END-IF
+               
+                   WHEN KEY-ENTER
+                       EVALUATE WS-FILA-CONF
+                           WHEN 1
+                               CALL "INVSTK01"
+                               CANCEL "INVSTK01"
+                               PERFORM REFRESCAR-PANTALLA-TOTAL
+               
+                           WHEN 2
+                                  DISPLAY "ERROR: PENDIENTE" LINE 15 COL 45  *>                         CALL "INVLSTK01" >                         CANCEL "INVLSTK01" >                         PERFORM REFRESCAR-PANTALLA-TOTAL
+               
+                           WHEN 3
+                               MOVE 2   TO WS-FILA-CONF
+                               MOVE "S" TO WS-SUBN
+                       END-EVALUATE
+               
+                   WHEN KEY-ESC
+                       MOVE "S" TO WS-SUBN
+               END-EVALUATE
+           END-PERFORM.
+
+       SUBCOM-BODEGAS.                                                 *> TERCER NIVEL PRODUCTOS COMERCIAL
+           MOVE "N" TO WS-SUBN
+           MOVE 1   TO WS-FILA-CONF
+       
+           PERFORM UNTIL WS-SUBN = "S"
+               DISPLAY BARRA-SUPERIOR
+               PERFORM DIBUJAR-OPCIONES
+               DISPLAY COMERCIAL       
+               DISPLAY SUBMENU-COM       
+               DISPLAY SUBCOM-PROD
+       
+               IF WS-FILA-CONF = 1
+                   DISPLAY "| 1. Bodegas (ABM)   |" LINE 08 COL 59 WITH REVERSE-VIDEO
+               ELSE
+                   DISPLAY "| 1. Bodegas (ABM)   |" LINE 08 COL 59 BACKGROUND-COLOR GRN FOREGROUND-COLOR 7
+               END-IF
+       
+               IF WS-FILA-CONF = 2
+                   DISPLAY "| 2. Listado General |" LINE 09 COL 59 WITH REVERSE-VIDEO
+               ELSE
+                   DISPLAY "| 2. Listado General |" LINE 09 COL 59 BACKGROUND-COLOR GRN FOREGROUND-COLOR 7
+               END-IF
+       
+               IF WS-FILA-CONF = 3
+                   DISPLAY "|    Regresar        |" LINE 10 COL 59 WITH REVERSE-VIDEO
+               ELSE
+                   DISPLAY "|    Regresar        |" LINE 10 COL 59 BACKGROUND-COLOR GRN FOREGROUND-COLOR 7
+               END-IF
+       
+               ACCEPT OPCION-VENTANA LINE 25 COL 80
+               
+               EVALUATE WS-KEY
+                   WHEN KEY-UP
+                       IF WS-FILA-CONF > 1
+                           SUBTRACT 1 FROM WS-FILA-CONF
+                       END-IF
+               
+                   WHEN KEY-DOWN
+                       IF WS-FILA-CONF < 3
+                           ADD 1 TO WS-FILA-CONF
+                       END-IF
+               
+                   WHEN KEY-ENTER
+                       EVALUATE WS-FILA-CONF
+                           WHEN 1
+                               CALL "INVBOD01"
+                               CANCEL "INVBOD01"
+                               PERFORM REFRESCAR-PANTALLA-TOTAL
+               
+                           WHEN 2
+                               CALL "INVBOD02"
+                               CANCEL "INVBOD02"
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                
                            WHEN 3

@@ -1,0 +1,8 @@
+       FD  BODEGAS.
+       01  BODEGAS-REG.
+           05 BOD-CODIGO      PIC 9(04).
+           05 BOD-NOMBRE      PIC X(30).
+           05 BOD-ESTADO      PIC X.
+              88 BOD-ACTIVA   VALUE "A".
+              88 BOD-INACTIVA VALUE "I".
+              

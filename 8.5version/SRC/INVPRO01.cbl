@@ -65,10 +65,7 @@
            *> Barra inferior
            05 LINE 25 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.
            05 LINE 25 COL 67 VALUE "<ESC>=Retorna" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-       
-       *> ============================================================
-       *> SOLUCIÓN: ACCEPT campo por campo con AFTER para detectar teclas
-       *> ============================================================
+        
        PROCEDURE DIVISION.
        MAIN-LOGIC. 
            MOVE "        A.B.M   PRODUCTO        " TO WS-TITULO-PANTALLA
@@ -127,24 +124,24 @@
        *> ============================================================
        EDITAR-DATOS.
            *> 1. DESCRIPCION
-           ACCEPT W-DESCRIPCION LINE 6 COL 25 WITH PROMPT HIGHLIGHT.
+           ACCEPT W-DESCRIPCION LINE 6 COL 25 WITH UPDATE PROMPT HIGHLIGHT.
            IF WS-KEY = KEY-ESC EXIT PARAGRAPH.
            
            *> 2. PRECIO
            MOVE W-PRECIO TO W-PRECIO-DISP.
-           ACCEPT W-PRECIO-DISP LINE 7 COL 25 WITH PROMPT HIGHLIGHT.
+           ACCEPT W-PRECIO-DISP LINE 7 COL 25 WITH UPDATE PROMPT HIGHLIGHT.
            IF WS-KEY = KEY-ESC EXIT PARAGRAPH.
            *> Convertimos de vuelta al campo numérico
            COMPUTE W-PRECIO = FUNCTION NUMVAL(W-PRECIO-DISP).
 
            *> 3. IVA (TU REGLA: El cursor se detiene aquí sí o sí)
            MOVE W-IVA TO W-IVA-DISP.
-           ACCEPT W-IVA-DISP LINE 8 COL 25 WITH PROMPT HIGHLIGHT.
+           ACCEPT W-IVA-DISP LINE 8 COL 25 WITH UPDATE PROMPT HIGHLIGHT.
            IF WS-KEY = KEY-ESC EXIT PARAGRAPH.
            MOVE FUNCTION NUMVAL(W-IVA-DISP) TO W-IVA.
            
            *> 4. ESTADO
-           ACCEPT W-ESTADO LINE 9 COL 25 WITH PROMPT HIGHLIGHT.
+           ACCEPT W-ESTADO LINE 9 COL 25 WITH UPDATE PROMPT HIGHLIGHT.
            IF WS-KEY = KEY-ESC EXIT PARAGRAPH.
        
        CONFIRMAR-Y-GUARDAR.

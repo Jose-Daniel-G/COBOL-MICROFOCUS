@@ -1,10 +1,14 @@
 🚀 Proyecto COBOL - Versión 8.5
 Repositorio de gestión y desarrollo en GnuCOBOL. Este proyecto implementa una arquitectura modular enfocada en CRUD, manejo de archivos indexados y pantallas interactivas.
 ```
-cobc -x -free SRC\MENU85.cbl SRC\LISTADO.cbl SRC\CLIENTES.cbl -I CPY -I FD -I FILES\SEL
-cobc -m -free SRC\VENFAC01.cbl  -I CPY -I FD -I FILES\SEL
-cobc -m -free SRC\INVPRO01.cbl  -I CPY -I FD -I FILES\SEL
-cobc -m -free SRC\INVLPRO01.cbl -I CPY -I FD -I FILES\SEL
+cobc -x -free SRC\MENU85.cbl -I CPY -I FD -I FILES\SEL
+cobc -m -free SRC\INVCLI01.cbl  -I CPY -I FD -I FILES\SEL    //CLIENTES
+cobc -m -free SRC\INVCLI02.cbl  -I CPY -I FD -I FILES\SEL    //LISTADO CLIENTES
+cobc -m -free SRC\VENFAC01.cbl  -I CPY -I FD -I FILES\SEL    //FACTURAS
+cobc -m -free SRC\INVPRO01.cbl  -I CPY -I FD -I FILES\SEL    //PRODUCTOS
+cobc -m -free SRC\INVPRO02.cbl  -I CPY -I FD -I FILES\SEL    //LISTADO PRODUCTOS
+cobc -m -free SRC\INVBOD01.cbl  -I CPY -I FD -I FILES\SEL     //BODGEAS
+cobc -m -free SRC\INVBOD02.cbl  -I CPY -I FD -I FILES\SEL     //LISTADO BODGEAS
 ```
 
 Cuando domines CRUD:
@@ -182,3 +186,8 @@ F2	1002
 | `"39"` | Archivo incompatible                |
 | `"41"` | Archivo ya abierto                  |
 | `"46"` | Archivo bloqueado                   |
+
+
+PRODUCTOS  1 ──────┐
+                   ├── STOCK
+BODEGAS    1 ──────┘

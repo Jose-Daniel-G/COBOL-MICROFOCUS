@@ -1,6 +1,6 @@
-       SELECT OPTIONAL PRODUCTOS
-           ASSIGN TO "./DAT/productos.dat"
+       SELECT OPTIONAL STOCK
+           ASSIGN TO "./DAT/stock.dat"
            ORGANIZATION IS INDEXED
            ACCESS MODE IS DYNAMIC
-           RECORD KEY IS PRD-CODIGO
-           STATUS IS ST-PRODUCTOS.
+           RECORD KEY IS STK-CODIGO
+           STATUS IS ST-STOCK.
