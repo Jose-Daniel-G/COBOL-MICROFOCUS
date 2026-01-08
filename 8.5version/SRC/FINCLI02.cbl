@@ -49,11 +49,6 @@
              10 T-NOM     PIC X(30).
              10 T-DIR     PIC X(30).
              10 T-CAT     PIC X(01).
-             
-       01  WS-PAGINACION.
-           05 WS-PAG-ACTUAL    PIC 99 VALUE 1.
-           05 WS-TABLA-PAGINAS OCCURS 99 TIMES.
-              10 WS-ID-INICIO  PIC 9(07).             
        01 WS-LINEA-PLANO PIC X(200).
 
        SCREEN SECTION.
@@ -82,6 +77,10 @@
                IF WS-FILA-MAX >= WS-FILA-INICIO
                    PERFORM MOSTRAR-PANTALLA-ACTUAL
                    PERFORM NAVEGACION-BUCLE 
+               ELSE
+                   DISPLAY "NO HAY DATOS - [ESC] SALIR" LINE 12 COL 30
+                           WITH REVERSE-VIDEO
+                   ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
                END-IF
            END-PERFORM.
 
@@ -97,18 +96,17 @@
                    
                    EVALUATE WS-KEY
                        WHEN KEY-DOWN
-                          IF WS-PUNTERO > WS-FILA-INICIO
-                              PERFORM NORMALIZAR-FILA
-                              SUBTRACT 1 FROM WS-PUNTERO
-                              SUBTRACT 1 FROM WS-INDICE
-                          ELSE
-                              *> AQUÍ ESTÁS EN EL TOPE DE LA PANTALLA
-                              IF WS-PAG-ACTUAL > 1
-                                  SUBTRACT 1 FROM WS-PAG-ACTUAL
-                                  MOVE WS-ID-INICIO(WS-PAG-ACTUAL) TO CLI-ID
-                                  PERFORM RECARGAR-PAGINA-ATRAS
-                              END-IF
-                          END-IF
+                           IF WS-PUNTERO < WS-FILA-MAX
+                               PERFORM NORMALIZAR-FILA
+                               ADD 1 TO WS-PUNTERO
+                               ADD 1 TO WS-INDICE
+                           ELSE
+                               IF NO-FIN-LISTA
+                                   PERFORM RECARGAR-PAGINA
+                                   DISPLAY PANTALLA-BASE
+                                   PERFORM MOSTRAR-PANTALLA-ACTUAL
+                               END-IF
+                           END-IF
                        WHEN KEY-UP
                            IF WS-PUNTERO > WS-FILA-INICIO
                                PERFORM NORMALIZAR-FILA
@@ -134,7 +132,9 @@
                    END-EVALUATE
                ELSE
                    *> Si no hay registros, forzamos esperar F7 o ESC
+                   DISPLAY "No hay registros."   LINE 22 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
                    ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
+                   PERFORM INICIALIZAR-LISTADO
                    IF WS-KEY = KEY-F7 PERFORM BUSCAR-CLIENTE END-IF
                END-IF
            END-PERFORM.
@@ -186,13 +186,13 @@
            
            IF WS-BUSCA-NOMBRE NOT = SPACES                              *> Si ingresó algo, activar modo búsqueda
                SET BUSCANDO TO TRUE
-               DISPLAY "MODO BUSQUEDA: " LINE 2 COL 2 
+               DISPLAY "MODO BUSQUEDA: " LINE 22 COL 2 
                        BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
                DISPLAY WS-BUSCA-NOMBRE LINE 2 COL 18
                        BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
            ELSE
                SET NO-BUSCANDO TO TRUE                                  *> Si no ingresó nada, desactivar búsqueda
-               DISPLAY "MODO SELECCION" LINE 2 COL 2 
+               DISPLAY "MODO SELECCION" LINE 22 COL 2 
                        BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
            END-IF
            
