@@ -1,0 +1,6 @@
+       SELECT MOVIMIENTOS
+          ASSIGN TO "./DAT/invmov.dat"
+          ORGANIZATION IS INDEXED
+          RECORD KEY IS MOV-TIPO MOV-NUMERO
+          STATUS IS ST-MOV.
+       

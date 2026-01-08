@@ -1,6 +1,6 @@
        >>SOURCE FORMAT FREE
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. LISTADO.
+       PROGRAM-ID. FINCLI02.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -49,6 +49,11 @@
              10 T-NOM     PIC X(30).
              10 T-DIR     PIC X(30).
              10 T-CAT     PIC X(01).
+             
+       01  WS-PAGINACION.
+           05 WS-PAG-ACTUAL    PIC 99 VALUE 1.
+           05 WS-TABLA-PAGINAS OCCURS 99 TIMES.
+              10 WS-ID-INICIO  PIC 9(07).             
        01 WS-LINEA-PLANO PIC X(200).
 
        SCREEN SECTION.
@@ -69,21 +74,14 @@
            MOVE "VERSION.01" TO WS-PROGRAMA
 
            PERFORM ABRO-ARCHIVO.
+           DISPLAY PANTALLA-BASE
+           SET NO-BUSCANDO TO TRUE.
+           PERFORM INICIALIZAR-LISTADO
 
-           PERFORM UNTIL WS-KEY = KEY-ESC
-               DISPLAY PANTALLA-BASE
-               PERFORM RECARGAR-LISTADO
-               SET NO-FIN-LISTA TO TRUE
-               MOVE 0 TO WS-KEY
-               
-               PERFORM MOSTRAR-REGISTROS
-               
+           PERFORM UNTIL WS-KEY = KEY-ESC 
                IF WS-FILA-MAX >= WS-FILA-INICIO
-                   PERFORM NAVEGACION-BUCLE
-               ELSE
-                   DISPLAY "NO HAY DATOS - [ESC] SALIR" LINE 12 COL 30
-                           WITH REVERSE-VIDEO
-                   ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
+                   PERFORM MOSTRAR-PANTALLA-ACTUAL
+                   PERFORM NAVEGACION-BUCLE 
                END-IF
            END-PERFORM.
 
@@ -92,96 +90,70 @@
 
        NAVEGACION-BUCLE.
            MOVE 0 TO WS-KEY.
-           PERFORM UNTIL WS-KEY = KEY-ESC
+           PERFORM UNTIL WS-KEY = KEY-ESC OR WS-KEY = KEY-F7
                IF WS-FILA-MAX >= WS-FILA-INICIO
                    PERFORM RESALTAR-FILA 
                    ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
                    
                    EVALUATE WS-KEY
                        WHEN KEY-DOWN
-                           IF WS-PUNTERO < WS-FILA-MAX
-                              PERFORM NORMALIZAR-FILA
-                              ADD 1 TO WS-PUNTERO
-                              ADD 1 TO WS-INDICE
-                           END-IF
-                       WHEN KEY-UP
-                           IF WS-PUNTERO > WS-FILA-INICIO
+                          IF WS-PUNTERO > WS-FILA-INICIO
                               PERFORM NORMALIZAR-FILA
                               SUBTRACT 1 FROM WS-PUNTERO
                               SUBTRACT 1 FROM WS-INDICE
+                          ELSE
+                              *> AQUÍ ESTÁS EN EL TOPE DE LA PANTALLA
+                              IF WS-PAG-ACTUAL > 1
+                                  SUBTRACT 1 FROM WS-PAG-ACTUAL
+                                  MOVE WS-ID-INICIO(WS-PAG-ACTUAL) TO CLI-ID
+                                  PERFORM RECARGAR-PAGINA-ATRAS
+                              END-IF
+                          END-IF
+                       WHEN KEY-UP
+                           IF WS-PUNTERO > WS-FILA-INICIO
+                               PERFORM NORMALIZAR-FILA
+                               SUBTRACT 1 FROM WS-PUNTERO
+                               SUBTRACT 1 FROM WS-INDICE
                            END-IF
-                       WHEN KEY-F7  *> BÚSQUEDA POR NOMBRE
-                           PERFORM BUSCAR-CLIENTE
+                       WHEN KEY-F7
+                          PERFORM BUSCAR-CLIENTE
+                          DISPLAY PANTALLA-BASE
+                          PERFORM MOSTRAR-PANTALLA-ACTUAL
                        WHEN KEY-F8  *> tecla Suprimir/Delete
                            PERFORM ELIMINAR-REGISTRO
+                           DISPLAY PANTALLA-BASE
+                           PERFORM MOSTRAR-PANTALLA-ACTUAL
                        WHEN KEY-F9  *> tecla F9 (Generar Plano)
                            PERFORM GENERAR-PLANO
-                           DISPLAY "Archivo plano 'clientes.txt' generado."   
-                               LINE 22 COL 20
-                           ACCEPT WS-PAUSA LINE 23 COL 55
+                           DISPLAY "Archivo plano 'clientes.txt' generado." LINE 22 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
                        WHEN KEY-F10  *> tecla F10 (Generar CSV)
                            PERFORM GENERAR-CSV
-                           DISPLAY "Archivo CSV 'clientes.CSV' generado."    
-                               LINE 22 COL 20
-                           ACCEPT WS-PAUSA LINE 23 COL 55
+                           DISPLAY "Archivo CSV 'clientes.CSV' generado."   LINE 22 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
                        WHEN KEY-ENTER
-                           CONTINUE                                          *> Aquí iría tu lógica de EDITAR
+                           CONTINUE 
                    END-EVALUATE
                ELSE
-                   DISPLAY "LISTA VACIA - PRESIONE [ESC] PARA SALIR" 
-                           LINE 12 COL 25 WITH REVERSE-VIDEO
+                   *> Si no hay registros, forzamos esperar F7 o ESC
                    ACCEPT WS-PAUSA LINE 1 COL 1 WITH NO-ECHO
+                   IF WS-KEY = KEY-F7 PERFORM BUSCAR-CLIENTE END-IF
                END-IF
            END-PERFORM.
 
-       MOSTRAR-REGISTROS.
-           SET NO-FIN-LISTA TO TRUE.
-           
-           IF BUSCANDO                                                         *> Si estamos en modo búsqueda, usar la clave alternativa
-               MOVE WS-BUSCA-NOMBRE TO CLI-NOMBRE
-               START CLIENTES KEY IS NOT LESS THAN CLI-NOMBRE
-                   INVALID KEY SET FIN-LISTA TO TRUE
-               END-START
-           ELSE
-               MOVE ZERO TO CLI-ID                                             *> Modo normal: mostrar todos desde el inicio
-               START CLIENTES KEY IS NOT LESS THAN CLI-ID
-                   INVALID KEY SET FIN-LISTA TO TRUE
-               END-START
-           END-IF.
-
-           MOVE WS-FILA-INICIO TO WS-FILA. 
-           MOVE 1 TO WS-INDICE.
-           
-           PERFORM UNTIL FIN-LISTA OR WS-FILA > 22
-               READ CLIENTES NEXT RECORD
-                   AT END SET FIN-LISTA TO TRUE
-                   NOT AT END
-                       IF BUSCANDO                                      *> Si estamos buscando, filtrar por coincidencia parcial
-                           IF CLI-NOMBRE(1:FUNCTION LENGTH(
-                              FUNCTION TRIM(WS-BUSCA-NOMBRE))) 
-                              = FUNCTION TRIM(WS-BUSCA-NOMBRE)
-                               PERFORM AGREGAR-A-TABLA
-                           END-IF
-                       ELSE
-                           PERFORM AGREGAR-A-TABLA
-                       END-IF
-               END-READ
-           END-PERFORM.
-           
-           MOVE WS-FILA TO WS-FILA-MAX.
-           SUBTRACT 1 FROM WS-FILA-MAX.
-           MOVE 1 TO WS-INDICE.
-           MOVE WS-FILA-INICIO TO WS-PUNTERO.
-
+ 
        AGREGAR-A-TABLA.
            MOVE CLI-ID        TO T-ID(WS-INDICE)
            MOVE CLI-NOMBRE    TO T-NOM(WS-INDICE)
            MOVE CLI-DIRECCION TO T-DIR(WS-INDICE)
            MOVE CLI-CATEGORIA TO T-CAT(WS-INDICE)
-           PERFORM NORMALIZAR-PINTADO
-           ADD 1 TO WS-FILA
            ADD 1 TO WS-INDICE.
 
+       MOSTRAR-PANTALLA-ACTUAL.
+           PERFORM VARYING WS-INDICE FROM 1 BY 1 
+               UNTIL WS-INDICE > (WS-FILA-MAX - WS-FILA-INICIO + 1)
+               COMPUTE WS-FILA = WS-FILA-INICIO + WS-INDICE - 1
+               PERFORM NORMALIZAR-PINTADO
+           END-PERFORM.
+           MOVE 1 TO WS-INDICE.
        NORMALIZAR-PINTADO.
            DISPLAY T-ID(WS-INDICE)  LINE WS-FILA COL 2  BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            DISPLAY T-NOM(WS-INDICE) LINE WS-FILA COL 15 BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
@@ -224,7 +196,7 @@
                        BACKGROUND-COLOR 7 FOREGROUND-COLOR 1
            END-IF
            
-           PERFORM RECARGAR-LISTADO                                     *> Recargar el listado con el filtro
+           PERFORM INICIALIZAR-LISTADO                                     *> Recargar el listado con el filtro
            MOVE 0 TO WS-KEY.
 
        ELIMINAR-REGISTRO. 
@@ -245,7 +217,7 @@
                                 DISPLAY "ERROR AL ELIMINAR" LINE 
                                 23 COL 20 ACCEPT WS-PAUSA LINE 23 COL 55
                               NOT INVALID KEY
-                                   PERFORM RECARGAR-LISTADO
+                                   PERFORM INICIALIZAR-LISTADO
                                    MOVE 0 TO WS-KEY
                            END-DELETE
                    END-READ
@@ -267,18 +239,54 @@
            END-IF.      
            
        LIMPIAR-LISTADO.
-           PERFORM VARYING WS-FILA FROM WS-FILA-INICIO BY 1
-               UNTIL WS-FILA > 22
+           PERFORM VARYING WS-FILA FROM WS-FILA-INICIO BY 1 UNTIL WS-FILA > 24
                DISPLAY ALL " " LINE WS-FILA COL 1 SIZE 80 BACKGROUND-COLOR 1
            END-PERFORM.
        
-       RECARGAR-LISTADO.
-           PERFORM LIMPIAR-LISTADO
-           MOVE "N" TO WS-FIN-LISTA
-           MOVE WS-FILA-INICIO TO WS-PUNTERO
-           MOVE 1 TO WS-INDICE
-           PERFORM MOSTRAR-REGISTROS.
-       
+       INICIALIZAR-LISTADO.
+           SET NO-FIN-LISTA TO TRUE.
+           IF BUSCANDO
+               MOVE WS-BUSCA-NOMBRE TO CLI-NOMBRE
+               START CLIENTES KEY IS NOT LESS THAN CLI-NOMBRE
+                   INVALID KEY SET FIN-LISTA TO TRUE
+               END-START
+           ELSE
+               MOVE ZERO TO CLI-ID
+               START CLIENTES KEY IS NOT LESS THAN CLI-ID
+                   INVALID KEY SET FIN-LISTA TO TRUE
+               END-START
+           END-IF.
+           PERFORM RECARGAR-PAGINA.
+       RECARGAR-PAGINA.
+           PERFORM LIMPIAR-LISTADO.
+           INITIALIZE TABLA-PANTALLA.
+           MOVE 1 TO WS-INDICE.
+           
+           *> Lee hasta llenar 20 huecos o fin de archivo
+           PERFORM UNTIL WS-INDICE > 20 OR FIN-LISTA
+               READ CLIENTES NEXT RECORD
+                   AT END SET FIN-LISTA TO TRUE
+                   NOT AT END
+                       IF BUSCANDO
+                           IF CLI-NOMBRE(1:FUNCTION LENGTH(FUNCTION TRIM(WS-BUSCA-NOMBRE))) 
+                              = FUNCTION TRIM(WS-BUSCA-NOMBRE)
+                               PERFORM AGREGAR-A-TABLA
+                           END-IF
+                       ELSE
+                           PERFORM AGREGAR-A-TABLA
+                       END-IF
+               END-READ
+           END-PERFORM.
+
+           IF WS-INDICE > 1
+               COMPUTE WS-FILA-MAX = WS-FILA-INICIO + WS-INDICE - 2
+               MOVE 1 TO WS-INDICE
+               MOVE WS-FILA-INICIO TO WS-PUNTERO
+               PERFORM MOSTRAR-PANTALLA-ACTUAL
+           ELSE
+               MOVE 0 TO WS-FILA-MAX
+               DISPLAY "SIN COINCIDENCIAS" LINE 12 COL 30 WITH REVERSE-VIDEO
+           END-IF.
        GENERAR-PLANO.
            OPEN OUTPUT CLIENTES-PLANO
            SET NO-FIN-LISTA TO TRUE
@@ -309,8 +317,7 @@
                END-READ
            END-PERFORM
            CLOSE CLIENTES-PLANO
-           SET NO-FIN-LISTA TO TRUE.
-*> 
+           SET NO-FIN-LISTA TO TRUE. 
        GENERAR-CSV.         
            SET NO-FIN-LISTA TO TRUE
            OPEN OUTPUT CLIENTES-CSV

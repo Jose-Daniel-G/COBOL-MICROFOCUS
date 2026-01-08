@@ -2,13 +2,13 @@
 Repositorio de gestión y desarrollo en GnuCOBOL. Este proyecto implementa una arquitectura modular enfocada en CRUD, manejo de archivos indexados y pantallas interactivas.
 ```
 cobc -x -free SRC\MENU85.cbl -I CPY -I FD -I FILES\SEL
-cobc -m -free SRC\INVCLI01.cbl  -I CPY -I FD -I FILES\SEL    //CLIENTES
-cobc -m -free SRC\INVCLI02.cbl  -I CPY -I FD -I FILES\SEL    //LISTADO CLIENTES
-cobc -m -free SRC\VENFAC01.cbl  -I CPY -I FD -I FILES\SEL    //FACTURAS
-cobc -m -free SRC\INVPRO01.cbl  -I CPY -I FD -I FILES\SEL    //PRODUCTOS
-cobc -m -free SRC\INVPRO02.cbl  -I CPY -I FD -I FILES\SEL    //LISTADO PRODUCTOS
-cobc -m -free SRC\INVBOD01.cbl  -I CPY -I FD -I FILES\SEL     //BODGEAS
-cobc -m -free SRC\INVBOD02.cbl  -I CPY -I FD -I FILES\SEL     //LISTADO BODGEAS
+cobc -m -free SRC\FINCLI01.cbl -I CPY -I FD -I FILES\SEL & rem CLIENTES
+cobc -m -free SRC\FINCLI02.cbl -I CPY -I FD -I FILES\SEL & rem LISTADO CLIENTES
+cobc -m -free SRC\VENFAC01.cbl -I CPY -I FD -I FILES\SEL & rem FACTURAS
+cobc -m -free SRC\INVPRO01.cbl -I CPY -I FD -I FILES\SEL & rem PRODUCTOS
+cobc -m -free SRC\INVPRO02.cbl -I CPY -I FD -I FILES\SEL & rem LISTADO PRODUCTOS
+cobc -m -free SRC\INVBOD01.cbl -I CPY -I FD -I FILES\SEL & rem BODEGAS
+cobc -m -free SRC\INVBOD02.cbl -I CPY -I FD -I FILES\SEL & rem LISTADO BODEGAS
 ```
 
 Cuando domines CRUD:

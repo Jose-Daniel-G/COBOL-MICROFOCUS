@@ -1,0 +1,12 @@
+       FD  KARDEX.
+       01  KARDEX-REG.
+           05 KDX-FECHA        PIC 9(08).    *> AAAAMMDD
+           05 KDX-HORA         PIC 9(06).    *> HHMMSS
+           05 KDX-PRODUCTO     PIC X(10).    *> FK PRODUCTOS
+           05 KDX-BODEGA       PIC 9(04).    *> FK BODEGAS
+           05 KDX-TIPO-MOV     PIC X.        *> E=Entrada S=Salida T=Traslado
+           05 KDX-DOCUMENTO    PIC X(12).    *> FACTURA, AJUSTE, TRASLADO
+           05 KDX-REFERENCIA   PIC X(20).    *> Nro documento
+           05 KDX-CANTIDAD     PIC S9(9).    *> + Entrada / - Salida
+           05 KDX-SALDO        PIC 9(9).     *> Saldo después del movimiento
+           05 KDX-USUARIO      PIC X(10).

@@ -1,6 +1,8 @@
        FD  STOCK.
        01  STOCK-REG.
+           05 STK-FECHA-ACT   PIC 9(8).    *> AAAAMMDD
            05 STK-CODIGO      PIC X(10).     *> FK Producto
+           05 STK-BODEGA      PIC X(04).      *> CAMPO AGREGADO
            05 STK-CANTIDAD    PIC 9(9).
            05 STK-MINIMO      PIC 9(5).
            05 STK-MAXIMO      PIC 9(5).

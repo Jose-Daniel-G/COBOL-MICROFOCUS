@@ -244,20 +244,20 @@
                    WHEN KEY-ENTER    *> TECLA ENTER
                        EVALUATE WS-FILA-CONF
                            WHEN 1
-                               CALL "CLIENTES" 
+                               CALL "FINCLI01" 
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
-                               CANCEL "CLIENTES"
+                               CANCEL "FINCLI01"
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                                DISPLAY FINANCIERO 
 
                            WHEN 2 
-                               CALL "LISTADO" 
+                               CALL "FINCLI02" 
                                ON EXCEPTION
                                   DISPLAY "ERROR: NO SE ENCONTRO PROG" LINE 15 COL 45
                                END-CALL
-                               CANCEL "LISTADO" 
+                               CANCEL "FINCLI02" 
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                                DISPLAY FINANCIERO 
                            WHEN 3

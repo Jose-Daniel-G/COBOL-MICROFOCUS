@@ -3,7 +3,7 @@
            05 MOV-ID         PIC 9(9).
            05 MOV-FECHA      PIC 9(8).
            05 MOV-CODIGO     PIC X(10).     *> Producto
-           05 MOV-TIPO       PIC X.         *> E=Entrada / S=Salida
+           05 MOV-TIPO       PIC X.         *> FV=Factura, CP=Compra, AJ=Ajuste, TR=Traslado
            05 MOV-CANTIDAD   PIC 9(9).
            05 MOV-REFERENCIA PIC X(20).     *> Factura, compra, ajuste
        

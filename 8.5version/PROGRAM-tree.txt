@@ -120,3 +120,95 @@ Cierres
  ├── CLIVAL01.cbl   *> Validar cliente
  ├── VEHVAL01.cbl   *> Validar vehículo
  └── VENIMP01.cbl   *> Imprimir factura
+
+
+
+ 
+MENÚ PRINCIPAL (Nivel 0)
+│
+├── Financiero
+│   │
+│   ├── Clientes
+│   │   ├── Crear / Modificar
+│   │   ├── Consultas
+│   │   └── Listados
+│   │
+│   ├── Facturación
+│   │   ├── Nueva factura
+│   │   ├── Consultar factura
+│   │   ├── Anular factura
+│   │   └── Impresiones
+│   │
+│   ├── Cuentas por cobrar
+│   │   ├── Recibos
+│   │   ├── Aplicaciones
+│   │   └── Consultas
+│   │
+│   └── Regresar
+│
+├── Comercial
+│   │
+│   ├── Ventas
+│   │   ├── Pedidos
+│   │   ├── Cotizaciones
+│   │   └── Reportes
+│   │
+│   ├── Compras
+│   │   ├── Órdenes de compra
+│   │   ├── Recepciones
+│   │   └── Proveedores
+│   │
+│   ├── Inventarios
+│   │   │
+│   │   ├── Productos
+│   │   │   ├── Crear / Modificar
+│   │   │   ├── Eliminar
+│   │   │   ├── Listados
+│   │   │   │   ├── General
+│   │   │   │   ├── Por estado
+│   │   │   │   ├── Por precio
+│   │   │   │   └── Por proveedor
+│   │   │   └── Regresar
+│   │   │
+│   │   ├── Entradas de stock
+│   │   │   ├── Compra
+│   │   │   ├── Ajuste positivo
+│   │   │   └── Importación
+│   │   │
+│   │   ├── Salidas de stock
+│   │   │   ├── Venta
+│   │   │   ├── Ajuste negativo
+│   │   │   └── Consumo interno
+│   │   │
+│   │   ├── Kardex
+│   │   │   ├── Por producto
+│   │   │   ├── Por fecha
+│   │   │   └── Por bodega
+│   │   │
+│   │   └── Consultas generales
+│   │
+│   └── Regresar
+│
+├── Contabilidad
+│   │
+│   ├── Plan de cuentas
+│   ├── Comprobantes
+│   ├── Mayor
+│   ├── Balances
+│   └── Cierres
+│
+├── Nómina
+│   │
+│   ├── Empleados
+│   ├── Liquidaciones
+│   ├── Seguridad social
+│   └── Reportes
+│
+├── Configuración
+│   │
+│   ├── Usuarios
+│   ├── Permisos
+│   ├── Parámetros
+│   └── Auditoría
+│
+└── Salir
