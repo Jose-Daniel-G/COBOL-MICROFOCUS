@@ -1,5 +1,11 @@
 
        >>SOURCE FORMAT FREE
+      *> ******************************************************************
+      *> * Author:   JOSE DANIEL GRIJALBA
+      *> * Date:     12/23/2025
+      *> * Purpose:  LEARN
+      *> * Tectonics: cobc
+      *> ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. MENU85.
        ENVIRONMENT DIVISION.

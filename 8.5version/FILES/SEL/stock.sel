@@ -4,3 +4,9 @@
            ACCESS MODE IS DYNAMIC
            RECORD KEY IS STK-CODIGO
            STATUS IS ST-STOCK.
+
+       SELECT STOCK-PLANO ASSIGN TO "stock.txt"
+              ORGANIZATION IS LINE SEQUENTIAL.
+       SELECT STOCK-CSV   ASSIGN TO "stock.csv"
+              ORGANIZATION IS LINE SEQUENTIAL.
+              

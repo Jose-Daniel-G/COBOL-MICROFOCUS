@@ -1,5 +1,11 @@
 
        >>SOURCE FORMAT FREE
+      *> ******************************************************************
+      *> * Author:   JOSE DANIEL GRIJALBA
+      *> * Date:     12/23/2025
+      *> * Purpose:  LEARN
+      *> * Tectonics: cobc
+      *> ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. MENU85.
        ENVIRONMENT DIVISION.
@@ -365,9 +371,8 @@
                PERFORM DIBUJAR-OPCIONES
                DISPLAY COMERCIAL
 
-               DISPLAY SUBMENU-COM               *> Dibujamos la caja del menú de SUMBMENU
-               
-               *> --- LÓGICA DE RESALTADO DINÁMICO ---
+               DISPLAY SUBMENU-COM                   *> Dibujamos la caja del menú de SUMBMENU
+                
                IF WS-FILA-CONF = 1
                   DISPLAY "| 1. Productos (ABM)   |" LINE 08 COL 40 WITH REVERSE-VIDEO
                ELSE
@@ -386,14 +391,14 @@
                   DISPLAY "| 3. Bodegas (ABM)     |" LINE 10 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
                IF WS-FILA-CONF = 4
-                  DISPLAY "| 4. Consulta Stock    |" LINE 11 COL 40 WITH REVERSE-VIDEO
+                  DISPLAY "| 4. #. ........       |" LINE 11 COL 40 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| 4. Consulta Stock    |" LINE 11 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| 4. #. ........       |" LINE 11 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
                IF WS-FILA-CONF = 5
-                  DISPLAY "| 5. kardex            |" LINE 12 COL 40 WITH REVERSE-VIDEO
+                  DISPLAY "| 5. #. ........       |" LINE 12 COL 40 WITH REVERSE-VIDEO
                ELSE
-                  DISPLAY "| 5. kardex            |" LINE 12 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
+                  DISPLAY "| 5. #. ........       |" LINE 12 COL 40 BACKGROUND-COLOR 6 FOREGROUND-COLOR 7
                END-IF
                IF WS-FILA-CONF = 6
                   DISPLAY "|    Regresar          |" LINE 13 COL 40 WITH REVERSE-VIDEO
@@ -557,7 +562,9 @@
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                
                            WHEN 2
-                                  DISPLAY "ERROR: PENDIENTE" LINE 15 COL 45  *>                         CALL "INVLSTK01" >                         CANCEL "INVLSTK01" >                         PERFORM REFRESCAR-PANTALLA-TOTAL
+                               CALL "INVSTK02"
+                               CANCEL "INVSTK02"
+                               PERFORM REFRESCAR-PANTALLA-TOTAL
                
                            WHEN 3
                                MOVE 2   TO WS-FILA-CONF

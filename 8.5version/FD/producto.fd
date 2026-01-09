@@ -9,7 +9,7 @@
              88 PRD-INACTIVO   VALUE "I".
 
        FD PRODUCTOS-PLANO.
-       01 REG-PLANO PIC X(200).
+       01 REG-PROD-PLANO PIC X(200).
        
        FD PRODUCTOS-CSV.
-       01 REG-CSV PIC X(200).       
+       01 REG-PROD-CSV PIC X(200).       

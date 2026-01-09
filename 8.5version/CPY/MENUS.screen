@@ -32,7 +32,7 @@
            05 LINE 04 COL 23 VALUE "| Comercial        |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 LINE 05 COL 23 VALUE "+------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 0.
            05 LINE 06 COL 23 VALUE "| I. Inventarios   |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>V. Ventas
-           05 LINE 07 COL 23 VALUE "| #. ??            |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>C. Compras
+           05 LINE 07 COL 23 VALUE "| #. ........      |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>C. Compras
            05 LINE 08 COL 23 VALUE "| Regresar         |" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
            05 LINE 09 COL 23 VALUE "+------------------+" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.      *>A. Actualizacion
 
@@ -42,8 +42,8 @@
             10 LINE 08 COL 40 VALUE "| 1. Productos (ABM)   |".
             10 LINE 09 COL 40 VALUE "| 2. Entradas de Stock |".
             10 LINE 10 COL 40 VALUE "| 3. Bodegas (ABM)     |".           
-            10 LINE 11 COL 40 VALUE "| 4. Consulta Stock    |".
-            10 LINE 12 COL 40 VALUE "| 5. kardex            |".
+            10 LINE 11 COL 40 VALUE "| 4. #. ........       |".  *> Consulta Stock
+            10 LINE 12 COL 40 VALUE "| 5. #. ........       |".  *> kardex
             10 LINE 13 COL 40 VALUE "|    Regresar          |".
             10 LINE 14 COL 40 VALUE "+----------------------+".
 

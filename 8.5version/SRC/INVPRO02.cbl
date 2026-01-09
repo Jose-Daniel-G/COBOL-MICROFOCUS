@@ -1,4 +1,10 @@
        >>SOURCE FORMAT FREE
+      *> ******************************************************************
+      *> * Author:   JOSE DANIEL GRIJALBA
+      *> * Date:     12/23/2025
+      *> * Purpose:  LEARN
+      *> * Tectonics: cobc
+      *> ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. INVLPRO01.
 
@@ -310,12 +316,11 @@
                            PRD-ESTADO DELIMITED BY SIZE
                            INTO WS-LINEA-PLANO
        
-                       WRITE REG-PLANO FROM WS-LINEA-PLANO
+                       WRITE REG-PROD-PLANO FROM WS-LINEA-PLANO
                END-READ
            END-PERFORM
            CLOSE PRODUCTOS-PLANO
-           SET NO-FIN-LISTA TO TRUE.
-*> 
+           SET NO-FIN-LISTA TO TRUE. 
        GENERAR-CSV.         
            SET NO-FIN-LISTA TO TRUE
            OPEN OUTPUT PRODUCTOS-CSV
@@ -326,14 +331,14 @@
                    CLOSE PRODUCTOS-CSV
                    EXIT PARAGRAPH
            NOT INVALID KEY
-           MOVE "ID;CODIGO;DESCRIPCION;PRECIO;IVA;ESTADO" TO REG-CSV
-           WRITE REG-CSV
+           MOVE "ID;CODIGO;DESCRIPCION;PRECIO;IVA;ESTADO" TO REG-PROD-CSV
+           WRITE REG-PROD-CSV
            PERFORM UNTIL FIN-LISTA
                READ PRODUCTOS NEXT RECORD
                    AT END
                        SET FIN-LISTA TO TRUE
                    NOT AT END
-                       INITIALIZE REG-CSV
+                       INITIALIZE REG-PROD-CSV
                        STRING
                            PRD-CODIGO DELIMITED BY SIZE
                            ";"                        
@@ -344,12 +349,13 @@
                            PRD-IVA DELIMITED BY SIZE
                            ";"
                            PRD-ESTADO DELIMITED BY SIZE
-                           INTO REG-CSV
+                           INTO REG-PROD-CSV
        
-                       WRITE REG-CSV
+                       WRITE REG-PROD-CSV
                END-READ
            END-PERFORM
            END-START
            CLOSE PRODUCTOS-CSV
            SET NO-FIN-LISTA TO TRUE.
+
 

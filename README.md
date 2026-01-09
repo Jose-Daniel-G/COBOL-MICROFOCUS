@@ -2,14 +2,18 @@
 Repositorio de gestión y desarrollo en GnuCOBOL. Este proyecto implementa una arquitectura modular enfocada en CRUD, manejo de archivos indexados y pantallas interactivas.
 ```
 cobc -x -free SRC\MENU85.cbl -I CPY -I FD -I FILES\SEL
-cobc -m -free SRC\FINCLI01.cbl -I CPY -I FD -I FILES\SEL & rem CLIENTES
-cobc -m -free SRC\FINCLI02.cbl -I CPY -I FD -I FILES\SEL & rem LISTADO CLIENTES
-cobc -m -free SRC\VENFAC01.cbl -I CPY -I FD -I FILES\SEL & rem FACTURAS
-cobc -m -free SRC\INVPRO01.cbl -I CPY -I FD -I FILES\SEL & rem PRODUCTOS
-cobc -m -free SRC\INVPRO02.cbl -I CPY -I FD -I FILES\SEL & rem LISTADO PRODUCTOS
-cobc -m -free SRC\INVBOD01.cbl -I CPY -I FD -I FILES\SEL & rem BODEGAS
-cobc -m -free SRC\INVBOD02.cbl -I CPY -I FD -I FILES\SEL & rem LISTADO BODEGAS
+
+cobc -m -free SRC\FINCLI01.cbl -I CPY -I FD -I FILES\SEL -o mod\FINCLI01.dll  & rem CLIENTES
+cobc -m -free SRC\FINCLI02.cbl -I CPY -I FD -I FILES\SEL -o mod\FINCLI02.dll & rem LISTADO CLIENTES
+cobc -m -free SRC\VENFAC01.cbl -I CPY -I FD -I FILES\SEL -o mod\VENFAC01.dll & rem FACTURAS
+cobc -m -free SRC\INVPRO01.cbl -I CPY -I FD -I FILES\SEL -o mod\INVPRO01.dll & rem PRODUCTOS
+cobc -m -free SRC\INVPRO02.cbl -I CPY -I FD -I FILES\SEL -o mod\INVPRO02.dll & rem LISTADO PRODUCTOS
+cobc -m -free SRC\INVBOD01.cbl -I CPY -I FD -I FILES\SEL -o mod\INVBOD01.dll & rem BODEGAS
+cobc -m -free SRC\INVBOD02.cbl -I CPY -I FD -I FILES\SEL -o mod\INVBOD02.dll & rem LISTADO BODEGAS
+cobc -m -free SRC\INVSTK01.cbl -I CPY -I FD -I FILES\SEL -o mod\INVSTK01.dll & rem LISTADO BODEGAS
+cobc -m -free SRC\INVSTK02.cbl -I CPY -I FD -I FILES\SEL -o mod\INVSTK02.dll & rem LISTADO BODEGAS
 ```
+cobc -x -free SRC\MENU85.cbl -I CPY -I FD -I FILES\SEL -o bin\MENU85.exe
 
 Cuando domines CRUD:
 

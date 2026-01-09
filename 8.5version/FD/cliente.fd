@@ -12,8 +12,8 @@
            03 FILLER               PIC X(240).
 
        FD CLIENTES-PLANO.
-       01 REG-PLANO PIC X(200).
+       01 REG-CLIENTE-PLANO PIC X(200).
 
        FD CLIENTES-CSV.
-       01 REG-CSV PIC X(200).
+       01 REG-CLIENTE-CSV PIC X(200).
 
