@@ -499,8 +499,8 @@
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                
                            WHEN 2
-                               CALL "INVLPRO01"
-                               CANCEL "INVLPRO01"
+                               CALL "INVPRO02"
+                               CANCEL "INVPRO02"
                                PERFORM REFRESCAR-PANTALLA-TOTAL
                
                            WHEN 3

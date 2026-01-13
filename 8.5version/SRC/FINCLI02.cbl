@@ -70,7 +70,7 @@
 
            MOVE "LISTADO INDEXADO DE CLIENTES" TO WS-TITULO-PANTALLA           *> 1. Configuras los datos del encabezado
            MOVE "MODO CONSULTA"                TO WS-MODULO-PANTALLA
-           MOVE "VERSION.01" TO WS-PROGRAMA
+           MOVE "FINCLI02"                     TO WS-PROGRAMA
 
            PERFORM ABRO-ARCHIVO.
            DISPLAY PANTALLA-BASE

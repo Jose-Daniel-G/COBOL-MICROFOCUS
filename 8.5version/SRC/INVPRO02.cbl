@@ -6,7 +6,7 @@
       *> * Tectonics: cobc
       *> ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. INVLPRO01.
+       PROGRAM-ID. INVPRO02.
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
@@ -75,7 +75,7 @@
 
            MOVE "LISTADO INDEXADO DE PRODUCTOS" TO WS-TITULO-PANTALLA           *> 1. Configuras los datos del encabezado
            MOVE "MODO CONSULTA"                 TO WS-MODULO-PANTALLA
-           MOVE "VERSION.01"                    TO WS-PROGRAMA
+           MOVE "INVPRO02"                      TO WS-PROGRAMA
 
            PERFORM ABRO-ARCHIVO.
 

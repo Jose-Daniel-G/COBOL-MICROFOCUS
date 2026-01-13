@@ -75,8 +75,8 @@
        PROCEDURE DIVISION.
        MAIN-LOGIC. 
            MOVE "        A.B.M   PRODUCTO        " TO WS-TITULO-PANTALLA
-           MOVE "VERSION.01" TO WS-PROGRAMA
-           MOVE "CREAR/EDITAR PRODUCTO" TO WS-MODULO-PANTALLA
+           MOVE "CREAR/EDITAR PRODUCTO"            TO WS-MODULO-PANTALLA
+           MOVE "INVPRO01"                         TO WS-PROGRAMA
            PERFORM ABRO-ARCHIVO.
            
            PERFORM UNTIL FIN = "S"

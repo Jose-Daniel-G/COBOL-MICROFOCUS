@@ -212,3 +212,4 @@ MENÚ PRINCIPAL (Nivel 0)
 │   └── Auditoría
 │
 └── Salir
+https://sourceforge.net/p/gnucobol/discussion/help/thread/9676cf4adf/a03a/

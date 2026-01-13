@@ -3,7 +3,7 @@ Repositorio de gestión y desarrollo en GnuCOBOL. Este proyecto implementa una a
 ```
 cobc -x -free SRC\MENU85.cbl -I CPY -I FD -I FILES\SEL
 
-cobc -m -free SRC\FINCLI01.cbl -I CPY -I FD -I FILES\SEL -o mod\FINCLI01.dll  & rem CLIENTES
+cobc -m -free SRC\FINCLI01.cbl -I CPY -I FD -I FILES\SEL -o mod\FINCLI01.dll & rem CLIENTES
 cobc -m -free SRC\FINCLI02.cbl -I CPY -I FD -I FILES\SEL -o mod\FINCLI02.dll & rem LISTADO CLIENTES
 cobc -m -free SRC\VENFAC01.cbl -I CPY -I FD -I FILES\SEL -o mod\VENFAC01.dll & rem FACTURAS
 cobc -m -free SRC\INVPRO01.cbl -I CPY -I FD -I FILES\SEL -o mod\INVPRO01.dll & rem PRODUCTOS
@@ -12,6 +12,8 @@ cobc -m -free SRC\INVBOD01.cbl -I CPY -I FD -I FILES\SEL -o mod\INVBOD01.dll & r
 cobc -m -free SRC\INVBOD02.cbl -I CPY -I FD -I FILES\SEL -o mod\INVBOD02.dll & rem LISTADO BODEGAS
 cobc -m -free SRC\INVSTK01.cbl -I CPY -I FD -I FILES\SEL -o mod\INVSTK01.dll & rem LISTADO BODEGAS
 cobc -m -free SRC\INVSTK02.cbl -I CPY -I FD -I FILES\SEL -o mod\INVSTK02.dll & rem LISTADO BODEGAS
+MENU85
+
 ```
 cobc -x -free SRC\MENU85.cbl -I CPY -I FD -I FILES\SEL -o bin\MENU85.exe
 
@@ -24,14 +26,16 @@ Cuando domines CRUD:
 🔹 Logs de errores
 
 🔜 FASES
-1️⃣ Corregimos ACTUALIZAR sin UPDATE (versión final estable)✅
-2️⃣ Pasamos a FASE 3: Clientes + Ventas + Factura
-3️⃣ Pantallas tipo SIESA (SCREEN SECTION)
+ - FASE 3: Clientes + Ventas + Factura
+1️⃣ Diseñar las validaciones correctas (nivel empresa real)
+2️⃣ Ordenar el flujo lógico del inventario
+3️⃣ Hacer un mapa completo del proyecto para que lo entiendas todo
+4️⃣ Simular una entrevista técnica con lo que ya sabes
 
 ![menu](images/menu.png)
-![menu](images/read.png)
+![read](images/read.png)
 ![program](images/menu0.png)
-![program](images/submenu.png)
+![submenu](images/submenu.png)
 
 
 
@@ -92,7 +96,8 @@ cobc -x -free MENU.cbl -o sistema.exe
       <ul><li><code>CLIENTES.SEL</code></li></ul>
     </details>
   </details>
-
+  <details>
+    <summary>📂 <b>mod/</b> - Archivos dll</summary> 
   <details>
     <summary>📂 <b>SRC/</b> - Programas COBOL (.cob, .cbl)</summary>
     <ul>
@@ -191,7 +196,43 @@ F2	1002
 | `"41"` | Archivo ya abierto                  |
 | `"46"` | Archivo bloqueado                   |
 
-
+```
 PRODUCTOS  1 ──────┐
                    ├── STOCK
 BODEGAS    1 ──────┘
+```
+### GnuCOBOL install step by step
+https://sourceforge.net/p/gnucobol/discussion/help/thread/9676cf4adf/a03a/
+- Download zip and extract here : C:\GC32
+- create a folder called cobol
+- create acces direct to desk of set_env.cmd
+- enronment variable w10: system variables - path: C:\GnuCOBOL\bin
+- edit set_env.cmd and set:
+  :: por jose daniel JDGO
+  set COB_SCREEN_EXCEPTIONS=Y
+  set COB_SCREEN_ESC=Y
+  set COB_COPY_DIR=C:\GC32\cobol\CPY
+  set COB_LIBRARY_PATH=mod
+
+  ## *MAINFRAME AS/400*
+  C:/mvs/mvs → TN3270 → 
+  ________________________________________________________________________________
+- https://github.com/actualquak/tk4 instead of http://wotho.ethz.ch/tk4-/
+- Extrae todo el contenido en C:/mvs del archivo descargado y crea la capeta /logs para que funcione 
+- C:/mvs/mvs
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+- https://sourceforge.net/projects/x3270/
+  #### Ubicacion de Standar division:
+- C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Vista TN3270
+- localhost o 127.0.0.0.1
+- port: 3227
+  ###### Credentials
+  - herc01
+  - cul8tr
+  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  Cancel proccess
+  - /c u=HERC01
+- https://www.tombrennansoftware.com/v200/
+------------------------------------------------------------
+![hercules](images/hercules.png)

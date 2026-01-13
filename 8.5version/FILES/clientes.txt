@@ -1,4 +1,41 @@
-00000001 | kette                                                        | 1                                                                                | 1
-00000002 | mario                                                        | dar                                                                              | 2
-00000003 | HATAKE                                                       | CRE 12                                                                           | 1
-00000012 | JHOSUA                                                       | DAN 15                                                                           | 2
+00000001 | Mario                                                        | cl 22                                                                            | 1
+00000002 | Jose                                                         |  cl 60A 104-87                                                                   | 1
+00000003 | Joshua                                                       | 33                                                                               | 2
+00000004 | Patricia Osorio                                              | cl 60A 107-47                                                                    | 1
+00000005 | Francisco                                                    | cl 24A                                                                           | 1
+00000006 | Juan David Grijalba Osorio                                   | cra 86                                                                           | 1
+00000007 | DAISY                                                        | CAHMP                                                                            | 1
+00000008 | PEACH                                                        | CAR CHAMP                                                                        | 1
+00000009 | WALUIGI                                                      | BORTHER                                                                          | 2
+00000010 | WARIO                                                        | REVERSE CHAMPINION                                                               | 3
+00000011 | PERMATARGO                                                   | FISH                                                                             | 3
+00000012 | VEGUETA                                                      | SAYA 12                                                                          | 2
+00000013 | BOB SPONJA                                                   | SATURDAY                                                                         | 3
+00000014 | PATRICIO                                                     | ESTRELLA                                                                         | 3
+00000015 | CALAMARDO                                                    | BIKINI 22                                                                        | 2
+00000016 | DON CANGREJO                                                 | BIK 2                                                                            | 1
+00000017 | GOKU                                                         | BEACH                                                                            | 3
+00000018 | CARLITOS                                                     | AVENTURAS 21                                                                     | 1
+00000019 | ROSHI                                                        | GAUANDAL                                                                         | 3
+00000020 | HARRY                                                        | 56 NOTREDAM                                                                      | 2
+00000021 | BULMA                                                        | CRA 45 ELOS                                                                      | 2
+00000022 | ASH                                                          | ENTRENADOR 112                                                                   | 6
+00000023 | PIKA                                                         | POKEMON                                                                          | 2
+00000024 | KATHERYN MUNOS OSORIO                                        | CL 23 9 OESTE                                                                    | 9
+00000025 | ALEJANDRO BUSTAMANTE                                         | CRA 1 SILOE                                                                      | 2
+00000026 | TAMAYO                                                       |                                                                                  |
+00000027 | LUIS MIGUEL                                                  | NAPOLES                                                                          | 2
+00000028 | Luigi                                                        | 52 cra                                                                           | 3
+00000029 | SAKURA CARCATOR                                              | 41                                                                               | 1
+00000030 | ABELARDO                                                     | DOMIAN 65                                                                        | 7
+00000031 | PRUEBA                                                       | 36                                                                               | A
+00000034 | PALACIOS                                                     | DARMAT                                                                           | 8
+00000036 | TUSANDE                                                      | TRAP 95                                                                          | 5
+00000042 | YAMCHA                                                       | EL DRAGON 25                                                                     | 6
+00000052 | MARCH SIMPSON                                                | SPRING FIELD 12                                                                  |
+00000055 | hino                                                         | chacrka 22                                                                       | 5
+00000056 | CALAMARDO                                                    | ASD                                                                              | 1
+00000065 | JIRAIYA                                                      | RENACUAJO 86                                                                     | 1
+00000086 | HAZH KECUM                                                   | CAR LIS25                                                                        |
+00000088 | GERMAN                                                       | CRA 92 O                                                                         | 5
+00000120 | GOTENS                                                       | LAMARK                                                                           | 2

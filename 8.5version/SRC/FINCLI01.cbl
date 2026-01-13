@@ -81,8 +81,8 @@
        PROCEDURE DIVISION.
        MAIN-LOGIC. 
            MOVE "        A.B.M   CLIENTES        " TO WS-TITULO-PANTALLA
-           MOVE "VERSION.01" TO WS-PROGRAMA
-           MOVE "CREAR/EDITAR CLIENTE" TO WS-MODULO-PANTALLA
+           MOVE "CREAR/EDITAR CLIENTE"             TO WS-MODULO-PANTALLA
+           MOVE "FINCLI01"                         TO WS-PROGRAMA
            PERFORM ABRO-ARCHIVO.
            
            PERFORM UNTIL FIN = "S"
