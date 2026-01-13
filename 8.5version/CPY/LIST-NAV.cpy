@@ -1,7 +1,7 @@
        01  WS-FILA        PIC 99.      *> Navegación y control de filas
-       01  WS-FILA-INICIO PIC 99 VALUE 5.
+       01  WS-FILA-INICIO PIC 99 VALUE 7.
        01  WS-FILA-MAX    PIC 99.
-       01  WS-PUNTERO     PIC 99 VALUE 5.
+       01  WS-PUNTERO     PIC 99 VALUE 7.
        01  WS-INDICE      PIC 99 VALUE 1.
 
        01  WS-FIN-LISTA       PIC X VALUE "N".

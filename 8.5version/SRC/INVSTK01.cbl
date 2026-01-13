@@ -57,21 +57,21 @@
        SCREEN SECTION.
        01 PANTALLA-BASE.
            COPY "HEADER.cpy". 
-           05 LINE 2 COL 70 VALUE " JD-TWINS "
+           05 LINE 02 COL 70 VALUE " JD-TWINS "
               BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 4 COL 02  VALUE "  +-------------------------[ PARAMETROS ]-----------------------+"
+           05 LINE 05 COL 02  VALUE "  +-------------------------[ PARAMETROS ]-----------------------+"
               BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           05 LINE 5 COL 04  VALUE "| Codigo       :" BACKGROUND-COLOR 1.
-           05 LINE 5 COL 67  VALUE "|" BACKGROUND-COLOR 1.
-           05 LINE 6 COL 04  VALUE "| 01. Cantidad :" BACKGROUND-COLOR 1.
-           05 LINE 6 COL 67  VALUE "|" BACKGROUND-COLOR 1.
-           05 LINE 7 COL 04  VALUE "| 02. Minimo   :" BACKGROUND-COLOR 1.
-           05 LINE 7 COL 67  VALUE "|" BACKGROUND-COLOR 1.
-           05 LINE 8 COL 04  VALUE "| 03 Maximo    :" BACKGROUND-COLOR 1. 
-           05 LINE 8 COL 67  VALUE "|" BACKGROUND-COLOR 1.
-           05 LINE 09 COL 04 VALUE "| 04 Iva    :" BACKGROUND-COLOR 1. 
-           05 LINE 09 COL 67 VALUE "| " BACKGROUND-COLOR 1.
-           05 LINE 10 COL 02 VALUE "  +--------------------------------------------------------------+"
+           05 LINE 06 COL 04  VALUE "| Codigo       :" BACKGROUND-COLOR 1.
+           05 LINE 06 COL 67  VALUE "|" BACKGROUND-COLOR 1.
+           05 LINE 07 COL 04  VALUE "| 01. Cantidad :" BACKGROUND-COLOR 1.
+           05 LINE 07 COL 67  VALUE "|" BACKGROUND-COLOR 1.
+           05 LINE 08 COL 04  VALUE "| 02. Minimo   :" BACKGROUND-COLOR 1.
+           05 LINE 08 COL 67  VALUE "|" BACKGROUND-COLOR 1.
+           05 LINE 09 COL 04  VALUE "| 03 Maximo    :" BACKGROUND-COLOR 1. 
+           05 LINE 09 COL 67  VALUE "|" BACKGROUND-COLOR 1.
+           05 LINE 10 COL 04 VALUE "| 04 Iva    :" BACKGROUND-COLOR 1. 
+           05 LINE 10 COL 67 VALUE "| " BACKGROUND-COLOR 1.
+           05 LINE 11 COL 02 VALUE "  +--------------------------------------------------------------+"
               BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            *> Barra inferior
            05 LINE 25 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.      *>     05 LINE 25 COL 53 VALUE "F10=Termina" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
@@ -107,7 +107,7 @@
 
        INGRESO-ID.
            MOVE 0 TO W-CODIGO.
-           ACCEPT W-CODIGO LINE 5 COL 25 WITH PROMPT HIGHLIGHT.
+           ACCEPT W-CODIGO LINE 6 COL 25 WITH PROMPT HIGHLIGHT.
            IF WS-KEY = 2005 EXIT PARAGRAPH.
            IF W-CODIGO = 0 GO TO INGRESO-ID.
 

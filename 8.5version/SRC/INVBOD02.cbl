@@ -23,7 +23,8 @@
 
        WORKING-STORAGE SECTION.
            COPY "TECLAS.cpy".
-           
+           COPY "LIST-NAV.cpy".
+
        01 WS-UI-CONTROLES.
           05 WS-TITULO-PANTALLA    PIC X(40) VALUE SPACES.
           05 WS-MODULO-PANTALLA    PIC X(26) VALUE SPACES.
@@ -33,16 +34,7 @@
        01  WS-KEY         PIC 9(4).
        01  WS-PAUSA       PIC X.
        01  RESPUESTA      PIC X     VALUE "S".
-
-       01  WS-FILA        PIC 99.      *> Navegación y control de filas
-       01  WS-FILA-INICIO PIC 99 VALUE 5.
-       01  WS-FILA-MAX    PIC 99.
-       01  WS-PUNTERO     PIC 99 VALUE 5.
-       01  WS-INDICE      PIC 99 VALUE 1.
-
-       01  WS-FIN-LISTA       PIC X VALUE "N".
-           88 FIN-LISTA          VALUE "S".
-           88 NO-FIN-LISTA       VALUE "N".
+  
        01 WS-BUSCA-NOMBRE      PIC X(20).       *>--------- --- BUSQUEDA --- -------------
        01 WS-MODO-BUSQUEDA     PIC X VALUE "N".
           88 BUSCANDO          VALUE "S".
@@ -53,16 +45,15 @@
           05 REG-PANTALLA OCCURS 20 TIMES.
              10 T-CODIGO      PIC 9(07).
              10 T-NOMBRE     PIC X(30).
-             10 T-ESTADO     PIC X(30). 
-       01 WS-LINEA-PLANO PIC X(200).
+             10 T-ESTADO     PIC X(30).  
 
        SCREEN SECTION.
        01 PANTALLA-BASE.
            COPY "HEADER.cpy". 
-           05 LINE 03 COL 02  VALUE "CODIGO"         BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           05 LINE 03 COL 15 VALUE "NOMBRE"      BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           05 LINE 03 COL 47 VALUE "ESTADO"   BACKGROUND-COLOR 1 FOREGROUND-COLOR 7. 
-           05 LINE 04 COL 01  PIC X(80) FROM ALL "_" BACKGROUND-COLOR 1. 
+           05 LINE 05 COL 02  VALUE "CODIGO"         BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           05 LINE 05 COL 15 VALUE "NOMBRE"      BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
+           05 LINE 05 COL 47 VALUE "ESTADO"   BACKGROUND-COLOR 1 FOREGROUND-COLOR 7. 
+           05 LINE 06 COL 01  PIC X(80) FROM ALL "_" BACKGROUND-COLOR 1. 
 
        PROCEDURE DIVISION.
        
@@ -156,7 +147,7 @@
            MOVE WS-FILA-INICIO TO WS-FILA. 
            MOVE 1 TO WS-INDICE.
            
-           PERFORM UNTIL FIN-LISTA OR WS-FILA > 22
+           PERFORM UNTIL FIN-LISTA OR WS-FILA > 18
                READ BODEGAS NEXT RECORD
                    AT END SET FIN-LISTA TO TRUE
                    NOT AT END
@@ -268,7 +259,7 @@
            
        LIMPIAR-LISTADO.
            PERFORM VARYING WS-FILA FROM WS-FILA-INICIO BY 1
-               UNTIL WS-FILA > 22
+               UNTIL WS-FILA > 18
                DISPLAY ALL " " LINE WS-FILA COL 1 SIZE 80 BACKGROUND-COLOR 1
            END-PERFORM.
        

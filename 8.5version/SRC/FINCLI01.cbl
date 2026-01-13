@@ -54,19 +54,19 @@
            COPY "HEADER.cpy". 
            05 LINE 2 COL 70 VALUE " JD-TWINS "
               BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
-           05 LINE 4 COL 2  VALUE "  +-------------------------[ PARAMETROS ]-----------------------+"
+           05 LINE 5 COL 2  VALUE "  +-------------------------[ PARAMETROS ]-----------------------+"
               BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
-           05 LINE 5 COL 4  VALUE "| Id Cliente       :" BACKGROUND-COLOR 1.
-           05 LINE 5 COL 67  VALUE "|" BACKGROUND-COLOR 1.
-           05 LINE 6 COL 4  VALUE "| 01 Nombre        :" BACKGROUND-COLOR 1.
+           05 LINE 6 COL 4  VALUE "| Id Cliente       :" BACKGROUND-COLOR 1.
            05 LINE 6 COL 67  VALUE "|" BACKGROUND-COLOR 1.
-           05 LINE 7 COL 4  VALUE "| 02 Direccion     :" BACKGROUND-COLOR 1.
+           05 LINE 7 COL 4  VALUE "| 01 Nombre        :" BACKGROUND-COLOR 1.
            05 LINE 7 COL 67  VALUE "|" BACKGROUND-COLOR 1.
-           05 LINE 8 COL 4  VALUE "| 03 Cod. Postal   :" BACKGROUND-COLOR 1.
+           05 LINE 8 COL 4  VALUE "| 02 Direccion     :" BACKGROUND-COLOR 1.
            05 LINE 8 COL 67  VALUE "|" BACKGROUND-COLOR 1.
-           05 LINE 9 COL 4  VALUE "| 04 Categoria     :" BACKGROUND-COLOR 1.
+           05 LINE 9 COL 4  VALUE "| 03 Cod. Postal   :" BACKGROUND-COLOR 1.
            05 LINE 9 COL 67  VALUE "|" BACKGROUND-COLOR 1.
-           05 LINE 10 COL 2 VALUE "  +--------------------------------------------------------------+"
+           05 LINE 10 COL 4  VALUE "| 04 Categoria     :" BACKGROUND-COLOR 1.
+           05 LINE 11 COL 67  VALUE "|" BACKGROUND-COLOR 1.
+           05 LINE 11 COL 2 VALUE "  +--------------------------------------------------------------+"
               BACKGROUND-COLOR 1 FOREGROUND-COLOR 7.
            *> Barra inferior
            05 LINE 25 COL 1 PIC X(80) FROM ALL " " BACKGROUND-COLOR 7.      *>     05 LINE 25 COL 53 VALUE "F10=Termina" BACKGROUND-COLOR 7 FOREGROUND-COLOR 1.
@@ -108,7 +108,7 @@
 
        INGRESO-ID.
            MOVE 0 TO W-CLI-ID.
-           ACCEPT W-CLI-ID LINE 5 COL 25 WITH PROMPT HIGHLIGHT.
+           ACCEPT W-CLI-ID LINE 7 COL 25 WITH PROMPT HIGHLIGHT.
            IF WS-KEY = 2005 EXIT PARAGRAPH.
            IF W-CLI-ID = 0 GO TO INGRESO-ID.
 
